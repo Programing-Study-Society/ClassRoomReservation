@@ -1,13 +1,15 @@
 from flask import Blueprint,jsonify,request
 from sqlalchemy import or_, and_
-from database import create_session
-import database as DB
+from src.database import create_session
+import src.database as DB
 from  datetime import datetime
 
 classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
 
+
 class ReservationTimeValueError(Exception):
     pass
+
 
 @classroom.route('/get', methods=['POST'])
 def submit_reserve():

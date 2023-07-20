@@ -1,6 +1,6 @@
 from flask import Flask
-from route.reserve import reserve
-from route.classroom import classroom
+from src.API.reserve import reserve
+from src.API.classroom import classroom
 
 app = Flask(__name__, static_folder='./static', static_url_path='/')
 
