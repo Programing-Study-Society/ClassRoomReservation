@@ -73,6 +73,7 @@ function getData()
             //ボタンの設置
             for (var i = 0; i < classrooms.length; i++) {
                 let button = document.createElement("input"); // ボタン要素を作成
+                button.setAttribute('type', 'button');// ボタンの値を設定
                 button.setAttribute('value', classrooms[i].classroom_name);// ボタンの値を設定
                 button.className = 'classroom-button btn_08';
                 // クリックイベントを追加

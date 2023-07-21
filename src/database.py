@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
-import secrets
 
 # 接続先DBの設定
 DATABASE = 'sqlite:///reserve_classroom.sqlite3'
@@ -11,6 +10,7 @@ Engine = create_engine(
     echo=False,
     connect_args={"check_same_thread": False}
 )
+
 
 Base = declarative_base()
 
