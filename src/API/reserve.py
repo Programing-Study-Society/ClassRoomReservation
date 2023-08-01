@@ -23,9 +23,9 @@ MAX_ATTEMPTS = 2000
 
 
 # 予約IDを設定します
-def generate_reservation_id():
+def generate_token(len:int):
     include_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
-    return ''.join(secrets.choice(include_chars) for _ in range(16))
+    return ''.join(secrets.choice(include_chars) for _ in range(len))
 
 
 # 予約時間が予約可能かチェックします
@@ -79,7 +79,7 @@ def register_reserve():
         cnt = 0
         while True:
             cnt += 1
-            reservation_id = generate_reservation_id()
+            reservation_id = generate_token(16)
 
             if not session.query(Reservation).filter(Reservation.reservation_id == reservation_id).first():
                 break
