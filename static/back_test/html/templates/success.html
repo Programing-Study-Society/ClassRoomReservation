@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/index.css">
+    <title>Home</title>
+</head>
+<body>
+    <h2>success</h2>
+    <div class="code-block">
+        <code id="hello-code">
+            print('Hello, World !')
+        </code>
+    </div>
+    <br>
+    <a href="/user/logout" class="logout">ログアウト</a>
+
+    <script>
+        fetch('/user/get-user')
+        .then(res => {
+            $doc = document;
+            res.json().then(data => {
+                console.log(data);
+                if(data['result'])
+                    document.getElementById("hello-code").innerText = `print("Hello, ${data['data']['name']}!")`;
+                else {
+                    console.log(data['message']);
+                    window.location.href = '/home';
+                }
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            window.location.href = '/home';
+        });
+    </script>
+</body>
+</html>

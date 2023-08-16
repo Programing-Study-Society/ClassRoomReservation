@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/base.css">
+    <title>予約成功</title>
+</head>
+<body>
+    <header class="header">
+        <div>
+            <a href="/" id="header-text">
+                OECU 教室予約フォーム
+            </a>
+        </div>
+    </header>
+    <main>
+        <h1 id="reservedMessageArea"></h1><br>
+        <a href="/">予約ページに戻る</a>
+    </main>
+
+    <script>
+        const URL = '';
+        function splitQueryString(url) {
+            // URLの?以降の部分を取得
+            const queryString = url.split('?')[1];
+            
+            // クエリ文字列を分割
+            const queryParts = queryString.split('=');
+            
+            // 分割結果をオブジェクトとして返す
+            return {
+              key: queryParts[0],
+              value: queryParts[1]
+            };
+        }
+
+    const url = location.href;
+    const result = splitQueryString(url);
+    console.log(result.key);
+    console.log(result.value);
+
+    fetch(URL + '/reserve/get/id', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({[result.key]:result.value })
+    })
+    .then(response => response.json()) // レスポンスをJSON形式に変換します
+    .then(data => {
+        if(data.result)
+        {
+            reservedMessageArea.innerHTML = data.value.classroom_name + 
+                "教室を" + data.value['reserve'].start_time + "から" + 
+                data.value['reserve'].end_time + "で予約しました。";
+        }
+        else
+        {
+            reservedMessageArea.innerHTML = data.message;
+        }
+    })
+    </script>
+</body>
+</html>

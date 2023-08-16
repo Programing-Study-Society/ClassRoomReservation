@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/base.css">
+    <title>教室予約</title>
+    <script src="/js/function.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div>
+            <a href="/" id="header-text">
+                OECU 教室予約フォーム
+            </a>
+        </div>
+    </header>
+    <main>
+        <div class="main-sentence">
+            <div class="sentence-title">
+                空き教室の検索
+            </div>
+            <h4>日時を入力すると空き教室を検索することができます。<br>
+            利用可能な教室一覧から教室を選択し、予約してください。
+            </h4>
+        </div>
+        <div id="errorMessageArea">
+
+        </div>
+        <form id="search-classroom-form" onsubmit="getData();">
+            <label for="date">予約したい日付：
+                <input type="date" id="reserveation-date" required>
+            </label>
+            
+            
+            <div class="time">   
+                <label for="time">利用開始時刻：
+                    <input type="time" id="start-time" required>
+                </label>    
+                <br>
+                <label for="time">利用終了時刻：
+                    <input type="time" id="end-time" required>
+                </label> 
+            </div>
+            <div class="search">
+                <i class="fas fa-angle-right fa-position-right"><input type="submit" id="search-button" value="検索"></i>
+            </div>
+
+        </form>
+
+        <div class="available-class">
+            <h3 class="box-title">利用可能な教室一覧</h3>
+            <div id="classroom-box">
+                <!--<input type="button" class="classroom-button" value="教室" onclick="reserve();">-->
+            </div>
+        </div>
+        <a href="/html/reserve_list.html">予約リスト</a>
+    </main>
+
+    <script>
+        (() => {
+            document.getElementById("search-classroom-form")
+                .addEventListener("submit", (e) => e.preventDefault());
+        })();
+    </script>
+</body>
+</html>

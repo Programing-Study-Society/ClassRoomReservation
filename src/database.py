@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
+from flask_login import UserMixin
 
 # 接続先DBの設定
 DATABASE = 'sqlite:///reserve_classroom.sqlite3'
@@ -19,8 +20,8 @@ class Classroom(Base):
 
     __tablename__ = 'classroom'
 
-    classroom_id = Column(Integer,primary_key=True)
-    classroom_name = Column(String)
+    classroom_id = Column('classroom_id', Integer,primary_key=True)
+    classroom_name = Column('classroom_name', String)
     
     def to_dict(self):
         classroom = {
@@ -35,11 +36,11 @@ class Reservation(Base):
 
     __tablename__ = 'reservation'
 
-    reservation_id = Column(String,primary_key=True)
-    classroom_id = Column(Integer)
+    reservation_id = Column('reservation_id', String,primary_key=True)
+    classroom_id = Column('classroom_id', Integer)
     # user_id = Column(Integer)
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
+    start_time = Column('start_time', DateTime)
+    end_time = Column('end_time', DateTime)
 
     def to_dict(self):
         reservation = {
@@ -53,13 +54,16 @@ class Reservation(Base):
         return reservation
 
 
-class User(Base):
+class User(UserMixin, Base):
 
     __tablename__ = 'user'
     
-    user_id = Column(Integer,primary_key=True)
-    user_name = Column(String)
-    user_email = Column(String)
+    user_id = Column('user_id',String(64),primary_key=True)
+    user_name = Column('user_name',String(128))
+    user_email = Column('user_email', String)
+
+    def get_id(self):
+        return self.user_id
     
     def to_dict(self):
         user = {

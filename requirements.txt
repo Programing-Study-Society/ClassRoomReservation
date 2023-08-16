@@ -2,3 +2,4 @@ flask
 flask-login
 sqlalchemy
 python-dotenv
+google-auth
