@@ -53,20 +53,22 @@ class Reservation(Base):
         return reservation
 
 
-# class User(Base):
+class User(Base):
 
-#     __tablename__ = 'user'
+    __tablename__ = 'user'
     
-#     user_id = Column(Integer,primary_key=True)
-#     user_name = Column(String)
+    user_id = Column(Integer,primary_key=True)
+    user_name = Column(String)
+    user_email = Column(String)
     
-#     def to_dict(self):
-#         user = {
-#             "user_id":self.user_id,
-#             "user_name":self.user_name
-#         }
+    def to_dict(self):
+        user = {
+            "user_id":self.user_id,
+            "user_name":self.user_name,
+            "user_email":self.user_email
+        }
 
-#         return user
+        return user
 
 
 def create_database():
