@@ -5,8 +5,25 @@ from src.API.user import user_api
 import os
 from flask_login import LoginManager
 from src.module.function import generate_token
-from src.database import create_session, User
-from datetime import timedelta
+from src.database import create_session, User, Reservation
+from datetime import timedelta, datetime
+import threading
+import schedule
+from time import sleep
+
+
+### Ctrl + C を押したときに正常終了する ###
+
+import signal
+import sys
+
+def signal_handler(signum, frame):
+    print('end program')
+    sys.exit()
+
+signal.signal(signal.SIGINT, signal_handler)
+
+### ここまで ###
 
 
 app = Flask(__name__, static_folder='./static', static_url_path='/')
@@ -27,9 +44,11 @@ login_manager.login_view = 'route.default_route'
 
 @login_manager.user_loader
 def load_user(user_id):
+
     session = create_session()
     loaded_user = session.query(User).filter(User.user_id == user_id).first()
     session.close()
+
     return loaded_user
 
 
@@ -66,3 +85,36 @@ def login_faild():
 
 
 print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
+
+
+### 定期実行プログラム ###
+
+def check_past_reservations():
+
+    def delete_past_reservations():
+        try:
+            session = create_session()
+
+            reservations_delete = session.query(Reservation).filter(Reservation.end_time <= datetime.now()).all()
+            
+            for reservation in reservations_delete:
+                session.delete(reservation)
+
+            session.commit()
+            session.close()
+
+            return
+
+        except Exception as e:
+            print(e)
+            return
+
+    schedule.every().day.at('00:00').do(delete_past_reservations)
+    while True:
+        schedule.run_pending()
+        sleep(1)
+
+
+thread1 = threading.Thread(target=check_past_reservations, daemon=True)
+
+thread1.start()

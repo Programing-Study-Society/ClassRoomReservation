@@ -50,6 +50,7 @@ def delete_past_reserved_date(session:orm.Session):
 
         session.delete(delete_reserve)
         session.commit()
+        session.close()
 
 
 @reserve.errorhandler(404)
@@ -74,6 +75,7 @@ def register_reserve():
         session = create_session()
 
         if not is_reservation_available(session, posts_data['classroom_id'], start_time, end_time):
+            session.close()
             raise ReserveValueError('すでに予約されています。')
 
         cnt = 0
@@ -85,6 +87,7 @@ def register_reserve():
                 break
 
             elif cnt >= MAX_ATTEMPTS:
+                session.close()
                 raise ManyAttemptsError('もう一度お試しください.')
 
         reservation_value = Reservation(
@@ -120,7 +123,6 @@ def reserve_get(mode):
             case 'id':
 
                 if request.method != 'POST':
-                    session.close()
                     abort(404)
 
                 reservation_id = request.json['reservation_id']
@@ -130,7 +132,6 @@ def reserve_get(mode):
                     raise PostValueError('指定されたIDは存在しません.')
 
                 classroom = session.query(Classroom).filter(Classroom.classroom_id == reserve_value.classroom_id).first()
-                session.close()
 
                 return jsonify({
                     'result': True,
@@ -144,7 +145,6 @@ def reserve_get(mode):
             case 'full':
 
                 if request.method != 'GET':
-                    session.close()
                     abort(404)
 
                 reserve_values = session.query(Reservation).join(Classroom, Classroom.classroom_id == Reservation.classroom_id).all()
@@ -156,15 +156,12 @@ def reserve_get(mode):
                         'reserve': reserve.to_dict(),
                     })
 
-                session.close()
-
                 return jsonify({'result': True, 'value': reserve_list}), 200
 
             # 日付での取得
             case 'date':
 
                 if request.method != 'POST':
-                    session.close()
                     abort(404)
 
                 post_data = request.json
@@ -180,8 +177,6 @@ def reserve_get(mode):
                     and_(Reservation.start_time >= start_time, Reservation.end_time <= end_time)
                 ).all()
 
-                session.close()
-
                 return jsonify({
                     'result': True,
                     'value': [reserve_value.to_dict() for reserve_value in reserve_values],
@@ -193,10 +188,8 @@ def reserve_get(mode):
 
     except PostValueError as e:
         print(e)
-        session.close()
         return jsonify({'result': False, 'message': e.args[0]}), 400
 
     except Exception as e:
         print(e)
-        session.close()
         return jsonify({'result': False, 'message': 'Internal Server Error'}), 500

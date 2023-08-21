@@ -23,10 +23,12 @@ def submit_reserve():
         session = create_session()
 
         if start_time < now_time:
+            session.close()
             raise ReservationTimeValueError("現在時刻より後の時刻を入力してください")
         
 
         if  start_time > end_time:
+            session.close()
             raise ReservationTimeValueError("開始時刻は終了時刻より前を入力してください")
         
                 
@@ -67,7 +69,6 @@ def submit_reserve():
 
     except ReservationTimeValueError as e:
         print(e)
-        session.close()
         return jsonify({
             "result": False,
             "message": e.args[0]
@@ -76,7 +77,6 @@ def submit_reserve():
 
     except Exception as e:
         print(e)
-        session.close()
         return jsonify({
             "result":False,
             "message": "Internal Server error"
