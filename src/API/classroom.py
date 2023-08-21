@@ -58,6 +58,7 @@ def submit_reserve():
                 )
             ).all()
         
+        session.close()
         
         return jsonify({
             "result": True,
@@ -66,6 +67,7 @@ def submit_reserve():
 
     except ReservationTimeValueError as e:
         print(e)
+        session.close()
         return jsonify({
             "result": False,
             "message": e.args[0]
@@ -74,6 +76,7 @@ def submit_reserve():
 
     except Exception as e:
         print(e)
+        session.close()
         return jsonify({
             "result":False,
             "message": "Internal Server error"

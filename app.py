@@ -48,13 +48,6 @@ def unauth_handler():
         'message': 'ログインしていません' 
     }), 400
 
-"""
-@app.errorhandler(404)
-def not_found(e):
-    print(f'httpステータス:{e.code}, メッセージ:{e.name}, 詳細:{e.description}')
-    return app.send_static_file('html/notfound.html')
-"""
-
 
 @app.route('/')
 def default_route():

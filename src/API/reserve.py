@@ -96,6 +96,7 @@ def register_reserve():
 
         session.add(reservation_value)
         session.commit()
+        session.close()
 
         return jsonify({'result': True, 'reservation_id': reservation_value.reservation_id}), 200
 
@@ -119,6 +120,7 @@ def reserve_get(mode):
             case 'id':
 
                 if request.method != 'POST':
+                    session.close()
                     abort(404)
 
                 reservation_id = request.json['reservation_id']
@@ -128,6 +130,7 @@ def reserve_get(mode):
                     raise PostValueError('指定されたIDは存在しません.')
 
                 classroom = session.query(Classroom).filter(Classroom.classroom_id == reserve_value.classroom_id).first()
+                session.close()
 
                 return jsonify({
                     'result': True,
@@ -141,6 +144,7 @@ def reserve_get(mode):
             case 'full':
 
                 if request.method != 'GET':
+                    session.close()
                     abort(404)
 
                 reserve_values = session.query(Reservation).join(Classroom, Classroom.classroom_id == Reservation.classroom_id).all()
@@ -152,12 +156,15 @@ def reserve_get(mode):
                         'reserve': reserve.to_dict(),
                     })
 
+                session.close()
+
                 return jsonify({'result': True, 'value': reserve_list}), 200
 
             # 日付での取得
             case 'date':
 
                 if request.method != 'POST':
+                    session.close()
                     abort(404)
 
                 post_data = request.json
@@ -173,6 +180,8 @@ def reserve_get(mode):
                     and_(Reservation.start_time >= start_time, Reservation.end_time <= end_time)
                 ).all()
 
+                session.close()
+
                 return jsonify({
                     'result': True,
                     'value': [reserve_value.to_dict() for reserve_value in reserve_values],
@@ -184,8 +193,10 @@ def reserve_get(mode):
 
     except PostValueError as e:
         print(e)
+        session.close()
         return jsonify({'result': False, 'message': e.args[0]}), 400
 
     except Exception as e:
         print(e)
+        session.close()
         return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
