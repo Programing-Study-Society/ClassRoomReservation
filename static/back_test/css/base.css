@@ -1,0 +1,150 @@
+body {
+    margin: 0 0 0 0;
+}
+
+.header{
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    padding: 5px;
+    background: #333;
+    color: white;
+}
+
+#header-text{
+    line-height: 60px;
+    padding-left: 10px;
+    font-size: large;
+    text-decoration: none;
+    color: #fff;
+}
+
+main{
+    margin-top: 120px;
+    margin-left: 10px;
+}
+
+.main-sentence{
+    margin: 2em 0;
+    padding: 2em 1em 1em;
+    position: relative;
+    border: 1px solid #81d4fa;
+    background-color: #e1f5fe;
+}
+
+.sentence-title{
+    position: absolute;
+    top: -0.8em;
+    left: 20px;
+    font-weight: bold;
+    font-size: 2em;
+    background-color: #81d4fa;
+    color: #fff;
+    padding: 0 0.5em;
+    -webkit-text-stroke: 0.75px #111;
+}
+
+.main-sentence h4{
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+  
+#search-classroom-form{
+    margin-top: 20px;
+    margin-left: 20px;
+}
+input[type="date"] {
+    position: relative;
+    padding: 0 10px;
+    width: 200px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+input[type="time"]{
+    margin-top: 10px;
+    position: relative;
+    padding: 0 10px;
+    width: 200px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+#search-button{
+    display: flex;
+	text-align: center;
+	align-items: center;
+    justify-content: center;
+	text-decoration: none;
+    /*height: 8px;*/
+	width: 32px;
+	margin-top: 20px;
+	padding: 0.5rem 4rem;
+	font-weight: bold;
+	background-image: linear-gradient(to top, #D8D9DB 0%, #fff 80%, #FDFDFD 100%);
+	border-radius: 100vh;
+	color: #333;
+	border: 1px solid #999;
+	text-shadow: 0 1px #fff;
+	box-shadow: 0 3px 2px 1px #fcfcfc, 0 4px 6px #cecfd1, 0 -2px 2px #cecfd1, 0 -4px 2px #eee, inset 0 0 2px 2px #cecfd1;
+	transition: 0.5s;
+}
+
+#search-button :hover{
+	opacity: 0.5;
+}
+
+a.btn_08:hover {
+	background: #44c6f2;
+	border: 6px outset #27acd9;
+	color: #fff;
+}
+
+.available-class{
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.box-title{
+    background-color: #4c9ac0;
+    color: #fff;
+    padding: 0.5em 20px;
+    width: fit-content;
+    border-radius: 10px 10px 0 0;
+    margin: 0;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+#classroom-box{
+    padding: 10px 20px;
+    min-height: 120px;
+    border: 2px solid #4c9ac0;
+}
+
+.classroom-button{
+    font-size: 1.0rem;
+    font-weight: 700;
+    line-height: 1.5;
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 2rem;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    letter-spacing: 0.1em;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    background-color: #0043eb;
+    right:3px;
+}

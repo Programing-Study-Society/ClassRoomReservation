@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify, abort
 from src.database import Reservation, Classroom, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
-import string, secrets
 import re
+from src.module.function import generate_token
 
 class ReserveValueError(Exception):
     pass
@@ -22,12 +22,6 @@ reserve = Blueprint('reserve', __name__, url_prefix='/reserve')
 MAX_ATTEMPTS = 2000
 
 
-# 予約IDを設定します
-def generate_token(len:int):
-    include_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
-    return ''.join(secrets.choice(include_chars) for _ in range(len))
-
-
 # 予約時間が予約可能かチェックします
 def is_reservation_available(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime):
     return session.query(Reservation).filter(
@@ -41,17 +35,6 @@ def is_reservation_available(session:orm.Session, classroom_id:str, start_time:d
     ).first() is None
 
 
-# 過去の予約データを削除します
-def delete_past_reserved_date(session:orm.Session):
-    while True:
-        delete_reserve = session.query(Reservation).filter(Reservation.end_time < datetime.now()).first()
-        if delete_reserve is None:
-            break
-
-        session.delete(delete_reserve)
-        session.commit()
-
-
 @reserve.errorhandler(404)
 def notfound():
     return jsonify({'result':False, 'message':'Not found'})
@@ -61,6 +44,8 @@ def notfound():
 @reserve.route('/register', methods=['POST'])
 def register_reserve():
     try:
+        session = create_session()
+
         posts_data = request.json
         start_time = datetime.strptime(posts_data['start_time'], '%Y-%m-%d %H:%M:%S')
         end_time = datetime.strptime(posts_data['end_time'], '%Y-%m-%d %H:%M:%S')
@@ -71,9 +56,8 @@ def register_reserve():
         if start_time.date() != end_time.date():
             raise ReserveValueError('日を跨いだ予約はできません.')
 
-        session = create_session()
-
         if not is_reservation_available(session, posts_data['classroom_id'], start_time, end_time):
+            session.close()
             raise ReserveValueError('すでに予約されています。')
 
         cnt = 0
@@ -85,7 +69,10 @@ def register_reserve():
                 break
 
             elif cnt >= MAX_ATTEMPTS:
+                session.close()
                 raise ManyAttemptsError('もう一度お試しください.')
+            
+        print('available reservation')
 
         reservation_value = Reservation(
             reservation_id=reservation_id,
@@ -101,22 +88,26 @@ def register_reserve():
 
     except ReserveValueError as e:
         print(e)
+        session.rollback()
         return jsonify({'result': False, 'message': e.args[0]}), 400
 
     except Exception as e:
         print(e)
+        session.rollback()
         return jsonify({'result': False, 'message': 'Internal Server Error !'}), 500
+    
+    finally :
+        session.close()
 
 
 # 予約情報を取得するエンドポイントです
 @reserve.route('/get/<string:mode>', methods=['POST', 'GET'])
 def reserve_get(mode):
-    try:
-        session = create_session()
-
-        match mode:
-            # idでの取得
-            case 'id':
+    match mode:
+        # idでの取得
+        case 'id':
+            try :
+                session = create_session()
 
                 if request.method != 'POST':
                     abort(404)
@@ -136,14 +127,29 @@ def reserve_get(mode):
                         'reserve': reserve_value.to_dict(),
                     },
                 }), 200
+            
+            except PostValueError as e:
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': e.args[0]}), 400
 
-            # 全て取得
-            case 'full':
+            except Exception as e:
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
+            
+            finally :
+                session.close()
+
+        # 全て取得
+        case 'full':
+            try :
+                session = create_session()
 
                 if request.method != 'GET':
                     abort(404)
 
-                reserve_values = session.query(Reservation).join(Classroom, Classroom.classroom_id == Reservation.classroom_id).all()
+                reserve_values = session.query(Reservation).join(Classroom, Classroom.classroom_id == Reservation.classroom_id).order_by(Reservation.start_time).all()
                 reserve_list = []
                 for reserve in reserve_values:
                     classroom = session.query(Classroom).filter(Classroom.classroom_id == reserve.classroom_id).first()
@@ -154,8 +160,18 @@ def reserve_get(mode):
 
                 return jsonify({'result': True, 'value': reserve_list}), 200
 
-            # 日付での取得
-            case 'date':
+            except Exception as e:
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
+            
+            finally :
+                session.close()
+
+        # 日付での取得
+        case 'date':
+            try :
+                session = create_session()
 
                 if request.method != 'POST':
                     abort(404)
@@ -177,15 +193,19 @@ def reserve_get(mode):
                     'result': True,
                     'value': [reserve_value.to_dict() for reserve_value in reserve_values],
                 }), 200
+            
+            except PostValueError as e:
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': e.args[0]}), 400
 
-            case _:
-                
-                abort(404)
+            except Exception as e:
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
+            
+            finally :
+                session.close()
 
-    except PostValueError as e:
-        print(e)
-        return jsonify({'result': False, 'message': e.args[0]}), 400
-
-    except Exception as e:
-        print(e)
-        return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
+        case _:
+            abort(404)

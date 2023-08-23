@@ -3,3 +3,4 @@ __pycache__
 venv
 reserve_classroom.sqlite3
 .vscode
+.vsls.json
