@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base, scoped_session
 from flask_login import UserMixin
 
 # 接続先DBの設定
@@ -81,3 +81,7 @@ def create_database():
 
 def create_session():
     return sessionmaker(bind=Engine)()
+
+
+def create_scoped_session():
+    return scoped_session(sessionmaker(bind=Engine))()

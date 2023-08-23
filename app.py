@@ -5,7 +5,7 @@ from src.API.user import user_api
 import os
 from flask_login import LoginManager
 from src.module.function import generate_token
-from src.database import create_session, User, Reservation
+from src.database import create_session, create_scoped_session, User, Reservation
 from datetime import timedelta, datetime
 import threading
 import schedule
@@ -97,19 +97,24 @@ def check_past_reservations():
 
             reservations_delete = session.query(Reservation).filter(Reservation.end_time <= datetime.now()).all()
             
+            if reservations_delete is None:
+                return
+            
             for reservation in reservations_delete:
+                print(f'{reservation.reservation_id} was deleted!')
                 session.delete(reservation)
 
             session.commit()
-            session.close()
-
-            return
 
         except Exception as e:
             print(e)
+            session.rollback()
             return
+        
+        finally :
+            session.close()
 
-    schedule.every().day.at('00:00').do(delete_past_reservations)
+    schedule.every().day.at('02:30').do(delete_past_reservations)
     while True:
         schedule.run_pending()
         sleep(1)

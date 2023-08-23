@@ -24,8 +24,9 @@ class MaxValueError(Exception):
 
 @user_api.route('/', methods=["POST"])
 def create_user():
-    session = create_session()
     try:
+        session = create_session()
+
         # Googleから送られてきたPOSTを辞書型に
         data = request.form.to_dict()
         # デコードをして読み取れる形に
@@ -34,29 +35,33 @@ def create_user():
         name = persed_request['name']
         email = persed_request['email']
         print(f'name : {name}, id : {id}, email : {email}')
+
         user = User(user_name=name, user_id=id,user_email=email)
+
         client_session['id'] = id
         client_session['name'] = name
         client_session['email'] = email
 
         if session.query(User).filter(User.user_id == id).first() :
             login_user(user)
-            session.close()
             return redirect('/back_test/html/templates/success.html')
         
         else:
             session.add(user)
             session.commit()
+            session.close()
 
             login_user(user)
-            session.close()
 
             return redirect('/back_test/html/templates/success.html')
     
     except Exception as e :
         print(e)
-        session.close()
+        session.rollback()
         return jsonify({'result':False, 'message':'Internal Server Error'}), 500
+    
+    finally :
+        session.close()
 
 
 @user_api.route('/get-user')
