@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify, abort
 from src.database import Reservation, Classroom, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
-import string, secrets
 import re
+from src.module.function import generate_token
 
 class ReserveValueError(Exception):
     pass
@@ -22,12 +22,6 @@ reserve = Blueprint('reserve', __name__, url_prefix='/reserve')
 MAX_ATTEMPTS = 2000
 
 
-# 予約IDを設定します
-def generate_token(len:int):
-    include_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
-    return ''.join(secrets.choice(include_chars) for _ in range(len))
-
-
 # 予約時間が予約可能かチェックします
 def is_reservation_available(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime):
     return session.query(Reservation).filter(
@@ -39,17 +33,6 @@ def is_reservation_available(session:orm.Session, classroom_id:str, start_time:d
             and_(Reservation.start_time <= start_time, Reservation.end_time >= end_time),
         )
     ).first() is None
-
-
-# 過去の予約データを削除します
-def delete_past_reserved_date(session:orm.Session):
-    while True:
-        delete_reserve = session.query(Reservation).filter(Reservation.end_time < datetime.now()).first()
-        if delete_reserve is None:
-            break
-
-        session.delete(delete_reserve)
-        session.commit()
 
 
 @reserve.errorhandler(404)

@@ -1,11 +1,12 @@
 from flask import Flask,jsonify,session as client_session
+from src.route import route
 from src.API.reserve import reserve
 from src.API.classroom import classroom
 from src.API.user import user_api
 import os
 from flask_login import LoginManager
 from src.module.function import generate_token
-from src.database import create_session, create_scoped_session, User, Reservation
+from src.database import create_session, User, Reservation
 from datetime import timedelta, datetime
 import threading
 import schedule
@@ -29,6 +30,7 @@ signal.signal(signal.SIGINT, signal_handler)
 app = Flask(__name__, static_folder='./static', static_url_path='/')
 
 
+app.register_blueprint(route)
 app.register_blueprint(reserve)
 app.register_blueprint(classroom)
 app.register_blueprint(user_api)
@@ -66,22 +68,6 @@ def unauth_handler():
         'result': False,
         'message': 'ログインしていません' 
     }), 400
-
-
-@app.route('/')
-def default_route():
-    return app.send_static_file('html/reserve_form.html')
-
-
-## ここからはテスト用のエンドポイント
-@app.route('/home')
-def login_test():
-    return app.send_static_file('back_test/html/templates/home.html')
-
-
-@app.route('/faild')
-def login_faild():
-    return app.send_static_file('back_test/html/templates/loginFaild.html')
 
 
 print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')

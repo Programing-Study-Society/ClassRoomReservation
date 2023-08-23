@@ -32,16 +32,16 @@
             <label for="date">予約したい日付：
                 <input type="date" id="reserveation-date" required>
             </label>
-            
-            
-            <div class="time">   
+
+
+            <div class="time">
                 <label for="time">利用開始時刻：
                     <input type="time" id="start-time" required>
-                </label>    
+                </label>
                 <br>
                 <label for="time">利用終了時刻：
                     <input type="time" id="end-time" required>
-                </label> 
+                </label>
             </div>
             <div class="search">
                 <i class="fas fa-angle-right fa-position-right"><input type="submit" id="search-button" value="検索"></i>
@@ -60,6 +60,13 @@
 
     <script>
         (() => {
+            fetch('/user/get-user')
+            .then(response => {
+                if(response['status'] !== 200) {
+                    console.log('エラー : ');
+                    location.href = 'http://localhost:8000/';
+                }
+            })
             document.getElementById("search-classroom-form")
                 .addEventListener("submit", (e) => e.preventDefault());
         })();

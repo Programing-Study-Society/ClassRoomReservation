@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base, scoped_session
 from flask_login import UserMixin
 
@@ -73,6 +73,24 @@ class User(UserMixin, Base):
         }
 
         return user
+    
+
+class Approved_User(Base):
+    
+    __tablename__ = 'approved_user'
+    
+    approved_email = Column('approved_email', String, primary_key=True)
+    approved_user_name = Column('approved_user_name',String(128))
+    is_admin = Column('is_admin', Boolean)
+    
+    def to_dict(self):
+        approved_user = {
+            "approved_user_name":self.approved_user_name,
+            "approved_email":self.approved_email,
+            "is_admin":self.is_admin,
+        }
+
+        return approved_user
 
 
 def create_database():
@@ -80,7 +98,7 @@ def create_database():
 
 
 def create_session():
-    return sessionmaker(bind=Engine)()
+    return sessionmaker(bind=Engine, expire_on_commit=False)()
 
 
 def create_scoped_session():
