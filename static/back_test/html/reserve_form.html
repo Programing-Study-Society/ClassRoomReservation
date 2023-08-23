@@ -60,9 +60,9 @@
 
     <script>
         (() => {
-            fetch('/user/get-user')
+            fetch('/user/get')
             .then(response => {
-                if(response['status'] !== 200) {
+                if(response['status'] >= 400) {
                     console.log('エラー : ');
                     location.href = 'http://localhost:8000/';
                 }

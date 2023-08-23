@@ -13,7 +13,7 @@ route = Blueprint('route', __name__, url_prefix='/', static_folder='./static', s
 
 
 def check_approved_user(session:orm.Session, user_email:str) -> bool :
-    return session.query(Approved_User).filter(Approved_User.approved_email == user_email).first is not None
+    return (session.query(Approved_User).filter(Approved_User.approved_email == user_email).first() != None)
 
 
 @route.route('/', methods=['GET', 'POST'])
