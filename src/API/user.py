@@ -15,10 +15,8 @@ user_api = Blueprint(
     static_folder='./static',
     )
 
-
-@user_api.route('/get', methods=['GET'])
-@login_required
-def get_user():
+@user_api.route('/current-user', methods=['GET'])
+def get_current_user():
     if 'id' in client_session.keys() :
         return jsonify({
             'result': True,
@@ -34,6 +32,29 @@ def get_user():
             'result':False,
             'message':'You are not logged in.'
         }), 400
+
+
+@user_api.route('/get', methods=['GET'])
+@login_required
+def get_user():
+    try :
+        session = create_session()
+        approved_users = session.query(Approved_User).all()
+
+    except Exception as e :
+        return jsonify({
+            'result':False,
+            'message':'Internal Server Error'
+        }), 500
+
+    else :
+        return jsonify({
+            'result': True,
+            'data':[approved_user.to_dict() for approved_user in approved_users]
+        }), 200
+    
+    finally :
+        session.close()
 
 
 @user_api.route('/add', methods=['POST'])
