@@ -10,7 +10,7 @@ classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
 class ReservationTimeValueError(Exception):
     pass
 
-class Post_ValueError(Exception):
+class Post_Value_Error(Exception):
     pass
 
 
@@ -91,13 +91,24 @@ def add_classroom():
         classroom = request.get_json()
         print(classroom)
         
+        name = 'classroom_name' in classroom.keys()
+        
+        if not name:
+            raise Post_Value_Error('必要な情報が不足しています')
+        
+        if (not name.startswith('J')) or (not name.startswith('Z')):
+            raise Post_Value_Error('存在しない教室名です')
+        
         session.add(DB.Classroom(classroom['classroom_name']))
         
         session.commit()
         
         return jsonify({
             'result':True,
-            
+            # 'classroom':[{
+            #     'result':True,
+            #     'message': 'Internal'
+            # }]
         }),200
         
     except ReservationTimeValueError as e:
@@ -118,5 +129,24 @@ def add_classroom():
         
     finally :
         session.close()
+        
+# @classroom.route('/delete',methods=['DELETE'])
+# def delete_classroom():
+#     try:
+#         session = create_session()
+        
+#         classroom = request.get_json()
+#         print(classroom)
+        
+#         name = 'classroom_name' in classroom.keys()
+
+#         if not name:
+#             raise Post_Value_Error('必要な情報が不足しています')
+        
+#         if (not name.startswith('J')) or (not name.startswith('Z')):
+#             raise Post_Value_Error('存在しない教室名です')
+        
+        
+        
         
         
