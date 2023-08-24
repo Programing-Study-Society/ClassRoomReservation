@@ -10,6 +10,9 @@ classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
 class ReservationTimeValueError(Exception):
     pass
 
+class Post_ValueError(Exception):
+    pass
+
 
 @classroom.route('/get', methods=['POST'])
 def get_classrooms():
@@ -79,3 +82,41 @@ def get_classrooms():
     
     finally :
         session.close()
+        
+@classroom.route('/add',methods=['POST'])
+def add_classroom():
+    try:
+        session = create_session()
+        
+        classroom = request.get_json()
+        print(classroom)
+        
+        session.add(DB.Classroom(classroom['classroom_name']))
+        
+        session.commit()
+        
+        return jsonify({
+            'result':True,
+            
+        }),200
+        
+    except ReservationTimeValueError as e:
+        print(e)
+        session.rollback()
+        return jsonify({
+            "result": False,
+            "message": e.args[0]
+        }),400
+        
+    except Exception as e:
+        print(e)
+        session.rollback()
+        return jsonify({
+            'result':False,
+            "message": "Internal Server error"
+        }),500
+        
+    finally :
+        session.close()
+        
+        
