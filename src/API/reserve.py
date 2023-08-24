@@ -1,9 +1,10 @@
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify, abort, session as client_session
 from src.database import Reservation, Classroom, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
 import re
 from src.module.function import generate_token
+from flask_login import login_required
 
 class ReserveValueError(Exception):
     pass
@@ -42,6 +43,7 @@ def notfound():
 
 # 予約するエンドポイントです
 @reserve.route('/register', methods=['POST'])
+@login_required
 def register_reserve():
     try:
         session = create_session()
@@ -57,7 +59,6 @@ def register_reserve():
             raise ReserveValueError('日を跨いだ予約はできません.')
 
         if not is_reservation_available(session, posts_data['classroom_id'], start_time, end_time):
-            session.close()
             raise ReserveValueError('すでに予約されています。')
 
         cnt = 0
@@ -69,27 +70,30 @@ def register_reserve():
                 break
 
             elif cnt >= MAX_ATTEMPTS:
-                session.close()
                 raise ManyAttemptsError('もう一度お試しください.')
-            
-        print('available reservation')
 
-        reservation_value = Reservation(
+        reserve = Reservation(
             reservation_id=reservation_id,
             classroom_id=posts_data['classroom_id'],
+            reserved_user_id=client_session['id'],
             start_time=start_time,
             end_time=end_time,
         )
 
-        session.add(reservation_value)
+        session.add(reserve)
         session.commit()
 
-        return jsonify({'result': True, 'reservation_id': reservation_value.reservation_id}), 200
+        return jsonify({'result': True, 'reservation_id': reserve.reservation_id}), 200
 
     except ReserveValueError as e:
         print(e)
         session.rollback()
         return jsonify({'result': False, 'message': e.args[0]}), 400
+    
+    except ManyAttemptsError as e :
+        print(e)
+        session.rollback()
+        return jsonify({'result':False, 'message': e.args[0]}), 500
 
     except Exception as e:
         print(e)
