@@ -63,7 +63,7 @@ def add_user():
     try:
         session = create_session()
 
-        user = request.get_json()
+        user = request.json
         print(user)
 
         if (not 'email' in user.keys()) or (not 'name' in user.keys()) or (not 'is_admin' in user.keys()) :
@@ -106,7 +106,7 @@ def user_delete():
     try:
         session = create_session()
 
-        data = request.get_json()
+        data = request.json
 
         if (not 'email' in data.keys()):
             raise Post_Value_Error('必要な情報が不足しています')

@@ -13,7 +13,7 @@ route = Blueprint('route', __name__, url_prefix='/', static_folder='./static', s
 
 
 def check_approved_user(session:orm.Session, user_email:str) -> bool :
-    return (session.query(Approved_User).filter(Approved_User.approved_email == user_email).first() != None)
+    return session.query(Approved_User).filter(Approved_User.approved_email == user_email).first() != None
 
 
 @route.route('/', methods=['GET', 'POST'])
@@ -43,6 +43,7 @@ def default_route():
             client_session['id'] = id
             client_session['name'] = name
             client_session['email'] = email
+            client_session['is_admin'] = session.query(Approved_User).filter(Approved_User.approved_user_name == name).first().is_admin
 
             if session.query(User).filter(User.user_id == id).first() :
                 login_user(user)
@@ -51,7 +52,6 @@ def default_route():
             else:
                 session.add(user)
                 session.commit()
-                session.close()
 
                 login_user(user)
 

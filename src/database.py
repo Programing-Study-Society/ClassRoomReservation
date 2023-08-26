@@ -38,18 +38,20 @@ class Reservation(Base):
 
     reservation_id = Column('reservation_id', String,primary_key=True)
     classroom_id = Column('classroom_id', Integer)
-    # user_id = Column(Integer)
+    reserved_user_id = Column(Integer)
     start_time = Column('start_time', DateTime)
     end_time = Column('end_time', DateTime)
 
-    def to_dict(self):
+    def to_dict(self, is_required_user_id=False):
         reservation = {
             "reservation_id":self.reservation_id,
             "classroom_id":self.classroom_id,
-            # "user_id":self.user_id,
             "start_time":self.start_time.strftime('%Y-%m-%d %H:%M:%S'),
             "end_time":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
+
+        if is_required_user_id :
+            reservation['reserved_user_id'] = self.reserved_user_id
 
         return reservation
 
