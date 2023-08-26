@@ -6,7 +6,7 @@ from src.API.user import user_api
 import os
 from flask_login import LoginManager
 from src.module.function import generate_token
-from src.database import create_session, User, Reservation
+from src.database import create_session, User, Reservation, ReservableClassroom
 from datetime import timedelta, datetime
 import threading
 import schedule
@@ -73,7 +73,7 @@ print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
 ### 定期実行プログラム ###
 
 def check_past_reservations():
-
+    # 過ぎた予約の削除
     def delete_past_reservations():
         try:
             session = create_session()
@@ -97,7 +97,33 @@ def check_past_reservations():
         finally :
             session.close()
 
-    schedule.every().day.at('02:30').do(delete_past_reservations)
+    # 利用可能時間が過ぎた教室の削除
+    def delete_past_classrooms():
+        try:
+            session = create_session()
+
+            classroom_delete = session.query(ReservableClassroom).filter(ReservableClassroom.reservable_end_time <= datetime.now()).all()
+            
+            if classroom_delete is None:
+                return
+            
+            for classroom in classroom_delete:
+                print(f'{classroom.classroom_id} was deleted!')
+                session.delete(classroom)
+
+            session.commit()
+
+        except Exception as e:
+            print(e)
+            session.rollback()
+            return
+        
+        finally :
+            session.close()
+
+
+    schedule.every().day.at('00:00').do(delete_past_reservations)
+    schedule.every().day.at('15:09').do(delete_past_classrooms)
     while True:
         schedule.run_pending()
         sleep(1)

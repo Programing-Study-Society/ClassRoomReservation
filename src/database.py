@@ -16,17 +16,21 @@ Engine = create_engine(
 Base = declarative_base()
 
 
-class Classroom(Base):
+class ReservableClassroom(Base):
 
-    __tablename__ = 'classroom'
+    __tablename__ = 'reservable_classroom'
 
     classroom_id = Column('classroom_id', Integer,primary_key=True)
     classroom_name = Column('classroom_name', String)
+    reservable_start_time = Column('reservable_start_time', DateTime)
+    reservable_end_time = Column('reservable_end_time', DateTime)
     
     def to_dict(self):
         classroom = {
             "classroom_id": self.classroom_id,
-            "classroom_name": self.classroom_name
+            "classroom_name": self.classroom_name,
+            "reservable_start_time": self.reservable_start_time,
+            "reservable_end_time": self.reservable_end_time
         }
         
         return classroom

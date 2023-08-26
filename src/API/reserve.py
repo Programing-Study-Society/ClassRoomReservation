@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, abort, session as client_session
-from src.database import Reservation, Classroom, Approved_User, create_session
+from src.database import Reservation, ReservableClassroom, Approved_User, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
 import re
@@ -125,7 +125,7 @@ def reserve_get(mode):
                 if not reserve_value:
                     raise PostValueError('指定されたIDは存在しません.')
 
-                classroom = session.query(Classroom).filter(Classroom.classroom_id == reserve_value.classroom_id).first()
+                classroom = session.query(ReservableClassroom).filter(ReservableClassroom.classroom_id == reserve_value.classroom_id).first()
 
                 is_required_user_id = False
 
@@ -166,10 +166,10 @@ def reserve_get(mode):
                 if client_session in 'email' :
                     is_required_user_id = is_approved_user(session, client_session['email'])
 
-                reserve_values = session.query(Reservation).join(Classroom, Classroom.classroom_id == Reservation.classroom_id).order_by(Reservation.start_time).all()
+                reserve_values = session.query(Reservation).join(ReservableClassroom, ReservableClassroom.classroom_id == Reservation.classroom_id).order_by(Reservation.start_time).all()
                 reserve_list = []
                 for reserve in reserve_values:
-                    classroom = session.query(Classroom).filter(Classroom.classroom_id == reserve.classroom_id).first()
+                    classroom = session.query(ReservableClassroom).filter(ReservableClassroom.classroom_id == reserve.classroom_id).first()
                     reserve_list.append({
                         'classroom_name': classroom.classroom_name,
                         'reserve': reserve.to_dict(is_required_user_id=is_required_user_id),

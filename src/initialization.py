@@ -1,8 +1,7 @@
-from database import create_database, create_session, Classroom, Approved_User
+from database import create_database, create_session, Approved_User
 
 create_database()
 
-rooms = ['J301', 'J302', 'J303', 'J304', 'J401', 'J402', 'J403', 'J404']
 users = [
     {
         'email':'gp22a074@oecu.jp',
@@ -27,9 +26,6 @@ users = [
 ]
 
 session = create_session()
-
-for room in rooms :
-    session.add(Classroom(classroom_name=room))
 
 for user in users :
     session.add(Approved_User(approved_email=user['email'], approved_user_name=user['name'], is_admin=user['is_admin']))

@@ -40,8 +40,8 @@ def get_classrooms():
         if  start_time > end_time:
             raise ReservationTimeValueError('開始時刻は終了時刻より前を入力してください')
                 
-        reserved_classroom = session.query(DB.Classroom)\
-            .join(DB.Reservation, DB.Reservation.classroom_id == DB.Classroom.classroom_id)\
+        reserved_classroom = session.query(DB.ReservableClassroom)\
+            .join(DB.Reservation, DB.Reservation.classroom_id == DB.ReservableClassroom.classroom_id)\
             .filter( or_(
                     and_(
                         DB.Reservation.start_time >= start_time, 
@@ -62,8 +62,8 @@ def get_classrooms():
                 )
             ).all()
         
-        classrooms = session.query(DB.Classroom)\
-            .filter(~DB.Classroom.classroom_name.in_(
+        classrooms = session.query(DB.ReservableClassroom)\
+            .filter(~DB.ReservableClassroom.classroom_name.in_(
                     [classroom.classroom_name for classroom in reserved_classroom]
                 )
             ).all()
@@ -117,14 +117,14 @@ def add_classroom():
             cnt+=1
             classroom_id = generate_token(16)
             
-            if not session.query(DB.Classroom).filter(DB.Classroom.classroom_id == classroom_id).first():
+            if not session.query(DB.ReservableClassroom).filter(DB.ReservableClassroom.classroom_id == classroom_id).first():
                 break
             
             elif cnt >= MAX_ATTEMPTS:
                 session.close()
                 raise ManyAttemptsError('もう一度お試しください。')
         
-        session.add(DB.Classroom(classroom['classroom_name']))
+        session.add(DB.ReservableClassroom(classroom['classroom_name']))
         
         session.commit()
         
