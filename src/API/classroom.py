@@ -1,6 +1,8 @@
 from flask import Blueprint,jsonify,request
+from flask import session as client_session
 from sqlalchemy import or_, and_
 from src.database import create_session
+from src.module.function import generate_token
 import src.database as DB
 from  datetime import datetime
 
@@ -13,23 +15,30 @@ class ReservationTimeValueError(Exception):
 class Post_Value_Error(Exception):
     pass
 
+class ManyAttemptsError(Exception):
+    pass
 
-@classroom.route('/get', methods=['POST'])
+MAX_ATTEMPTS = 2000
+
+
+#予約可能な教室の取得
+@classroom.route('/get', methods=['GET'])
 def get_classrooms():
     try:
         session = create_session()
 
         posts_data = request.json
+        print(posts_data)
 
         start_time = datetime.strptime(posts_data['start_time'], '%Y-%m-%d %H:%M:%S')
         end_time = datetime.strptime(posts_data['end_time'], '%Y-%m-%d %H:%M:%S')
         now_time = datetime.now()
 
         if start_time < now_time:
-            raise ReservationTimeValueError("現在時刻より後の時刻を入力してください")
+            raise ReservationTimeValueError('現在時刻より後の時刻を入力してください')
 
         if  start_time > end_time:
-            raise ReservationTimeValueError("開始時刻は終了時刻より前を入力してください")
+            raise ReservationTimeValueError('開始時刻は終了時刻より前を入力してください')
                 
         reserved_classroom = session.query(DB.Classroom)\
             .join(DB.Reservation, DB.Reservation.classroom_id == DB.Classroom.classroom_id)\
@@ -60,24 +69,28 @@ def get_classrooms():
             ).all()
         
         return jsonify({
-            "result": True,
-            "classrooms": [classroom.to_dict() for classroom in classrooms]
+            'result': True,
+            'data': [{
+                'classroom': [classroom.to_dict() for classroom in classrooms],
+                'start-date': client_session['start_date'],
+                'end-date': client_session['end_date']
+            }]
         })
 
     except ReservationTimeValueError as e:
         print(e)
         session.rollback()
         return jsonify({
-            "result": False,
-            "message": e.args[0]
+            'result': False,
+            'message': e.args[0]
         }),400
         
     except Exception as e:
         print(e)
         session.rollback()
         return jsonify({
-            "result":False,
-            "message": "Internal Server error"
+            'result':False,
+            'message': 'Internal Server error'
         }),500
     
     finally :
@@ -88,16 +101,28 @@ def add_classroom():
     try:
         session = create_session()
         
-        classroom = request.get_json()
-        print(classroom)
+        classroom_data = request.get_json()
+        print(classroom_data)
         
-        name = 'classroom_name' in classroom.keys()
+        name = classroom_data['classroom_name']
         
-        if not name:
+        if (not 'classroom_name' in classroom_data.keys()):
             raise Post_Value_Error('必要な情報が不足しています')
         
         if (not name.startswith('J')) or (not name.startswith('Z')):
             raise Post_Value_Error('存在しない教室名です')
+        
+        cnt = 0
+        while True:
+            cnt+=1
+            classroom_id = generate_token(16)
+            
+            if not session.query(DB.Classroom).filter(DB.Classroom.classroom_id == classroom_id).first():
+                break
+            
+            elif cnt >= MAX_ATTEMPTS:
+                session.close()
+                raise ManyAttemptsError('もう一度お試しください。')
         
         session.add(DB.Classroom(classroom['classroom_name']))
         
@@ -115,8 +140,8 @@ def add_classroom():
         print(e)
         session.rollback()
         return jsonify({
-            "result": False,
-            "message": e.args[0]
+            'result': False,
+            'message': e.args[0]
         }),400
         
     except Exception as e:
@@ -124,7 +149,7 @@ def add_classroom():
         session.rollback()
         return jsonify({
             'result':False,
-            "message": "Internal Server error"
+            'message': 'Internal Server error'
         }),500
         
     finally :
@@ -135,18 +160,11 @@ def add_classroom():
 #     try:
 #         session = create_session()
         
-#         classroom = request.get_json()
-#         print(classroom)
-        
-#         name = 'classroom_name' in classroom.keys()
-
-#         if not name:
+#         classroom_data = request.get_json()
+#         print(classroom_data)
+    
+#         if not 'classroom_name' in classroom_data.keys():
 #             raise Post_Value_Error('必要な情報が不足しています')
         
-#         if (not name.startswith('J')) or (not name.startswith('Z')):
+#         if (not classroom_data['classroom_name'].startswith('J')) or (not classroom_data['classroom_name'].startswith('Z')):
 #             raise Post_Value_Error('存在しない教室名です')
-        
-        
-        
-        
-        

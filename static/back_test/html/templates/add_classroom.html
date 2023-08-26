@@ -25,7 +25,7 @@
                 const params = {
                     'name':name
                 }
-                const create_res = await request('/api/create-user', params);
+                const create_res = await request('/classroom/get', params);
                 const statusText = create_res['message'];
                 if(create_res['result']) location.href = '/templates/success.html';
                 else errorMessage.innerText = statusText;
