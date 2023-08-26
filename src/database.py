@@ -41,7 +41,7 @@ class Reservation(Base):
     __tablename__ = 'reservation'
 
     reservation_id = Column('reservation_id', String,primary_key=True)
-    classroom_id = Column('classroom_id', Integer)
+    classroom_id = Column('reserved_classroom_id', Integer)
     reserved_user_id = Column('reserved_user_id', Integer)
     start_time = Column('start_date', DateTime)
     end_time = Column('end_date', DateTime)
