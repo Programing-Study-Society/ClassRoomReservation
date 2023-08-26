@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="classroom-register-form">
+        <label for="classroom_name">教室名：</label>
+        <input type="text" id="classroom_name" name="classroom_name"><br>
+        <button type="submit">送信</button>
+    </form>
+
+    <script src="../js/function.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            const registerform = document.getElementById('classroom-register-form');
+            const errorMessage = document.getElementById('error-message');
+
+            registerform.addEventListener('submit', async(e) => {
+                e.preventDefault();
+                const name = e.target.querySelector("input[name='classroom_name']").value;
+                console.log(`name : ${name}`);
+                const params = {
+                    'name':name
+                }
+                const create_res = await request('/classroom/get', params);
+                const statusText = create_res['message'];
+                if(create_res['result']) location.href = '/templates/success.html';
+                else errorMessage.innerText = statusText;
+            });
+        });
+    </script>
+</body>
+</html>
