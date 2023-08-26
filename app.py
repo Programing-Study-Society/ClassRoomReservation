@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,session as client_session
+from flask import Flask, redirect, session as client_session
 from src.route import route
 from src.API.reserve import reserve
 from src.API.classroom import classroom
@@ -64,10 +64,7 @@ def before_request():
 
 @login_manager.unauthorized_handler
 def unauth_handler():
-    return jsonify({
-        'result': False,
-        'message': 'ログインしていません' 
-    }), 400
+    return redirect('/back_test/html/templates/loginFaild.html')
 
 
 print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
