@@ -20,7 +20,7 @@ class ReservableClassroom(Base):
 
     __tablename__ = 'reservable_classroom'
 
-    classroom_id = Column('classroom_id', Integer,primary_key=True)
+    classroom_id = Column('classroom_id', String, primary_key=True)
     classroom_name = Column('classroom_name', String)
     reservable_start_time = Column('reservable_start_time', DateTime)
     reservable_end_time = Column('reservable_end_time', DateTime)
