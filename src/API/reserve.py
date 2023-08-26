@@ -24,8 +24,8 @@ MAX_ATTEMPTS = 2000
 
 
 # 予約時間が予約可能かチェックします
-def is_reservation_available(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime):
-    return session.query(Reservation).filter(
+def is_reservable(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime) -> bool:
+    if session.query(Reservation).filter(
         Reservation.classroom_id == classroom_id,
         or_(
             and_(Reservation.start_time >= start_time, Reservation.start_time <= end_time),
@@ -33,7 +33,16 @@ def is_reservation_available(session:orm.Session, classroom_id:str, start_time:d
             and_(Reservation.start_time >= start_time, Reservation.end_time <= end_time),
             and_(Reservation.start_time <= start_time, Reservation.end_time >= end_time),
         )
-    ).first() is None
+    ).first() != None :
+        return False
+    
+    return session.query(ReservableClassroom).filter(
+        ReservableClassroom.classroom_id == classroom_id,
+        and_(
+            ReservableClassroom.reservable_start_time <= start_time,
+            ReservableClassroom.reservable_end_time >= end_time
+        )
+    ).all() != None
 
 def is_approved_user(session:orm.Session, email:str):
     return session.query(Approved_User).filter(Approved_User.approved_email == email).first() != None
@@ -61,8 +70,8 @@ def register_reserve():
         if start_time.date() != end_time.date():
             raise ReserveValueError('日を跨いだ予約はできません.')
 
-        if not is_reservation_available(session, posts_data['classroom_id'], start_time, end_time):
-            raise ReserveValueError('すでに予約されています。')
+        if not is_reservable(session, posts_data['classroom_id'], start_time, end_time):
+            raise ReserveValueError('予約できません。')
 
         cnt = 0
         while True:
@@ -111,48 +120,6 @@ def register_reserve():
 @reserve.route('/get/<string:mode>', methods=['POST', 'GET'])
 def reserve_get(mode):
     match mode:
-        # idでの取得
-        case 'id':
-            try :
-                session = create_session()
-
-                if request.method != 'POST':
-                    abort(404)
-
-                reservation_id = request.json['reservation_id']
-                reserve_value = session.query(Reservation).filter(Reservation.reservation_id == reservation_id).first()
-
-                if not reserve_value:
-                    raise PostValueError('指定されたIDは存在しません.')
-
-                classroom = session.query(ReservableClassroom).filter(ReservableClassroom.classroom_id == reserve_value.classroom_id).first()
-
-                is_required_user_id = False
-
-                if client_session in 'email' :
-                    is_required_user_id = is_approved_user(session, client_session['email'])
-
-                return jsonify({
-                    'result': True,
-                    'value': {
-                        'classroom_name': classroom.classroom_name,
-                        'reserve': reserve_value.to_dict(is_required_user_id=is_required_user_id),
-                    },
-                }), 200
-            
-            except PostValueError as e:
-                print(e)
-                session.rollback()
-                return jsonify({'result': False, 'message': e.args[0]}), 400
-
-            except Exception as e:
-                print(e)
-                session.rollback()
-                return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
-            
-            finally :
-                session.close()
-
         # 全て取得
         case 'full':
             try :
@@ -220,6 +187,36 @@ def reserve_get(mode):
                 print(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': e.args[0]}), 400
+
+            except Exception as e:
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
+            
+            finally :
+                session.close()
+            
+        # ユーザー個人の取得
+        case 'user':
+            try :
+                session = create_session()
+
+                if request.method != 'GET':
+                    abort(404)
+
+                if client_session in 'id' :
+                    abort(404)
+
+                is_required_user_id = False
+
+                if client_session in 'is_admin' :
+                    is_required_user_id = client_session['is_admin']
+
+                reserve_values = session.query(Reservation).filter(
+                    Reservation.reserved_user_id == client_session['id']
+                ).all()
+
+                return jsonify({'result': True, 'value': reserve_values}), 200
 
             except Exception as e:
                 print(e)
