@@ -22,15 +22,15 @@ class ReservableClassroom(Base):
 
     classroom_id = Column('classroom_id', String, primary_key=True)
     classroom_name = Column('classroom_name', String)
-    reservable_start_time = Column('reservable_start_time', DateTime)
-    reservable_end_time = Column('reservable_end_time', DateTime)
+    reservable_start_time = Column('reservable_start_date', DateTime)
+    reservable_end_time = Column('reservable_end_date', DateTime)
     
     def to_dict(self):
         classroom = {
-            "classroom_id": self.classroom_id,
-            "classroom_name": self.classroom_name,
-            "reservable_start_time": self.reservable_start_time,
-            "reservable_end_time": self.reservable_end_time
+            "classroom-id": self.classroom_id,
+            "classroom-name": self.classroom_name,
+            "reservable-start-date": self.reservable_start_time,
+            "reservable-end-date": self.reservable_end_time
         }
         
         return classroom
@@ -42,16 +42,16 @@ class Reservation(Base):
 
     reservation_id = Column('reservation_id', String,primary_key=True)
     classroom_id = Column('classroom_id', Integer)
-    reserved_user_id = Column(Integer)
-    start_time = Column('start_time', DateTime)
-    end_time = Column('end_time', DateTime)
+    reserved_user_id = Column('reserved_user_id', Integer)
+    start_time = Column('start_date', DateTime)
+    end_time = Column('end_date', DateTime)
 
     def to_dict(self, is_required_user_id=False):
         reservation = {
-            "reservation_id":self.reservation_id,
-            "classroom_id":self.classroom_id,
-            "start_time":self.start_time.strftime('%Y-%m-%d %H:%M:%S'),
-            "end_time":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
+            "reservation-id":self.reservation_id,
+            "classroom-id":self.classroom_id,
+            "start-date":self.start_time.strftime('%Y-%m-%d %H:%M:%S'),
+            "end-date":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
 
         if is_required_user_id :
@@ -73,9 +73,9 @@ class User(UserMixin, Base):
     
     def to_dict(self):
         user = {
-            "user_id":self.user_id,
-            "user_name":self.user_name,
-            "user_email":self.user_email
+            "user-id":self.user_id,
+            "user-name":self.user_name,
+            "user-email":self.user_email
         }
 
         return user
@@ -91,9 +91,9 @@ class Approved_User(Base):
     
     def to_dict(self):
         approved_user = {
-            "approved_user_name":self.approved_user_name,
-            "approved_email":self.approved_email,
-            "is_admin":self.is_admin,
+            "approved-user-name":self.approved_user_name,
+            "approved-email":self.approved_email,
+            "is-admin":self.is_admin,
         }
 
         return approved_user
