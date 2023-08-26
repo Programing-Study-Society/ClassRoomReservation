@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
-from sqlalchemy.orm import sessionmaker, declarative_base, scoped_session
-from flask_login import UserMixin
+from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 # 接続先DBの設定
 DATABASE = 'sqlite:///reserve_classroom.sqlite3'
@@ -20,8 +19,8 @@ class Classroom(Base):
 
     __tablename__ = 'classroom'
 
-    classroom_id = Column('classroom_id', Integer,primary_key=True)
-    classroom_name = Column('classroom_name', String)
+    classroom_id = Column(Integer,primary_key=True)
+    classroom_name = Column(String)
     
     def to_dict(self):
         classroom = {
@@ -36,11 +35,11 @@ class Reservation(Base):
 
     __tablename__ = 'reservation'
 
-    reservation_id = Column('reservation_id', String,primary_key=True)
-    classroom_id = Column('classroom_id', Integer)
+    reservation_id = Column(String,primary_key=True)
+    classroom_id = Column(Integer)
     # user_id = Column(Integer)
-    start_time = Column('start_time', DateTime)
-    end_time = Column('end_time', DateTime)
+    start_time = Column(DateTime)
+    end_time = Column(DateTime)
 
     def to_dict(self):
         reservation = {
@@ -54,43 +53,20 @@ class Reservation(Base):
         return reservation
 
 
-class User(UserMixin, Base):
+# class User(Base):
 
-    __tablename__ = 'user'
+#     __tablename__ = 'user'
     
-    user_id = Column('user_id',String(64),primary_key=True)
-    user_name = Column('user_name',String(128))
-    user_email = Column('user_email', String)
+#     user_id = Column(Integer,primary_key=True)
+#     user_name = Column(String)
+    
+#     def to_dict(self):
+#         user = {
+#             "user_id":self.user_id,
+#             "user_name":self.user_name
+#         }
 
-    def get_id(self):
-        return self.user_id
-    
-    def to_dict(self):
-        user = {
-            "user_id":self.user_id,
-            "user_name":self.user_name,
-            "user_email":self.user_email
-        }
-
-        return user
-    
-
-class Approved_User(Base):
-    
-    __tablename__ = 'approved_user'
-    
-    approved_email = Column('approved_email', String, primary_key=True)
-    approved_user_name = Column('approved_user_name',String(128))
-    is_admin = Column('is_admin', Boolean)
-    
-    def to_dict(self):
-        approved_user = {
-            "approved_user_name":self.approved_user_name,
-            "approved_email":self.approved_email,
-            "is_admin":self.is_admin,
-        }
-
-        return approved_user
+#         return user
 
 
 def create_database():
@@ -98,8 +74,4 @@ def create_database():
 
 
 def create_session():
-    return sessionmaker(bind=Engine, expire_on_commit=False)()
-
-
-def create_scoped_session():
-    return scoped_session(sessionmaker(bind=Engine))()
+    return sessionmaker(bind=Engine)()
