@@ -47,9 +47,17 @@ class Reservation(Base):
     end_time = Column('end_date', DateTime)
 
     def to_dict(self, is_required_user_id=False):
+
+        session = create_session()
+
+        classroom = session.query(ReservableClassroom.classroom_name)\
+                    .filter(
+                        ReservableClassroom.classroom_id == self.classroom_id
+                    ).first()
+
         reservation = {
             "reservation-id":self.reservation_id,
-            "classroom-id":self.classroom_id,
+            "classroom-name":classroom.classroom_name,
             "start-date":self.start_time.strftime('%Y-%m-%d %H:%M:%S'),
             "end-date":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
