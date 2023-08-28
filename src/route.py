@@ -38,14 +38,20 @@ def default_route():
             if not check_approved_user(session, email) :
                 raise NotApprovedUserError('登録されているユーザーではありません')
 
-            user = User(user_name=name, user_id=id, user_email=email)
-
             client_session['id'] = id
             client_session['name'] = name
             client_session['email'] = email
-            client_session['is_admin'] = session.query(Approved_User).filter(Approved_User.approved_user_name == name).first().is_admin
 
-            if session.query(User).filter(User.user_id == id).first() :
+            approved_user = session.query(Approved_User).filter(Approved_User.approved_email == email).first()
+
+            if approved_user is None :
+                client_session['is_admin'] = False
+            else :
+                client_session['is_admin'] = approved_user.is_admin
+
+            user = User(user_name=name, user_id=id, user_email=email)
+
+            if session.query(User).filter(User.user_id == id).first() != None :
                 login_user(user)
                 return redirect('/back_test/html/reserve_form.html')
 
