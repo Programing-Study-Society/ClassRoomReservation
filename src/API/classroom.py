@@ -31,19 +31,19 @@ def get_classrooms(mode):
             try:
                 session = create_session()
 
-                if request.method == 'POST':
+                if request.method != 'POST':
                     abort(404)
                 
                 post_data = request.get_json()
                 print(post_data)
-                
-                date = post_data['date']
+            
 
-                if re.match(r'\d+-\d+-\d+', date) is None:
+                if re.match(r'\d+-\d+-\d+', post_data['start-date']) is None or \
+                    re.match(r'\d+-\d+-\d+', post_data['end-date']) is None:
                     raise Post_Value_Error('日付のフォーマットが間違えています。(yyyy-mm-dd)')
 
-                start_time = datetime.strptime(post_data['start_time'], '%Y-%m-%d %H:%M:%S')
-                end_time = datetime.strptime(post_data['end_time'], '%Y-%m-%d %H:%M:%S')
+                start_time = datetime.strptime(post_data['start-date'], '%Y-%m-%d %H:%M:%S')
+                end_time = datetime.strptime(post_data['end-date'], '%Y-%m-%d %H:%M:%S')
                 now_time = datetime.now()
 
                 if start_time < now_time or end_time < now_time:
@@ -53,36 +53,20 @@ def get_classrooms(mode):
                     raise ReservationTimeValueError('開始時刻は終了時刻より前を入力してください')
                         
                 reserved_classroom = session.query(DB.ReservableClassroom)\
-                    .join(DB.Reservation, DB.Reservation.classroom_id == DB.ReservableClassroom.classroom_id)\
-                    .filter( or_(
-                            and_(
-                                DB.Reservation.start_time >= start_time, 
-                                DB.Reservation.start_time <= end_time
-                            ),
-                            and_(
-                                DB.Reservation.end_time >= start_time,
-                                DB.Reservation.end_time <= end_time
-                            ),
-                            and_(
-                                DB.Reservation.start_time >= start_time,
-                                DB.Reservation.end_time <= end_time
-                            ),
-                            and_(
-                                DB.Reservation.start_time <= start_time,
-                                DB.Reservation.end_time >= end_time
-                            )
-                        )
-                    ).all()
+                    .filter(and_(DB.ReservableClassroom.reservable_start_time <= start_time),
+                        (DB.ReservableClassroom.reservable_end_time >= end_time)).all()
                 
-                classrooms = session.query(DB.ReservableClassroom)\
-                    .filter(~DB.ReservableClassroom.classroom_name.in_(
-                            [classroom.classroom_name for classroom in reserved_classroom]
-                        )
-                    ).all()
+                #予約済みの教室を除いた教室
+                
+                # classrooms = session.query(DB.ReservableClassroom)\
+                #     .filter(~DB.ReservableClassroom.classroom_name.in_(
+                #             [classroom.classroom_name for classroom in reserved_classroom]
+                #         )
+                #     ).all()
                 
                 return jsonify({
                     'result': True,
-                    'data': [classroom.to_dict() for classroom in classrooms]
+                    'data': [classroom.to_dict() for classroom in reserved_classroom],
                 })
 
             except ReservationTimeValueError as e:
@@ -151,65 +135,108 @@ def get_classrooms(mode):
 #　教室の追加をするエンドポイントです
 @classroom.route('/add',methods=['POST'])
 def add_classroom():
+    result_list = []
     try:
-        session = create_session()
-        
-        classroom_data = request.get_json()
-        print(classroom_data)
-        
-        name = classroom_data['classroom_name']
-        
-        if (not 'classroom_name' in classroom_data.keys()):
-            raise Post_Value_Error('必要な情報が不足しています')
-        
-        if (not name.startswith('J')) or (not name.startswith('Z')):
-            raise Post_Value_Error('存在しない教室名です')
-        
-        cnt = 0
-        while True:
-            cnt+=1
-            classroom_id = generate_token(16)
-            
-            if not session.query(DB.ReservableClassroom).filter(DB.ReservableClassroom.classroom_id == classroom_id).first():
-                break
-            
-            elif cnt >= MAX_ATTEMPTS:
+        for classroom_data in request.json:
+            try:
+                session = create_session()
+                
+                print('ここから下')
+                print()
+                
+                name = classroom_data['classroom-name']
+                
+                if (not 'classroom-name' in classroom_data.keys()):
+                    raise Post_Value_Error('必要な情報が不足しています')
+                
+                if (not name.startswith('J')) and (not name.startswith('Z')):
+                    raise Post_Value_Error('存在しない教室名です')
+                
+                if (classroom_data['start-date'] >= classroom_data['end-date']):
+                    raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
+                
+                cnt = 0
+                while True:
+                    cnt+=1
+                    classroom_id = generate_token(16)
+                    
+                    if not session.query(DB.ReservableClassroom).filter(DB.ReservableClassroom.classroom_id == classroom_id).first():
+                        break
+                    
+                    elif cnt >= MAX_ATTEMPTS:
+                        raise ManyAttemptsError('もう一度お試しください。')
+                
+                add_classroom_data = DB.ReservableClassroom(
+                    classroom_id = classroom_id,
+                    classroom_name = classroom_data['classroom-name'],
+                    reservable_start_time = datetime.strptime(classroom_data['start-date'], '%Y-%m-%d %H:%M:%S'),
+                    reservable_end_time = datetime.strptime(classroom_data['end-date'], '%Y-%m-%d %H:%M:%S')
+                )
+                
+                if session.query(DB.ReservableClassroom).filter(
+                    DB.ReservableClassroom.classroom_name == add_classroom_data.classroom_name,\
+                        or_(
+                            and_(DB.ReservableClassroom.reservable_start_time >= add_classroom_data.reservable_start_time, \
+                                DB.ReservableClassroom.reservable_start_time <= add_classroom_data.reservable_end_time),
+                            and_(DB.ReservableClassroom.reservable_end_time >= add_classroom_data.reservable_start_time, \
+                                DB.ReservableClassroom.reservable_end_time <= add_classroom_data.reservable_end_time),
+                            and_(DB.ReservableClassroom.reservable_start_time >= add_classroom_data.reservable_start_time, \
+                                DB.ReservableClassroom.reservable_end_time <= add_classroom_data.reservable_end_time),
+                            and_(DB.ReservableClassroom.reservable_start_time <= add_classroom_data.reservable_start_time, \
+                                DB.ReservableClassroom.reservable_end_time >= add_classroom_data.reservable_end_time),
+                        )).first() != None:
+                    raise Post_Value_Error('既に追加された教室です')
+                
+                else:
+                    session.add(add_classroom_data)
+                session.commit()
+                
+                
+                result_list.append(
+                    {
+                        'result':True,
+                        'data': add_classroom_data.to_dict()
+                    }
+                )
+                
+            except ReservationTimeValueError as e:
+                print(e)
+                session.rollback()
+                result_list.append({
+                    'result': False,
+                    'message': e.args[0]
+                })
+                
+            except Post_Value_Error as e:
+                print(e)
+                session.rollback()
+                result_list.append({
+                    'result': False,
+                    'message': e.args[0]
+                })
+                
+            except Exception as e:
+                print(e)
+                session.rollback()
+                result_list.append({
+                    'result':False,
+                    'message': 'Internal Server error'
+                })
+                
+            finally :
                 session.close()
-                raise ManyAttemptsError('もう一度お試しください。')
-        
-        session.add(DB.ReservableClassroom(classroom['classroom_name']))
-        session.commit()
-        
-        return jsonify({
-            'result':True,
-            'message':'成功',
-            'classroom':[{
-                'result':True,
-                'message':'成功',
-                'classroom-name': client_session['classroom_name'],
-                'start-date': client_session['start_date'],
-                'end-date': client_session['end_date']
-            }]
-        }),200
-        
-    except ReservationTimeValueError as e:
-        print(e)
-        session.rollback()
+    
+    except Exception as e:
         return jsonify({
             'result': False,
-            'message': e.args[0]
-        }),400
-        
-    except Exception as e:
-        print(e)
-        session.rollback()
-        return jsonify({
-            'result':False,
-            'message': 'Internal Server error'
+            'message': 'Internal Server Error'
         }),500
-        
-    finally :
-        session.close()
+    
+    else:
+        return jsonify({
+            'result': True,
+            'data': result_list
+        }),200
         
 # 教室の削除をするエンドポイントです
 @classroom.route('/delete',methods=['DELETE'])
@@ -220,7 +247,7 @@ def delete_classroom():
         post_data = request.get_json()
         print(post_data)
     
-        if not post_data in 'classroom':
+        if not 'classroom_id' in post_data:
             raise Post_Value_Error('JSONの形式が異なります')
         
         delete_classroom_data = session.query(DB.ReservableClassroom)\
@@ -231,6 +258,10 @@ def delete_classroom():
         
         session.delete(delete_classroom_data)
         session.commit()
+        
+        return jsonify({
+            'result': True
+        }),200
         
     except Post_Value_Error as e :
         print(e)
