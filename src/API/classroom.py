@@ -1,11 +1,11 @@
 from flask import Blueprint,jsonify,request,abort
-from flask import session as client_session
 from sqlalchemy import or_, and_
 from src.database import create_session
 from src.module.function import generate_token
 from  datetime import datetime
 import src.database as DB
 import re
+from flask_login import login_required
 
 classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
 
@@ -134,6 +134,7 @@ def get_classrooms(mode):
 
 #　教室の追加をするエンドポイントです
 @classroom.route('/add',methods=['POST'])
+@login_required
 def add_classroom():
     result_list = []
     try:
@@ -240,6 +241,7 @@ def add_classroom():
         
 # 教室の削除をするエンドポイントです
 @classroom.route('/delete',methods=['DELETE'])
+@login_required
 def delete_classroom():
     try:
         session = create_session()
