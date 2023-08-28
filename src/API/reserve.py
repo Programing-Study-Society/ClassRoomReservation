@@ -163,15 +163,10 @@ def reserve_get(mode):
                         ReservableClassroom.classroom_id == Reservation.classroom_id
                     ).order_by(Reservation.start_time).all()
 
-                reserve_list = []
-                for reserve in reserve_values:
-                    classroom = session.query(ReservableClassroom).filter(ReservableClassroom.classroom_id == reserve.classroom_id).first()
-                    reserve_list.append({
-                        'classroom_name': classroom.classroom_name,
-                        'reserve': reserve.to_dict(is_required_user_id=is_required_user_id),
-                    })
-
-                return jsonify({'result': True, 'value': reserve_list}), 200
+                return jsonify({
+                    'result': True, 
+                    'data': [reserve_value.to_dict(is_required_user_id=is_required_user_id) for reserve_value in reserve_values]
+                    }), 200
 
             except Exception as e:
                 print(e)
@@ -216,7 +211,7 @@ def reserve_get(mode):
 
                 return jsonify({
                     'result': True,
-                    'value': [reserve_value.to_dict(is_required_user_id=is_required_user_id) for reserve_value in reserve_values],
+                    'data': [reserve_value.to_dict(is_required_user_id=is_required_user_id) for reserve_value in reserve_values],
                 }), 200
             
             except PostValueError as e:
@@ -254,7 +249,7 @@ def reserve_get(mode):
 
                 return jsonify({
                     'result': True, 
-                    'value': [reserve_value.to_dict(is_required_user_id=is_required_user_id) for reserve_value in reserve_values]
+                    'data': [reserve_value.to_dict(is_required_user_id=is_required_user_id) for reserve_value in reserve_values]
                     }), 200
             
             except NotLoginError as e :
@@ -269,6 +264,41 @@ def reserve_get(mode):
             
             finally :
                 session.close()
+
+        # クラスルームから予約を検索
+        case 'classroom-id' :
+            try :
+                session = create_session()
+
+                if request.method != 'POST':
+                    abort(404)
+
+                post_data = request.json
+
+                if not 'classroom-id' in post_data :
+                    raise PostValueError('無効なデータ形式です。')
+                
+                reserve_values = session.query(Reservation).filter(Reservation.classroom_id == post_data['classroom-id']).all()
+
+                is_required_user_id = False
+
+                if 'is_admin' in client_session :
+                    is_required_user_id = client_session['is_admin']
+
+                return jsonify({
+                        'result':True,
+                        'data':[reserve_value.to_dict(is_required_user_id=is_required_user_id) for reserve_value in reserve_values]
+                    })
+                
+            except PostValueError as e :
+                print(e)
+                session.rollback()
+                return jsonify({'result':False, 'message':e.args[0]}), 400
+
+            except Exception as e :
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
 
         case _:
             abort(404)
@@ -289,8 +319,6 @@ def delete_reserve():
 
         if delete_date is None :
             raise PostValueError('削除する予約がありません')
-        
-        deleted_reserve_id = deepcopy(delete_date.reservation_id)
         
         session.delete(delete_date)
         session.commit()

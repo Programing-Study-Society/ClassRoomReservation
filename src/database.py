@@ -51,9 +51,9 @@ class Reservation(Base):
         session = create_session()
 
         classroom = session.query(ReservableClassroom.classroom_name)\
-                    .filter(
-                        ReservableClassroom.classroom_id == self.classroom_id
-                    ).first()
+            .filter(
+                ReservableClassroom.classroom_id == self.classroom_id
+            ).first()
 
         reservation = {
             "reservation-id":self.reservation_id,
@@ -63,7 +63,11 @@ class Reservation(Base):
         }
 
         if is_required_user_id :
-            reservation['reserved_user_id'] = self.reserved_user_id
+            user = session.query(User).filter(User.user_id == self.reserved_user_id).first()
+
+            if user != None :
+                reservation['user-name'] = user.user_name
+                reservation['user-email'] = user.user_email
 
         return reservation
 
