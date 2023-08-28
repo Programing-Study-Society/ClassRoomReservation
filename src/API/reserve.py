@@ -274,7 +274,7 @@ def reserve_get(mode):
             abort(404)
 
 
-@reserve.route('/delete', methods=['POST'])
+@reserve.route('/delete', methods=['DELETE'])
 @login_required
 def delete_reserve():
     try :
@@ -295,7 +295,7 @@ def delete_reserve():
         session.delete(delete_date)
         session.commit()
 
-        return jsonify({'result':True, 'message':f'{deleted_reserve_id} was deleted!'})
+        return jsonify({'result':True})
     
     except PostValueError as e :
         print(e)
