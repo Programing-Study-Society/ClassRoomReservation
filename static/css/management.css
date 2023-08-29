@@ -1,0 +1,100 @@
+/* user_list.htmlの内容 */
+header{
+    z-index: 999;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    max-height: 60px;
+    padding: 5px;
+    background: #000;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#header-text{margin: auto;
+    line-height: 60px;
+    padding-left: 10px;
+    font-size: large;
+    text-decoration: none;
+    color: #fff;
+}
+
+nav{
+    margin-right: 100px;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;;
+}
+
+.jump{
+    margin-left: 15px;
+    float: left;
+    border-radius: 5px;
+    background-color: #000;
+    padding: 10px;
+    text-decoration: underline;
+    color: #fff;
+}
+
+#margin{
+    margin-top: 100px;
+}
+#margin-narrow{
+    margin-top: 30px;
+}
+
+h1{
+    border-bottom: 6px double #000;
+}
+
+.user-list{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.user-list th{
+    background-color: #adc9f3;
+    padding: 10px;
+    border-bottom: solid 4px #778ca3;
+    color: #000000
+}
+.user-list td{
+    padding: 10px;
+    border-bottom: solid 1px #778ca3;
+}
+
+footer{
+    max-width: 800px;
+    margin-left: 150px;
+    margin:0 auto;
+}
+.contact-address{
+    margin: 2em 0.5em 0.5em 0.5em;
+    padding: 1em 0.5em 0.5em;
+    position: relative;
+    border: 1px solid #81d4fa;
+    background-color: #e1f5fe;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+/* ここからreserve_state.htmlの内容 */
+.reserve-list{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.reserve-list th{
+    background-color: #fff;
+    padding: 10px;
+    border-bottom: solid 4px #778ca3;
+    color: #000
+}
+.reserve-list td{
+    padding: 5px;
+    border-bottom: solid 1px #778ca3;
+}

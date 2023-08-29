@@ -92,3 +92,33 @@ def apiTest4():
 		'message': '予約削除　成功：黒文字　失敗：赤文字', #String型
 	}
     return jsonify(response_data)
+
+
+
+# 'ユーザー個人の予約の取得(/reserve/get/user)'エンドポイントにGETリクエストがあった場合に、データを返します
+@testApi.route('/reserve/get/full', methods=['GET'])
+def apiTest5():
+    print('/reserve/get/userにアクセス(API)')
+    # データを処理するなどのロジックを実装
+    response_data = {
+		'result': True, #Bool型,
+		'message': 'メッセージ', #String型,
+		'data':[{
+			'reservation-id': 'r501', #String型
+			'start-date': '2023-05-01 05:00:00', #Date型,
+			'end-date': '2023-05-01 06:00:00', #Date型,
+			'classroom-name': 'J501', #String型,
+			'user-name': 'プログラミング研究会51号', #String型（管理者おんりー）
+			'user-email': 'proken501@gmail.com', #String型（管理者おんりー）
+			},
+        	{
+			'reservation-id': 'r502', #String型
+			'start-date': '2023-05-02 05:00:00', #Date型,
+			'end-date': '2023-05-02 06:00:00', #Date型,
+			'classroom-name': 'J502', #String型,
+			'user-name': 'プログラミング研究会52号', #String型（管理者おんりー）
+			'user-email': 'proken502@gmail.com', #String型（管理者おんりー）
+			},
+		]
+	}
+    return jsonify(response_data)

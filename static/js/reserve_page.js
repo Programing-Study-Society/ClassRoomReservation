@@ -1,7 +1,3 @@
-const LOCATION_URL = '/testApi'; // 本番(APIとの結合時)にtestApiを消すのを忘れずに
-
-
-
 // メッセージをメッセージエリアに表示する関数
 function showMessageArea(message, collor)
 {
@@ -12,26 +8,8 @@ function showMessageArea(message, collor)
 
 
 
-// 開始日時、終了日時、教室を分かりやすい形に変換する関数
-function timeFormating(startDate, endDate, classroomName)
-{
-    const days = '日月火水木金土'; // 曜日表示用の文字列
-    startDate = startDate.replace(/-/g,'/'); // -を/に変更
-    const day = new Date(startDate); //Date型に変換
-    const reservationDateAndTime = 
-        startDate.slice( 0, 10 ) + // yyyy-MM-dd
-        '(' + days[day.getDay()] + ') ' + // 曜日(day)
-        startDate.slice( 11, 16 ) + // HH:mm
-        '  ～  ' + endDate.slice( 11, 16 ) + // HH:mm
-        '　' + classroomName; // 教室
-    
-    return reservationDateAndTime;
-}
-
-
-
-// 予約を削除する関数(/reserve/delete)(ユーザー個人の予約を取得する関数より、予約削除ボタンに紐づけられる)
-function reserveDelete(reservationId, reservationDateAndTime)
+// 予約を削除する関数(ユーザー側)(/reserve/delete)(ユーザー個人の予約を取得する関数より、予約削除ボタンに紐づけられる)
+function reserveDeleteUser(reservationId, reservationDateAndTime)
 {
 
     if (!confirm(reservationDateAndTime + 'の予約を削除しますか？'))
@@ -77,7 +55,7 @@ function reserveGetUser()
             if(resData['data'].length <= 0) // dataが0件なら
             {
                 // 予約が無いことを表示
-                reservedClassroomPrintArea.innerHTML = 'なし'
+                reservedClassroomPrintArea.innerHTML = 'なし';
             }
             else // 予約が存在するなら
             {
@@ -85,7 +63,7 @@ function reserveGetUser()
                 resData['data'].forEach((ele) => {
 
                     // 予約されている日時をわかりやすい形に加工
-                    const reservationDateAndTime = timeFormating(ele['start-date'], ele['end-date'], ele['classroom-name'])
+                    const reservationDateAndTime = timeFormating(ele['start-date'], ele['end-date']) + '　' + ele['classroom-name'];
                     // messageに挿入
                     const message = document.createTextNode(reservationDateAndTime);
 
@@ -95,7 +73,7 @@ function reserveGetUser()
                     /*button.className = ''; // ボタンのクラスを設定(現状クラス無し) */
                     // クリックイベントを追加
                     button.addEventListener("click", function() {
-                        reserveDelete(ele['reservation-id'], reservationDateAndTime);
+                        reserveDeleteUser(ele['reservation-id'], reservationDateAndTime);
                     });
 
                     reserveList = document.createElement('li'); // li要素を作成
@@ -120,7 +98,7 @@ function reserveGetUser()
 // 教室ボタンに付与する関数(/reserve/add)(日時を送り、空き教室を検索する関数より、クリックイベントの追加で紐づけられる)
 function reserveationApplication(classroomId, classroomName, reserveationData)
 {
-    const alertMessage = timeFormating(reserveationData['start-date'], reserveationData['end-date'], classroomName);
+    const alertMessage = timeFormating(reserveationData['start-date'], reserveationData['end-date']) + '　' + classroomName;
     if (!confirm(alertMessage + 'で予約を確定しますか？'))
     {
         alert('予約をキャンセルしました');
