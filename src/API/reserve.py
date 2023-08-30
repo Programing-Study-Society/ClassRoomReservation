@@ -5,7 +5,6 @@ from datetime import datetime
 import re
 from src.module.function import generate_token
 from flask_login import login_required
-from copy import deepcopy
 
 
 class ReserveValueError(Exception):
@@ -49,7 +48,7 @@ def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime,
             and_(Reservation.start_time <= start_time, Reservation.end_time >= end_time),
         )
     ).first() != None :
-        return '既に予約済みです。'
+        return '既に予約が入っています。'
     
     return None
 
@@ -60,7 +59,7 @@ def is_approved_user(session:orm.Session, email:str):
 
 @reserve.errorhandler(404)
 def notfound():
-    return jsonify({'result':False, 'message':'Not found'})
+    return jsonify({'result':False, 'message':'Not found'}), 404
 
 
 # 予約するエンドポイントです
@@ -87,6 +86,9 @@ def register_reserve():
         classroom = session.query(ReservableClassroom).filter(
             ReservableClassroom.classroom_id == post_datas['classroom-id']
         ).first()
+
+        if classroom is None :
+            raise ReserveValueError('この教室は予約できません。')
 
         reserve_state = check_reservable(session, classroom.classroom_id, start_time, end_time)
 

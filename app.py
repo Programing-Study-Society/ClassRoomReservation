@@ -19,7 +19,6 @@ import signal
 import sys
 
 def signal_handler(signum, frame):
-    print('end program')
     sys.exit()
 
 signal.signal(signal.SIGINT, signal_handler)

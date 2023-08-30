@@ -5,16 +5,28 @@ from module.function import generate_token
 
 rooms = [
     {
-        'id': generate_token(16),
+        'id': 'XCuNoRz8xCr8qgy0',
         'room':'J301',
-        'start':datetime.strptime('2004-03-02 16:44:35', '%Y-%m-%d %H:%M:%S'),
-        'end':datetime.strptime('2004-03-02 16:46:35', '%Y-%m-%d %H:%M:%S')
+        'start':datetime.strptime('2024-03-02 16:00:00', '%Y-%m-%d %H:%M:%S'),
+        'end':datetime.strptime('2024-03-02 20:00:00', '%Y-%m-%d %H:%M:%S')
     }, 
     {
-        'id': generate_token(16),
+        'id': 'XCuNoRz8xCr8qgy1',
         'room':'J302',
-        'start':datetime.strptime('2024-03-02 16:44:35', '%Y-%m-%d %H:%M:%S'),
-        'end':datetime.strptime('2024-03-02 16:46:35', '%Y-%m-%d %H:%M:%S')
+        'start':datetime.strptime('2024-03-02 16:00:00', '%Y-%m-%d %H:%M:%S'),
+        'end':datetime.strptime('2024-03-02 20:00:00', '%Y-%m-%d %H:%M:%S')
+    }, 
+    {
+        'id': 'XCuNoRz8xCr8qgy2',
+        'room':'J303',
+        'start':datetime.strptime('2024-03-02 16:00:00', '%Y-%m-%d %H:%M:%S'),
+        'end':datetime.strptime('2024-03-02 20:00:00', '%Y-%m-%d %H:%M:%S')
+    }, 
+    {
+        'id': 'XCuNoRz8xCr8qgy3',
+        'room':'J304',
+        'start':datetime.strptime('2024-03-02 16:00:00', '%Y-%m-%d %H:%M:%S'),
+        'end':datetime.strptime('2024-03-02 20:00:00', '%Y-%m-%d %H:%M:%S')
     }
 ]
 

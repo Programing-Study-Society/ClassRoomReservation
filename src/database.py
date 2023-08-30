@@ -41,8 +41,8 @@ class Reservation(Base):
     __tablename__ = 'reservation'
 
     reservation_id = Column('reservation_id', String,primary_key=True)
-    classroom_id = Column('reserved_classroom_id', Integer)
-    reserved_user_id = Column('reserved_user_id', Integer)
+    classroom_id = Column('reserved_classroom_id', String)
+    reserved_user_id = Column('reserved_user_id', String(64))
     start_time = Column('start_date', DateTime)
     end_time = Column('end_date', DateTime)
 
@@ -50,7 +50,7 @@ class Reservation(Base):
 
         session = create_session()
 
-        classroom = session.query(ReservableClassroom.classroom_name)\
+        classroom = session.query(ReservableClassroom)\
             .filter(
                 ReservableClassroom.classroom_id == self.classroom_id
             ).first()
@@ -62,9 +62,14 @@ class Reservation(Base):
             "end-date":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
 
-        if is_required_user_id :
-            user = session.query(User).filter(User.user_id == self.reserved_user_id).first()
+        for user in session.query(User).all() :
+            print(user.user_id)
 
+        print(f'reserved_user_id : {self.reserved_user_id}')
+
+        if is_required_user_id == True :
+            user = session.query(User).filter(User.user_id == self.reserved_user_id).first()
+            print(user)
             if user != None :
                 reservation['user-name'] = user.user_name
                 reservation['user-email'] = user.user_email

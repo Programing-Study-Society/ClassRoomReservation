@@ -1,11 +1,17 @@
-from flask import Blueprint,jsonify,request,abort
-from sqlalchemy import or_, and_
+from flask import Blueprint, jsonify, request, abort, session as client_session
+from sqlalchemy import or_, and_, orm
 from src.database import create_session
 from src.module.function import generate_token
 from  datetime import datetime
 import src.database as DB
 import re
 from flask_login import login_required
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formatdate
+import os
+import threading
+
 
 classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
 
@@ -13,13 +19,52 @@ classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
 class ReservationTimeValueError(Exception):
     pass
 
+
 class Post_Value_Error(Exception):
     pass
+
 
 class ManyAttemptsError(Exception):
     pass
 
+
 MAX_ATTEMPTS = 2000
+
+
+def send_reserve_delete_mail(reservations) :
+    mail = smtplib.SMTP(
+        host = os.environ.get('MAIL_SERVER'),
+        port=os.environ.get('MAIL_PORT')
+        )
+    
+    mail.starttls()
+
+    mail.login(
+        user = os.environ.get('MAIL_USERNAME'),
+        password = os.environ.get('MAIL_PASSWORD')
+    )
+
+    for reserve in reservations :
+                
+        formated_start_date = reserve['start-date'].replace('-', '/')
+        formated_end_date = reserve['end-date'].replace('-', '/')
+        
+        send_txt = f"{reserve['user-name']} 様\n\n当サイトにてご予約いただいた\n\n{reserve['classroom-name']}教室　{formated_start_date} ～ {formated_end_date}\n\nの予約が取り消されました。\n\n当日は教室を貸出できないためご了承下さい。\n\n何かご不明な点がございましたら学務課までご連絡お願いいたします。"
+        
+        message = MIMEText(send_txt)
+        message['Subject'] = '【お知らせ】教室のご予約取り消しについて'
+        message['From'] = os.environ.get('MAIL_USERNAME')
+        message['To'] = reserve['user-email']
+        message['Date'] = formatdate()
+
+        mail.send_message(message)
+
+    mail.close()
+
+
+@classroom.errorhandler(404)
+def notfound():
+    return jsonify({'result':False, 'message':'Not found'}), 404
 
 
 #　予約可能な教室の取得をするエンドポイントです
@@ -131,6 +176,7 @@ def get_classrooms(mode):
                     'result': False,
                     'message': 'Internal Server Error'
                 }),500
+            
 
 #　教室の追加をするエンドポイントです
 @classroom.route('/add',methods=['POST'])
@@ -141,9 +187,6 @@ def add_classroom():
         for classroom_data in request.json:
             try:
                 session = create_session()
-                
-                print('ここから下')
-                print()
                 
                 name = classroom_data['classroom-name']
                 
@@ -244,23 +287,38 @@ def add_classroom():
 @login_required
 def delete_classroom():
     try:
+        if not client_session['is_admin'] :
+            abort(404)
+
         session = create_session()
         
-        post_data = request.get_json()
-        print(post_data)
+        post_data = request.json
     
-        if not 'classroom_id' in post_data:
+        if not 'classroom-id' in post_data:
             raise Post_Value_Error('JSONの形式が異なります')
         
         delete_classroom_data = session.query(DB.ReservableClassroom)\
-            .filter(DB.ReservableClassroom.classroom_id == post_data['classroom_id']).first()
+            .filter(DB.ReservableClassroom.classroom_id == post_data['classroom-id']).first()
         
         if delete_classroom_data is None:
             raise Post_Value_Error('削除可能な教室がありません')
         
-        session.delete(delete_classroom_data)
-        session.commit()
+        delete_classroom_id = delete_classroom_data.classroom_id
+
+        reservations = session.query(DB.Reservation).filter(DB.Reservation.classroom_id == delete_classroom_id).all()
         
+        if reservations != None :
+            reservations_dict = [reserve.to_dict(is_required_user_id=True) for reserve in reservations]
+            mail_thread = threading.Thread(target=send_reserve_delete_mail, args=(reservations_dict,), daemon=True)
+            mail_thread.start()
+        
+        session.delete(delete_classroom_data)
+
+        for reserve in reservations :
+            session.delete(reserve)
+
+        session.commit()
+
         return jsonify({
             'result': True
         }),200
@@ -271,7 +329,7 @@ def delete_classroom():
         return jsonify({
             'result':False, 
             'message':e.args[0]
-        })
+        }), 400
         
     except Exception as e :
         print(e)
