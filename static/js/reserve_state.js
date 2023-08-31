@@ -23,14 +23,13 @@ function reserveDeleteAdmin(reservationId, reservationDateAndTime, userName)
     .then(resData => {
         if(resData['result']) // 予約削除成功時
         {
-            reserveGetUser() // 予約済み教室を更新
-            showMessageArea(resData['message'], 'black') // メッセージをメッセージエリアに表示
+            location.reload(); // ページをリロード
         }
-        else {showMessageArea(resData['message'], 'red')} // エラーメッセージをメッセージエリアに表示
+        else {alert('予約を削除できませんでした\n' + resData['message']);} // エラーメッセージをメッセージエリアに表示
     }).catch((err) => console.log(err)); // エラーキャッチ
 }
 
-// 全ての予約の取得する関数(/reserve/get/full)(現在の予約状況を確認・更新するときに実行される)
+// 全ての予約の取得する関数(/reserve/get/full)(現在の予約状況を確認するときに実行される)
 function reserveGetFull()
 {
     fetch(LOCATION_URL + '/reserve/get/full')
@@ -40,11 +39,14 @@ function reserveGetFull()
             if(resData['data'].length <= 0) // dataが0件なら
             {
                 // 予約が無いことを表示
-                reservedClassroomPrintArea.innerHTML = 'なし';
+                const $noReservationSentence = document.getElementById('no-reservation-sentence');
+                $noReservationSentence.innerHTML = '予約なし';
+                $noReservationSentence.style.color = 'black';
             }
             else // 予約が存在するなら
             {
                 resData['data'].forEach((ele) => {
+                    // 予約可能日時を見やすい形に加工する
                     const reservationDateAndTime = timeFormating(ele['start-date'], ele['end-date']);
 
                     const $tableBody = document.getElementById('reservation-list-box');
@@ -86,7 +88,10 @@ function reserveGetFull()
         }
         else
         {
-
+            // エラーを表示
+            const $noReservationSentence = document.getElementById('no-reservation-sentence');
+            $noReservationSentence.innerHTML = resData['message'];
+            $noReservationSentence.style.color = 'red';
         }
     }).catch((err) => console.log(err)); // エラーキャッチ
 }

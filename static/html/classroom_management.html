@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ↓ゴミ箱マーク用↓ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>予約可能な教室の管理</title>
+    <link rel="stylesheet" href="/css/management.css">
+    <script src = "/js/user_get.js"></script>
+    <script src="/js/function.js" defer="defer"></script>
+    <script src="/js/classroom_management.js" defer="defer"></script>
+</head>
+<body>
+    <header>
+        <div>
+            <p id="header-text">
+                OECU 教室予約   ---管理者ページ---
+            </p>
+        </div>
+        <nav>
+            <a class="jump" href="/html/user_list.html">登録ユーザ一覧</a>
+            <a class="jump" href="/html/reserve_state.html">予約状況</a>
+        </nav>
+    </header>
+    <div id="margin"></div>
+    <h1>予約可能な教室の管理</h1>
+    <h2>追加</h2>
+    <div id="message-area">
+        <h2 id="message-area-sentence" style="color: red">
+            <!-- 予約可能教室追加時のエラー等表示場所 -->
+        </h2>
+    </div>
+    <form id="classroom-addform" onsubmit="classroomAdd()">
+        <div id="addform-parent">
+            <div class="addform-child">
+                日付：<input type="date" class="addform-today" required>
+                開始時刻：<input type="time" list="start-time-datalist" autocomplete="off" class="addform-start-time" required>
+                  <datalist id="start-time-datalist">
+                    <option value="09:00">
+                    <option value="10:40">
+                    <option value="13:00">
+                    <option value="14:40">
+                    <option value="16:20">
+                    <option value="18:00">
+                  </datalist>
+                終了時刻：<input type="time" list="end-time-datalist" autocomplete="off" class="addform-end-time" required>
+                  <datalist id="end-time-datalist">
+                    <option value="10:30">
+                    <option value="12:10">
+                    <option value="14:30">
+                    <option value="16:10">
+                    <option value="18:10">
+                    <option value="20:00">
+                  </datalist>
+                教室：<input type="text" value="J" class="addform-roomname" required>
+                <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
+            </div>
+        </div>
+        <div id="margin-narrow"></div>
+        <!-- 送信ボタン -->
+        <button id="addbutton" type="button" onclick="addInputField()">入力欄を追加</button>
+        <input type="submit" value="送信">
+    </form>
+    
+    <div id="margin-narrow"></div>
+    <div id="border"></div>
+    <h2 id=>一覧・削除</h2>
+        <table class="classroom-list">
+            <thead>
+                <tr>
+                    <th>予約可能時間</th>
+                    <th>教室名</th>
+                    <th>予約の有無</th>
+                    <th>削除</th>
+                </tr>
+            </thead>
+            <tbody id="classroom-list-box">
+            </tbody>
+        </table>
+        <h2 style="text-align:center;" id="no-classroom-sentence"></h2>
+
+        <footer>
+            <h4 class="contact-address">プログラミング研究会<br>連絡先:proken0603@gmail.com</h4>
+        </footer>
+
+    <script>
+        (() => {
+            document.getElementById("classroom-addform")
+                .addEventListener("submit", (e) => e.preventDefault());
+        })();
+    </script>
+</body>
+</html>
