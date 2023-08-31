@@ -109,7 +109,7 @@ function classroomGetFull()
             }
             else // 予約が存在するなら
             {
-                // classroom-list-boxを取得
+                // classroom-list-box(tbodyタグ)を取得
                 const $tableBody = document.getElementById('classroom-list-box');
 
                 resData['data'].forEach(ele => {
@@ -198,7 +198,7 @@ function classroomGetFull()
 function classroomAdd()
 {
     // メッセージエリア(主にエラーメッセージを表示するエリア)を取得
-    const messageAreaSentence = document.getElementById("message-area-sentence");
+    const messageAreaSentence = document.getElementById('message-area-sentence');
     messageAreaSentence.innerHTML = '';
 
     console.log('classroomAdd run');
@@ -239,8 +239,6 @@ function classroomAdd()
 
     // 追加分の予約可能教室をjson形式にする
     const room_JSON_DATA = JSON.stringify(roomDatas);
-    console.log('roomDatas:' + roomDatas);
-    console.log('room_JSON_DATA:' + room_JSON_DATA);
     // データを取得するためのAPIエンドポイントにリクエストを送信します
     fetch(LOCATION_URL + '/classroom/add', {
         method: 'POST',

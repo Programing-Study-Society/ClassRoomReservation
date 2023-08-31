@@ -12,7 +12,7 @@ def apiTest1():
     # データを処理するなどのロジックを実装
     response_data = {
 	    'result': True, #Bool型,
-	    'message': '失敗メッセージ(理由)', #String型,
+	    'message': '失敗メッセージ1(理由)', #String型,
 	    'data':[{
 		    'reservation-id': 'rID101' , #String型,
 		    'start-date': '2023-01-01 01:00:00', #Date型,
@@ -40,7 +40,7 @@ def apiTest2():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 		'result': True, # Bool型,
-		'message': '失敗メッセージ(理由)', # String型,
+		'message': '失敗メッセージ2(理由)', # String型,
 		'data': [{
             'classroom-id': 'cID201',#String型
 			'classroom-name': 'J201', # String型,
@@ -68,7 +68,7 @@ def apiTest3():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 		'result': True, # Bool型,
-		'message': '失敗メッセージ(理由)', # String型,
+		'message': '失敗メッセージ3(理由)', # String型,
 		'data': {
             'reservation-id': 'rID301',#String型
 			'start-date': '2023-03-01 03:00:00', # Date型,
@@ -89,7 +89,7 @@ def apiTest4():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 		'result': True, #Bool型,
-		'message': '失敗：赤文字', #String型
+		'message': '失敗：赤文字4', #String型
 	}
     return jsonify(response_data)
 
@@ -102,7 +102,7 @@ def apiTest5():
     # データを処理するなどのロジックを実装
     response_data = {
 		'result': True, #Bool型,
-		'message': 'メッセージ', #String型,
+		'message': 'メッセージ5', #String型,
 		'data':[{
 			'reservation-id': 'r501', #String型
 			'start-date': '2023-05-01 05:00:00', #Date型,
@@ -125,14 +125,14 @@ def apiTest5():
 
 
 
-# '予約可能教室全ての取得(/classroom/get/full)'エンドポイントにGETリクエストがあった場合に、データを返します
+# 予約可能教室全ての取得(/classroom/get/full)エンドポイントにGETリクエストがあった場合に、データを返します
 @testApi.route('/classroom/get/full', methods=['GET'])
 def apiTest6():
     print('/classroom/get/fullにアクセス(API)')
     # データを処理するなどのロジックを実装
     response_data = {
 		'result': True, #Bool型,
-		'message': 'メッセージ', #String型
+		'message': 'メッセージ6', #String型
 		'data':[{
 			'classroom-id': 'cID601', #String型
 			'classroom-name': 'J601', #String型,
@@ -166,7 +166,7 @@ def apiTest7():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 	'result': True, #Bool型,
-	'message': 'エラーメッセージ', #String型,
+	'message': 'エラーメッセージ7', #String型,
 	'data':[{
 		'reservation-id': 'r701', #String型,
 		'start-date': '2023-07-01 07:00:00', #Date型,
@@ -198,7 +198,7 @@ def apiTest8():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 	'result': True, #Bool型,
-	'message': 'メッセージ', #String型
+	'message': 'メッセージ8', #String型
 }
     return jsonify(response_data)
 
@@ -213,37 +213,93 @@ def apiTest9():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 		'result': True, # Bool型,
-		'message': '全て失敗', # String型(成功 : なし, 失敗（100%失敗のみ） : 理由)
+		'message': '全て失敗9', # String型(成功 : なし, 失敗（100%失敗のみ） : 理由)
 		'classroom': [{
-				'result': False, # Bool型,
-				'message': '失敗1', # String型(成功 : なし, 失敗 : 理由),
+				'result': True, # Bool型,
+				'message': '失敗01', # String型(成功 : なし, 失敗 : 理由),
 				'data':{
 					'classroom-id': 'c901', # String型 非使用,
 					'classroom-name': 'J901', # String型,
-					'start-date': '2023-09-01 09:00:00', #Date型,
-					'end-date': '2023-09-01 10:00:00', #Date型
+					'start-date': '2023-09-01 09:00:00', # Date型,
+					'end-date': '2023-09-01 10:00:00', # Date型
 				}
 			},
             {
 				'result': True, # Bool型,
-				'message': '失敗2', # String型(成功 : なし, 失敗 : 理由),
+				'message': '失敗92', # String型(成功 : なし, 失敗 : 理由),
 				'data':{
 					'classroom-id': 'c902', # String型 非使用,
 					'classroom-name': 'J902', # String型,
-					'start-date': '2023-09-02 09:00:00', #Date型,
-					'end-date': '2023-09-02 10:00:00', #Date型
+					'start-date': '2023-09-02 09:00:00', # Date型,
+					'end-date': '2023-09-02 10:00:00', # Date型
 				}
 			},
             {
 				'result': True, # Bool型,
-				'message': '失敗3', # String型(成功 : なし, 失敗 : 理由),
+				'message': '失敗93', # String型(成功 : なし, 失敗 : 理由),
 				'data':{
 					'classroom-id': 'c903', # String型 非使用,
 					'classroom-name': 'J903', # String型,
-					'start-date': '2023-09-03 09:00:00', #Date型,
-					'end-date': '2023-09-03 10:00:00', #Date型
+					'start-date': '2023-09-03 09:00:00', # Date型;
+					'end-date': '2023-09-03 10:00:00', # Date型
 				}
 			},
 		]	
 }
+    return jsonify(response_data)
+
+
+
+# ユーザーの取得(/user/get)エンドポイントにGETリクエストがあった場合に、データを返します
+@testApi.route('/user/get', methods=['GET'])
+def apiTest10():
+    print('/user/getにアクセス(API)')
+    # データを処理するなどのロジックを実装
+    response_data = {
+	'result': True, # Bool型,
+	'message': '失敗メッセージ10', # String型
+	'data':[{
+		'user-name': 'プログラミング研究会101号', # String型,
+		'email': 'proken1001@gmail.com' # String型
+		},
+        {
+		'user-name': 'プログラミング研究会102号', # String型,
+		'email': 'proken1002@gmail.com' # String型
+		},
+        {
+		'user-name': 'プログラミング研究会103号', # String型,
+		'email': 'proken1003@gmail.com' # String型
+		},
+	]
+}
+    return jsonify(response_data)
+
+
+
+# ユーザー削除(/user/delete)
+@testApi.route('/user/delete', methods=['POST'])
+def apiTest11():
+    data = request.get_json()  # JSONデータを取得
+    print("/user/delete data : ")
+    print(data)
+    # 受け取ったデータを処理するなどのロジックを実装
+    response_data = {
+	'result': True, #Bool型,
+	'message': 'メッセージ11', #String型
+	}
+    return jsonify(response_data)
+
+
+
+# ユーザー追加(/user/add)
+@testApi.route('/user/add', methods=['POST'])
+def apiTest12():
+    data = request.get_json()  # JSONデータを取得
+    print("/user/add data : ")
+    print(data)
+    # 受け取ったデータを処理するなどのロジックを実装
+    response_data = {
+	'result': True, #Bool型,
+	'message': 'メッセージ12', #String型
+	}
     return jsonify(response_data)
