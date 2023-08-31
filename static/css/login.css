@@ -1,0 +1,103 @@
+body{
+    margin: 0 0 0 0;
+}
+ 
+ 
+.header{
+    z-index: 999;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    max-height: 60px;
+    padding: 5px;
+    background: #000;
+}
+
+#header-text{
+    line-height: 60px;
+    padding-left: 10px;
+    font-size: large;
+    text-decoration: none;
+    color: #fff;
+}
+
+#margin{
+    margin-top: 100px;
+}
+
+.sentence{
+    margin: 2em 0.5em 0.5em 0.5em;
+    padding: 1em 0.5em 0.5em;
+    position: relative;
+    border: 1px solid #81d4fa;
+    background-color: #e1f5fe;
+}
+
+.sentence-title{
+    position:absolute;
+    top: 80px;
+    left: 20px;
+    font-weight: bold;
+    font-size: 1.5em;
+    background-color: #81d4fa;
+    color: #fff;
+    padding: 0 0.5em;
+    -webkit-text-stroke: 0.75px #111;
+    z-index: 2;
+}
+
+#google-login{
+    max-height: 60px;
+    max-width: 200px;
+    margin: 0 auto;
+    background-color: rgb(204, 254, 204);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+#information{
+    margin:5em 1em 1em 1em;
+    background-color: #D9D9D9;
+    text-align: center;
+}
+
+.login-failed{
+    margin:2em 1em 1em 1em;
+    background-color: #c0ccff;
+    text-align: center;
+}
+.alert-message{
+    margin-top: 0.5em;
+    color: red;
+}
+
+.page-back,
+a.page-back {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  border-radius: 0.5rem;
+  color: #000000;
+  background-color: #a4e8f9;
+  margin: 0 auto;
+  max-width: 250px;
+}
+
+ 
