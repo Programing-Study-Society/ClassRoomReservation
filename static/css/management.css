@@ -15,7 +15,7 @@ header{
 #header-text{margin: auto;
     line-height: 60px;
     padding-left: 10px;
-    font-size: large;
+    font-size: medium;
     text-decoration: none;
     color: #fff;
 }
@@ -48,19 +48,19 @@ h1{
     border-bottom: 6px double #000;
 }
 
-.user-list{
+.user-list,.classroom-list{
     width: 100%;
     text-align: center;
     border-collapse: collapse;
     border-spacing: 0;
 }
-.user-list th{
+.user-list th,.classroom-list th{
     background-color: #adc9f3;
     padding: 10px;
     border-bottom: solid 4px #778ca3;
     color: #000000
 }
-.user-list td{
+.user-list td,.classroom-list th{
     padding: 10px;
     border-bottom: solid 1px #778ca3;
 }
@@ -97,4 +97,47 @@ footer{
 .reserve-list td{
     padding: 5px;
     border-bottom: solid 1px #778ca3;
+}
+
+/* ここからclassroom_management.htmlの内容 */
+input{
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+input[type="date"] {
+    position: relative;
+    padding: 0 10px;
+    width: 150px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+input[type="time"]{
+    position: relative;
+    padding: 0 10px;
+    width: 100px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+input[type="text"]{
+    position: relative;
+    padding: 0 10px;
+    width: 100px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+#border{
+    border-top: 3px dotted #000;
 }

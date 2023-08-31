@@ -89,7 +89,7 @@ def apiTest4():
     # 受け取ったデータを処理するなどのロジックを実装
     response_data = {
 		'result': True, #Bool型,
-		'message': '予約削除　成功：黒文字　失敗：赤文字', #String型
+		'message': '失敗：赤文字', #String型
 	}
     return jsonify(response_data)
 
@@ -98,7 +98,7 @@ def apiTest4():
 # 'ユーザー個人の予約の取得(/reserve/get/user)'エンドポイントにGETリクエストがあった場合に、データを返します
 @testApi.route('/reserve/get/full', methods=['GET'])
 def apiTest5():
-    print('/reserve/get/userにアクセス(API)')
+    print('/reserve/get/fullにアクセス(API)')
     # データを処理するなどのロジックを実装
     response_data = {
 		'result': True, #Bool型,
@@ -121,4 +121,129 @@ def apiTest5():
 			},
 		]
 	}
+    return jsonify(response_data)
+
+
+
+# '予約可能教室全ての取得(/classroom/get/full)'エンドポイントにGETリクエストがあった場合に、データを返します
+@testApi.route('/classroom/get/full', methods=['GET'])
+def apiTest6():
+    print('/classroom/get/fullにアクセス(API)')
+    # データを処理するなどのロジックを実装
+    response_data = {
+		'result': True, #Bool型,
+		'message': 'メッセージ', #String型
+		'data':[{
+			'classroom-id': 'cID601', #String型
+			'classroom-name': 'J601', #String型,
+			'start-date': '2023-06-01 06:00:00', #Date型,
+			'end-date': '2023-06-01 07:00:00', #Date型
+			},
+			{
+				'classroom-id': 'cID602', #String型
+				'classroom-name': 'J602', #String型,
+				'start-date': '2023-06-02 06:00:00', #Date型,
+				'end-date': '2023-06-02 07:00:00', #Date型
+			},
+            {
+				'classroom-id': 'cID603', #String型
+				'classroom-name': 'J603', #String型,
+				'start-date': '2023-06-03 06:00:00', #Date型,
+				'end-date': '2023-06-03 07:00:00', #Date型
+			},
+		]
+	}
+    return jsonify(response_data)
+
+
+
+# クラスルームIDでの予約の取得(/reserve/get/classroom-id)
+@testApi.route('/reserve/get/classroom-id', methods=['POST'])
+def apiTest7():
+    data = request.get_json()  # JSONデータを取得
+    print("/reserve/get/classroom-id data : ")
+    print(data)
+    # 受け取ったデータを処理するなどのロジックを実装
+    response_data = {
+	'result': True, #Bool型,
+	'message': 'エラーメッセージ', #String型,
+	'data':[{
+		'reservation-id': 'r701', #String型,
+		'start-date': '2023-07-01 07:00:00', #Date型,
+		'end-date': '2023-07-01 08:00:00', #Date型
+		'classroom-name': 'J701', #String型,
+		'user-name': 'プログラミング研究会71号', #String型（管理者おんりー）
+		'user-email': 'proken701@gmail.com', #String型（管理者おんりー）
+		},
+        {
+		'reservation-id': 'r702', #String型,
+		'start-date': '2023-07-02 07:00:00', #Date型,
+		'end-date': '2023-07-02 08:00:00', #Date型
+		'classroom-name': 'J702', #String型,
+		'user-name': 'プログラミング研究会72号', #String型（管理者おんりー）
+		'user-email': 'proken702@gmail.com', #String型（管理者おんりー）
+		},
+	]
+}
+    return jsonify(response_data)
+
+
+
+# 教室の削除(/classroom/delete)
+@testApi.route('/classroom/delete', methods=['POST'])
+def apiTest8():
+    data = request.get_json()  # JSONデータを取得
+    print("/classroom/delete data : ")
+    print(data)
+    # 受け取ったデータを処理するなどのロジックを実装
+    response_data = {
+	'result': True, #Bool型,
+	'message': 'メッセージ', #String型
+}
+    return jsonify(response_data)
+
+
+
+# 教室の追加(/classroom/add)
+@testApi.route('/classroom/add', methods=['POST'])
+def apiTest9():
+    data = request.get_json()  # JSONデータを取得
+    print("/classroom/add data : ")
+    print(data)
+    # 受け取ったデータを処理するなどのロジックを実装
+    response_data = {
+		'result': True, # Bool型,
+		'message': '全て失敗', # String型(成功 : なし, 失敗（100%失敗のみ） : 理由)
+		'classroom': [{
+				'result': False, # Bool型,
+				'message': '失敗1', # String型(成功 : なし, 失敗 : 理由),
+				'data':{
+					'classroom-id': 'c901', # String型 非使用,
+					'classroom-name': 'J901', # String型,
+					'start-date': '2023-09-01 09:00:00', #Date型,
+					'end-date': '2023-09-01 10:00:00', #Date型
+				}
+			},
+            {
+				'result': True, # Bool型,
+				'message': '失敗2', # String型(成功 : なし, 失敗 : 理由),
+				'data':{
+					'classroom-id': 'c902', # String型 非使用,
+					'classroom-name': 'J902', # String型,
+					'start-date': '2023-09-02 09:00:00', #Date型,
+					'end-date': '2023-09-02 10:00:00', #Date型
+				}
+			},
+            {
+				'result': True, # Bool型,
+				'message': '失敗3', # String型(成功 : なし, 失敗 : 理由),
+				'data':{
+					'classroom-id': 'c903', # String型 非使用,
+					'classroom-name': 'J903', # String型,
+					'start-date': '2023-09-03 09:00:00', #Date型,
+					'end-date': '2023-09-03 10:00:00', #Date型
+				}
+			},
+		]	
+}
     return jsonify(response_data)

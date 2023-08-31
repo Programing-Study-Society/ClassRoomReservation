@@ -20,4 +20,4 @@ def not_found(e):
 
 @app.route('/')
 def default_route():
-    return app.send_static_file('html/reserve_state.html')
+    return app.send_static_file('html/classroom_management.html')

@@ -131,8 +131,8 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
             const time = startDate.slice( 11, 16 ) + '  ～  ' + data['end-date'].slice( 11, 16 ); // HH:mm + ～ + HH:mm
             const room = data['classroom-name']; // 教室
 
-            const h1 = document.getElementById("message-area-sentence"); // h1タグを取得
-            h1.innerHTML = `${date}<span class="break"></span>${time}<br>${room}を予約しました`; // メッセージを表示
+            const messageAreaSentence = document.getElementById("message-area-sentence");
+            messageAreaSentence.innerHTML = `${date}<span class="break"></span>${time}<br>${room}を予約しました`; // メッセージを表示
 
             reserveGetUser(); // 予約済み教室を更新
         }
@@ -152,15 +152,15 @@ function getData()
     const classroomBox =  document.getElementById('classroom-box');
     classroomBox.innerHTML = '';
 
-    //予約時間を一時保存する変数
+    // 予約時間を一時保存する変数
     let reserveationData = {};
-    //予約する日にちを取得
+    // 予約する日にちを取得
     const reserveATION_DATE = document.getElementById('reserveation-date').value;
     // console.log(reserveATION_DATE);
-    //予約日 + 空白 + 予約時間で結合する
+    // 予約日 + 空白 + 予約時間で結合する
     reserveationData['start-date'] = reserveATION_DATE + ' ' + document.getElementById('start-time').value + ':00';
     reserveationData['end-date'] = reserveATION_DATE + ' ' +document.getElementById('end-time').value + ':00';
-    //予約日時をjson形式にする
+    // 予約日時をjson形式にする
     const reserveATION_JSON_DATA = JSON.stringify(reserveationData);
 
     // データを取得するためのAPIエンドポイントにリクエストを送信します
@@ -174,7 +174,7 @@ function getData()
     .then(response => response.json()) // レスポンスをJSON形式に変換します
     .then(resData => {
         if(resData['result']) {
-            //let classrooms = resData['data'];
+            // let classrooms = resData['data'];
             // console.log(classrooms);
 
             // ボタンの設置
