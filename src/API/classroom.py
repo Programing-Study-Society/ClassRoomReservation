@@ -28,6 +28,10 @@ class ManyAttemptsError(Exception):
     pass
 
 
+class NothingResultValueError(Exception):
+    pass
+
+
 MAX_ATTEMPTS = 2000
 
 
@@ -79,7 +83,7 @@ def get_classrooms(mode):
                 if request.method != 'POST':
                     abort(404)
                 
-                post_data = request.get_json()
+                post_data = request.json
                 print(post_data)
             
 
@@ -127,7 +131,7 @@ def get_classrooms(mode):
                 session.rollback()
                 return jsonify({
                     'result':False,
-                    'message': 'Internal Server error'
+                    'message': 'サービスにエラーが発生しました。'
                 }),500
             
             finally :
@@ -174,7 +178,7 @@ def get_classrooms(mode):
                 session.rollback()
                 return jsonify({
                     'result': False,
-                    'message': 'Internal Server Error'
+                    'message': 'サービスにエラーが発生しました。'
                 }),500
             
 
@@ -188,9 +192,9 @@ def add_classroom():
             try:
                 session = create_session()
                 
-                name = classroom_data['classroom-name']
+                name:str = classroom_data['classroom-name']
                 
-                if (not 'classroom-name' in classroom_data.keys()):
+                if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
                     raise Post_Value_Error('必要な情報が不足しています')
                 
                 if (not name.startswith('J')) and (not name.startswith('Z')):
@@ -264,16 +268,33 @@ def add_classroom():
                 session.rollback()
                 result_list.append({
                     'result':False,
-                    'message': 'Internal Server error'
+                    'message': 'サービスにエラーが発生しました。'
                 })
                 
             finally :
                 session.close()
+
+        cnt = 0
+        for result_value in result_list :
+            if not result_value['result'] : cnt += 1
+
+        print(cnt)
+
+        if len(result_list) == cnt :
+            raise NothingResultValueError('教室の追加に失敗しました。')
+        
+    except NothingResultValueError as e :
+        print(e)
+        return jsonify({
+            'result': False,
+            'message': e.args[0],
+            'errors':result_list
+        }), 500
     
     except Exception as e:
         return jsonify({
             'result': False,
-            'message': 'Internal Server Error'
+            'message': 'サービスにエラーが発生しました。'
         }),500
     
     else:
@@ -336,7 +357,7 @@ def delete_classroom():
         session.close()
         return jsonify({
             'result':False, 
-            'message':'Internal Server Error'
+            'message':'サービスにエラーが発生しました。'
         }), 500
     
     finally :
