@@ -1,4 +1,4 @@
-fetch('/user/get')
+fetch('/user/current-user')
 .then(response => {
     if(response['status'] !== 200) {
         console.log('エラー : ');

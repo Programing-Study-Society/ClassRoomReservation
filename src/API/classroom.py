@@ -157,7 +157,7 @@ def get_classrooms(mode):
                 for classroom_value in classroom_values:
                     classroom_list.append({
                         'result': True,
-                        'date': classroom_value.to_dict()
+                        'data': classroom_value.to_dict()
                     })
                 
                 return jsonify({

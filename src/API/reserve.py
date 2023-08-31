@@ -5,6 +5,11 @@ from datetime import datetime
 import re
 from src.module.function import generate_token
 from flask_login import login_required
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formatdate
+import os
+import threading
 
 
 class ReserveValueError(Exception):
@@ -25,8 +30,38 @@ class NotLoginError(Exception):
 
 reserve = Blueprint('reserve', __name__, url_prefix='/reserve')
 
+
 MAX_ATTEMPTS = 2000
 
+
+def send_reserve_delete_mail(reservation) :
+    mail = smtplib.SMTP(
+        host = os.environ.get('MAIL_SERVER'),
+        port=os.environ.get('MAIL_PORT')
+        )
+    
+    mail.starttls()
+
+    mail.login(
+        user = os.environ.get('MAIL_USERNAME'),
+        password = os.environ.get('MAIL_PASSWORD')
+    )
+                
+    formated_start_date = reservation['start-date'].replace('-', '/')
+    formated_end_date = reservation['end-date'].replace('-', '/')
+    
+    send_txt = f"{reservation['user-name']} 様\n\n当サイトにてご予約いただいた\n\n{reservation['classroom-name']}教室　{formated_start_date} ～ {formated_end_date}\n\nの予約が取り消されました。\n\n当日は教室を貸出できないためご了承下さい。\n\n何かご不明な点がございましたら学務課までご連絡お願いいたします。"
+    
+    message = MIMEText(send_txt)
+    message['Subject'] = '【お知らせ】教室のご予約取り消しについて'
+    message['From'] = os.environ.get('MAIL_USERNAME')
+    message['To'] = reservation['user-email']
+    message['Date'] = formatdate()
+
+    mail.send_message(message)
+
+    mail.close()
+    
 
 # 予約時間が予約可能かチェックします
 def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime) -> str | None:
@@ -312,17 +347,22 @@ def delete_reserve():
     try :
         session = create_session()
 
-        post_data = request.json
+        post_data = request.get_json()
 
         if not ('reservation-id' in post_data) :
             raise PostValueError('無効なデータ形式です。')
 
-        delete_date = session.query(Reservation).filter(Reservation.reservation_id == post_data['reservation-id']).first()
+        delete_data = session.query(Reservation).filter(Reservation.reservation_id == post_data['reservation-id']).first()
 
-        if delete_date is None :
+        if delete_data is None :
             raise PostValueError('削除する予約がありません')
         
-        session.delete(delete_date)
+        if client_session['is_admin'] :
+            reservations_dict = delete_data.to_dict()
+            mail_thread = threading.Thread(target=send_reserve_delete_mail, args=(reservations_dict,), daemon=True)
+            mail_thread.start()
+
+        session.delete(delete_data)
         session.commit()
 
         return jsonify({'result':True})

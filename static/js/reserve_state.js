@@ -9,11 +9,11 @@ function reserveDeleteAdmin(reservationId, reservationDateAndTime, userName)
     }
 
     // //教室idを含めたjsonを作成
-    const RESERVATION_ID_JSON_DATA = JSON.stringify(reservationId);
+    const RESERVATION_ID_JSON_DATA = JSON.stringify({'reservation-id' : reservationId});
 
     // データを取得するためのAPIエンドポイントにリクエストを送信します
     fetch(LOCATION_URL + '/reserve/delete', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         },

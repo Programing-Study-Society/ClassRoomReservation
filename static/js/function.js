@@ -1,6 +1,4 @@
-const LOCATION_URL = '/testApi'; // 本番(APIとの結合時)にtestApiを消すのを忘れずに
-
-
+const LOCATION_URL = ''; // 本番(APIとの結合時)にtestApiを消すのを忘れずに
 
 // 開始日時、終了日時、教室を分かりやすい形に変換する関数
 function timeFormating(startDate, endDate)

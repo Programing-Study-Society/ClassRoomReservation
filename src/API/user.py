@@ -71,13 +71,13 @@ def add_user():
         user = request.json
         print(user)
 
-        if (not 'email' in user.keys()) or (not 'name' in user.keys()) or (not 'is_admin' in user.keys()) :
+        if not ('email' in user or 'user-name' in user or 'is-admin' in user) :
             raise PostValueError('必要な情報が不足しています。')
 
-        if len(user['email']) >= 64 or len(user['name']) >= 128:
+        if len(user['email']) >= 64 or len(user['user-name']) >= 128:
             raise PostValueError('文字の長さが長すぎます。')
 
-        session.add(Approved_User(approved_email=user['email'], approved_user_name=user['name'], is_admin=user['is_admin']))
+        session.add(Approved_User(approved_email=user['email'], approved_user_name=user['user-name'], is_admin=user['is-admin']))
 
         session.commit()
 
@@ -89,7 +89,7 @@ def add_user():
         print(e)
         return jsonify({
             'result':False,
-            'message':e
+            'message':e.args[0]
         }), 400
 
     except Exception as e :
@@ -112,7 +112,9 @@ def user_delete():
 
         data = request.json
 
-        if (not 'email' in data.keys()):
+        print(data)
+
+        if (not 'email' in data):
             raise PostValueError('必要な情報が不足しています。')
 
         if len(data['email']) >= 64:

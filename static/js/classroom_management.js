@@ -112,10 +112,14 @@ function classroomGetFull()
                 // classroom-list-box(tbodyタグ)を取得
                 const $tableBody = document.getElementById('classroom-list-box');
 
+                console.log(resData);
+
                 resData['data'].forEach(ele => {
 
+                    resValue = ele['data']
+
                     // 予約可能日時を見やすい形に加工する
-                    const reservationDateAndTime = timeFormating(ele['start-date'], ele['end-date']);
+                    const reservationDateAndTime = timeFormating(resValue['reservable-start-date'], resValue['reservable-end-date']);
 
                     // trタグのclassroom-list-box-rowを作成
                     const $newRow = document.createElement('tr');
@@ -132,7 +136,7 @@ function classroomGetFull()
 
 
                     // clasrromIdをjson形式に変換
-                    const CLASSROOM_ID_JSON_DATA = JSON.stringify(ele['classroom-id']);
+                    const CLASSROOM_ID_JSON_DATA = JSON.stringify({'classroom-id' : resValue['classroom-id']});
 
                     // データを取得するためのAPIエンドポイントにリクエストを送信します
                     fetch(LOCATION_URL + '/reserve/get/classroom-id', {
@@ -168,7 +172,7 @@ function classroomGetFull()
                         $cancelButton.className = 'classroom-delete';
                         $cancelButton.textContent = '削除';
                         $cancelButton.addEventListener("click", function() {
-                            classroomDeleteAdmin(ele['classroom-id'], reservationDateAndTime + '　' + ele['classroom-name'], reservationStatus);
+                            classroomDeleteAdmin(resValue['classroom-id'], reservationDateAndTime + '　' + resValue['classroom-name'], reservationStatus);
                         });
                         // // ボタンをセルに追加
                         const $cell4 = document.createElement('td');

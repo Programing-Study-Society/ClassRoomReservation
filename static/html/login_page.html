@@ -35,7 +35,27 @@
             <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
             </div>
             -->
-            <img src="../image/google_login_button.png" alt="Sign in with Google">
+            <script src="https://accounts.google.com/gsi/client" async defer></script>
+            <div id="g_id_onload"
+                data-client_id="298118280458-k6q7l7bh7ieborj8iltkc0cgc17aruri.apps.googleusercontent.com"
+                data-context="signup"
+                data-ux_mode="redirect"
+                data-login_uri="http://localhost:8000/"
+                data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="outline"
+                data-text="signup_with"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+            <!--
+                <img src="../image/google_login_button.png" alt="Sign in with Google">
+            -->
+            
         </div>
     </main>
     <footer>

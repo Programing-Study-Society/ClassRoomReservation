@@ -19,7 +19,7 @@ def check_approved_user(session:orm.Session, user_email:str) -> bool :
 @route.route('/', methods=['GET', 'POST'])
 def default_route():
     if request.method == 'GET':
-        return redirect('/back_test/html/templates/home.html')
+        return redirect('/html/login_page.html')
 
     elif request.method == 'POST':
         try:
@@ -53,7 +53,11 @@ def default_route():
 
             if session.query(User).filter(User.user_id == id).first() != None :
                 login_user(user)
-                return redirect('/back_test/html/reserve_form.html')
+
+                if approved_user.is_admin :
+                    return redirect('/html/classroom_management.html')
+                else :
+                    return redirect('/html/reserve_list.html')
 
             else:
                 session.add(user)
@@ -61,7 +65,10 @@ def default_route():
 
                 login_user(user)
 
-                return redirect('/back_test/html/reserve_form.html')
+                if approved_user.is_admin :
+                    return redirect('/html/classroom_management.html')
+                else :
+                    return redirect('/html/reserve_list.html')
 
         except NotApprovedUserError as e:
             print(e)
@@ -90,4 +97,4 @@ def logout():
     #ログアウト処理
     logout_user()
 
-    return redirect('/back_test/html/templates/home.html')
+    return redirect('/')

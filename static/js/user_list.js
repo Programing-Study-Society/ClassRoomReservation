@@ -7,7 +7,7 @@ function userDeleteAdmin(email, userName)
         return 0;
     }
     
-    const EMAIL_JSON_DATA = JSON.stringify(email);
+    const EMAIL_JSON_DATA = JSON.stringify({'email' : email});
 
     // データを取得するためのAPIエンドポイントにリクエストを送信します
     fetch(LOCATION_URL + '/user/delete', {
@@ -48,18 +48,17 @@ function userGet()
                 const $userListBox = document.getElementById('user-list-box');
 
                 resData['data'].forEach(ele => {
-
                     // trタグのuser-list-box-rowを作成
                     const $newRow = document.createElement('tr');
                     $newRow.className = 'user-list-box-row';
 
                     // 各セルにデータを設定して <td> 要素を作成し、<tr> に追加
                     const $cell1 = document.createElement('td');
-                    $cell1.textContent = ele['user-name'];
+                    $cell1.textContent = ele['approved-user-name'];
                     $newRow.appendChild($cell1);
 
                     const $cell2 = document.createElement('td');
-                    $cell2.textContent = ele['email'];
+                    $cell2.textContent = ele['approved-email'];
                     $newRow.appendChild($cell2);
 
 
@@ -68,7 +67,7 @@ function userGet()
                     $cancelButton.className = 'user-delete';
                     $cancelButton.textContent = '削除';
                     $cancelButton.addEventListener("click", function() {
-                        userDeleteAdmin(ele['email'], ele['user-name']);
+                        userDeleteAdmin(ele['approved-email'], ele['approved-user-name']);
                     });
                     // // ボタンをセルに追加
                     const $cell3 = document.createElement('td');
@@ -102,6 +101,7 @@ function userAdd()
     let userData = {};
     userData['user-name'] = addUserNameValue;
     userData['email'] = addEmailValue;
+    userData['is-admin'] = false;
 
     // ユーザー情報をjson形式にする
     const user_JSON_DATA = JSON.stringify(userData);
