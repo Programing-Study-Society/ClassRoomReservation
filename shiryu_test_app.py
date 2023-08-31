@@ -20,4 +20,4 @@ def not_found(e):
 
 @app.route('/')
 def default_route():
-    return app.send_static_file('html/user_list.html')
+    return app.send_static_file('html/login_page.html')
