@@ -57,7 +57,7 @@ def default_route():
                 if approved_user.is_admin :
                     return redirect('/html/classroom_management.html')
                 else :
-                    return redirect('/html/reserve_list.html')
+                    return redirect('/html/reserve_page.html')
 
             else:
                 session.add(user)
@@ -68,7 +68,7 @@ def default_route():
                 if approved_user.is_admin :
                     return redirect('/html/classroom_management.html')
                 else :
-                    return redirect('/html/reserve_list.html')
+                    return redirect('/html/reserve_page.html')
 
         except NotApprovedUserError as e:
             print(e)
