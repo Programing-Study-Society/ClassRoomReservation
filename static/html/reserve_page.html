@@ -51,11 +51,27 @@
             
             <div class="time">   
                 <label for="time">利用開始時刻：
-                    <input type="time" id="start-time" required>
+                    <input type="time" id="start-time" list="start-time-datalist" autocomplete="off" required>
+                    <datalist id="start-time-datalist">
+                        <option value="09:00">
+                        <option value="10:40">
+                        <option value="13:00">
+                        <option value="14:40">
+                        <option value="16:20">
+                        <option value="18:00">
+                      </datalist>
                 </label>    
                 <br>
                 <label for="time">利用終了時刻：
-                    <input type="time" id="end-time" required>
+                    <input type="time" id="end-time" list="end-time-datalist" autocomplete="off" required>
+                    <datalist id="end-time-datalist">
+                        <option value="10:30">
+                        <option value="12:10">
+                        <option value="14:30">
+                        <option value="16:10">
+                        <option value="18:10">
+                        <option value="20:00">
+                      </datalist>
                 </label> 
             </div>
             <div class="search">
