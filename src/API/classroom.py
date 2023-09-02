@@ -196,12 +196,11 @@ def add_classroom():
                 if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
                     raise Post_Value_Error('必要な情報が不足しています')
                 
-                if (not name.startswith('J')) and (not name.startswith('Z')):
-                    raise Post_Value_Error('存在しない教室名です')
+                # if (not name.startswith('J')) and (not name.startswith('Z')):
+                #     raise Post_Value_Error('存在しない教室名です')
                 
-                if len(name) >= 4:
-                    raise Post_Value_Error('教室名が長すぎます')
-                
+                # if len(name) > 4:
+                #     raise Post_Value_Error('教室名が長すぎます')
                 
                 if (classroom_data['start-date'] >= classroom_data['end-date']):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
