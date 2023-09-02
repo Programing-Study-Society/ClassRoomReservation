@@ -60,6 +60,10 @@ function userGet()
                     $cell2.textContent = ele['approved-email'];
                     $newRow.appendChild($cell2);
 
+                    const $cell3 = document.createElement('td');
+                    $cell3.textContent = ele['is-admin'];
+                    $newRow.appendChild($cell3);
+
 
                     // 新しいボタン要素を作成
                     const $cancelButton = document.createElement('button');
@@ -69,9 +73,9 @@ function userGet()
                         userDeleteAdmin(ele['approved-email'], ele['approved-user-name']);
                     });
                     // // ボタンをセルに追加
-                    const $cell3 = document.createElement('td');
-                    $cell3.appendChild($cancelButton);
-                    $newRow.appendChild($cell3);
+                    const $cell4 = document.createElement('td');
+                    $cell4.appendChild($cancelButton);
+                    $newRow.appendChild($cell4);
 
                     // セルを表に挿入
                     $userListBox.appendChild($newRow);
