@@ -212,6 +212,11 @@ function classroomGetFull()
 // 予約可能教室を追加する関数(/classroom/add)
 function classroomAdd()
 {
+    if (!confirm('予約可能な教室を送信しますか？'))
+    {
+        return;
+    }
+
     // メッセージエリア(主にエラーメッセージを表示するエリア)を取得
     const messageAreaSentence = document.getElementById('message-area-sentence');
     messageAreaSentence.innerHTML = '';
