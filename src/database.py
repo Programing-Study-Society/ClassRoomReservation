@@ -29,8 +29,8 @@ class ReservableClassroom(Base):
         classroom = {
             "classroom-id": self.classroom_id,
             "classroom-name": self.classroom_name,
-            "reservable-start-date": self.reservable_start_time,
-            "reservable-end-date": self.reservable_end_time
+            "reservable-start-date": self.reservable_start_time.strftime('%Y-%m-%d %H:%M:%S'),
+            "reservable-end-date": self.reservable_end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
         
         return classroom
