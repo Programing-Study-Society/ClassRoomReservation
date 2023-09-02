@@ -77,6 +77,9 @@ def add_user():
         if len(user['email']) >= 64 or len(user['user-name']) >= 128:
             raise PostValueError('文字の長さが長すぎます。')
 
+        if session.query(Approved_User).filter(Approved_User.approved_email == user['email']).first() != None :
+            raise PostValueError('同じメールが登録されています。')
+
         session.add(Approved_User(approved_email=user['email'], approved_user_name=user['user-name'], is_admin=user['is-admin']))
 
         session.commit()
