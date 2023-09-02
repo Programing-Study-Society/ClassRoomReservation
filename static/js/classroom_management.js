@@ -69,11 +69,11 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
         return;
     }
     
-    const CLASSROOM_ID_JSON_DATA = JSON.stringify(classroomId);
+    const CLASSROOM_ID_JSON_DATA = JSON.stringify({'classroom-id':classroomId});
 
     // データを取得するためのAPIエンドポイントにリクエストを送信します
     fetch(LOCATION_URL + '/classroom/delete', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -115,7 +115,7 @@ function classroomGetFull()
 
                 resData['data'].forEach(ele => {
 
-                    resValue = ele['data']
+                    const resValue = ele['data'];
 
                     // 予約可能日時を見やすい形に加工する
                     const reservationDateAndTime = timeFormating(resValue['reservable-start-date'], resValue['reservable-end-date']);
