@@ -27,8 +27,20 @@ function addInputField()
             <option value="16:10">
             <option value="18:10">
             <option value="20:00">
-        </datalist>
-        教室：<input type="text" value="J" class="addform-roomname" required>
+        </datalist>                
+        教室：<select type="text" class="addform-roomname" required>
+        <option value="">-選択してください-</option>
+            <optgroup label="J号館">
+                <option value="J401">J401</option>
+                <option value="J402">J402</option>
+                <option value="J403">J403</option>
+                <option value="J404">J404</option>
+                <option value="J501">J501</option>
+                <option value="J502">J502</option>
+                <option value="J503">J503</option>
+                <option value="J504">J504</option>
+            </optgroup>
+        </select>
         <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
     `;
 

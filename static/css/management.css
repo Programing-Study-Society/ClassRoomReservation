@@ -142,6 +142,17 @@ input[type="text"]{
     color: #000;
 }
 
+.addform-roomname {
+    position: relative;
+    padding: 0 10px;
+    width: 180px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
 #border{
     border-top: 3px dotted #000;
 }

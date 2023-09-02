@@ -33,6 +33,9 @@
         </h2>
     </div>
     <form id="classroom-addform" onsubmit="classroomAdd()">
+        <!-- 送信ボタン -->
+        <button id="addbutton" type="button" onclick="addInputField()">入力欄を追加</button>
+        <input type="submit" value="送信">
         <div id="addform-parent">
             <div class="addform-child">
                 日付：<input type="date" class="addform-today" required>
@@ -67,13 +70,12 @@
                         <option value="J504">J504</option>
                     </optgroup>
                 </select>
-                <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
+                <!--
+                    <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
+                -->
             </div>
         </div>
         <div id="margin-narrow"></div>
-        <!-- 送信ボタン -->
-        <button id="addbutton" type="button" onclick="addInputField()">入力欄を追加</button>
-        <input type="submit" value="送信">
     </form>
     
     <div id="margin-narrow"></div>
