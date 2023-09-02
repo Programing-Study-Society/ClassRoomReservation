@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask import session as client_session
 from flask_login import login_required
-from src.database import create_session, Approved_User, User
+from src.database import create_session, Approved_User, User, Reservation
 
 
 class PostValueError(Exception) :
@@ -134,6 +134,10 @@ def user_delete():
         user = session.query(User).filter(User.user_email == data['email']).first()
 
         if user != None:
+            for reserved in session.query(Reservation).filter(Reservation.reserved_user_id == user.user_id).all() :
+                session.delete(reserved)
+                session.commit()
+                
             session.delete(user)
 
         session.delete(approved_user)
