@@ -130,7 +130,7 @@ function classroomGetFull()
                     $newRow.appendChild($cell1);
 
                     const $cell2 = document.createElement('td');
-                    $cell2.textContent = ele['classroom-name'];
+                    $cell2.textContent = resValue['classroom-name'];
                     $newRow.appendChild($cell2);
 
 
