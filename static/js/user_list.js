@@ -3,8 +3,7 @@ function userDeleteAdmin(email, userName)
 {
     if (!confirm(userName + 'を削除しますか？\n※削除されたユーザーはサイトにアクセスできなくなり、予約状況も削除されます。'))
     {
-        alert('削除をキャンセルしました');
-        return 0;
+        return;
     }
     
     const EMAIL_JSON_DATA = JSON.stringify({'email' : email});

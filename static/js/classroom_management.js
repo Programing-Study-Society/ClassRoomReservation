@@ -66,8 +66,7 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
 
     if (!confirm(confirmMessage))
     {
-        alert('削除をキャンセルしました');
-        return 0;
+        return;
     }
     
     const CLASSROOM_ID_JSON_DATA = JSON.stringify(classroomId);

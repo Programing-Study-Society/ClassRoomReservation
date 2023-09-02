@@ -1,21 +1,40 @@
 // メッセージをメッセージエリアに表示する関数
-function showMessageArea(message, collor)
+function showMessageArea(message, color)
 {
     const messageAreaSentence = document.getElementById('message-area-sentence');
     messageAreaSentence.innerHTML = message;
-    messageAreaSentence.style.color = collor
+    messageAreaSentence.style.color = color;
+}
+
+// 日時を、画面サイズによって自動で改行される文章に成形させる関数
+function createFormattedMessage(startDate, endDate, classroomName)
+{
+    const days = '日月火水木金土'; // 曜日表示用の文字列
+
+    // const data = resData["data"]; // json内のdataを取り出してdataに格納
+    const newStartDate = startDate.replace(/-/g,'/'); // -を/に変更
+    const day = new Date(newStartDate); //Date型に変換
+
+    const date = newStartDate.slice( 0, 10 ) + '(' + days[day.getDay()] + ') ' // yyyy-MM-dd + 曜日(day)
+    const time = newStartDate.slice( 11, 16 ) + '  ～  ' + endDate.slice( 11, 16 ); // HH:mm + ～ + HH:mm
+    const room = classroomName; // 教室
+
+    console.log(date);
+    console.log(time);
+    console.log(room);
+    
+    return `${date}<span class="break"></span>${time}<br>${room}`;
 }
 
 
 
 // 予約を削除する関数(ユーザー側)(/reserve/delete)(ユーザー個人の予約を取得する関数より、予約削除ボタンに紐づけられる)
-function reserveDeleteUser(reservationId, reservationDateAndTime)
+function reserveDeleteUser(reservationId, reservationDateAndTimeConfirm, reservationDateAndTimeMessage)
 {
 
-    if (!confirm(reservationDateAndTime + 'の予約を削除しますか？'))
+    if (!confirm(reservationDateAndTimeConfirm + 'の予約を削除しますか？'))
     {
-        alert('削除をキャンセルしました');
-        return 0;
+        return;
     }
 
     // //教室idを含めたjsonを作成
@@ -34,7 +53,7 @@ function reserveDeleteUser(reservationId, reservationDateAndTime)
         if(resData['result']) // 予約削除成功時
         {
             reserveGetUser() // 予約済み教室を更新
-            showMessageArea(resData['message'], 'black') // メッセージをメッセージエリアに表示
+            showMessageArea(reservationDateAndTimeMessage + 'の予約を削除しました', 'black'); // メッセージを表示
         }
         else {showMessageArea(resData['message'], 'red')} // エラーメッセージをメッセージエリアに表示
     }).catch((err) => console.log(err)); // エラーキャッチ
@@ -63,9 +82,10 @@ function reserveGetUser()
                 resData['data'].forEach((ele) => {
 
                     // 予約されている日時をわかりやすい形に加工
-                    const reservationDateAndTime = timeFormating(ele['start-date'], ele['end-date']) + '　' + ele['classroom-name'];
+                    const reservationDateAndTimeConfirm = timeFormating(ele['start-date'], ele['end-date']) + '　' + ele['classroom-name'];
+                    const reservationDateAndTimeMessage = createFormattedMessage(ele['start-date'], ele['end-date'], ele['classroom-name']);
                     // messageに挿入
-                    const message = document.createTextNode(reservationDateAndTime);
+                    const message = document.createTextNode(reservationDateAndTimeConfirm);
 
                     // 予約削除ボタンの作成
                     const button = document.createElement("button"); // 予約削除ボタン要素を作成
@@ -73,7 +93,7 @@ function reserveGetUser()
                     /*button.className = ''; // ボタンのクラスを設定(現状クラス無し) */
                     // クリックイベントを追加
                     button.addEventListener("click", function() {
-                        reserveDeleteUser(ele['reservation-id'], reservationDateAndTime);
+                        reserveDeleteUser(ele['reservation-id'], reservationDateAndTimeConfirm, reservationDateAndTimeMessage);
                     });
 
                     reserveList = document.createElement('li'); // li要素を作成
@@ -101,8 +121,7 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
     const alertMessage = timeFormating(reserveationData['start-date'], reserveationData['end-date']) + '　' + classroomName;
     if (!confirm(alertMessage + 'で予約を確定しますか？'))
     {
-        alert('予約をキャンセルしました');
-        return 0;
+        return;
     }
 
     //教室idを含めたjsonを作成
@@ -122,17 +141,11 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
     .then(resData => {
         if(resData['result'])
         {
-            const days = '日月火水木金土'; // 曜日表示用の文字列
             const data = resData["data"]; // json内のdataを取り出してdataに格納
-            const startDate = data['start-date'].replace(/-/g,'/'); // -を/に変更
-            const day = new Date(startDate); //Date型に変換
 
-            const date = startDate.slice( 0, 10 ) + '(' + days[day.getDay()] + ') ' // yyyy-MM-dd + 曜日(day)
-            const time = startDate.slice( 11, 16 ) + '  ～  ' + data['end-date'].slice( 11, 16 ); // HH:mm + ～ + HH:mm
-            const room = data['classroom-name']; // 教室
-
-            const messageAreaSentence = document.getElementById("message-area-sentence");
-            messageAreaSentence.innerHTML = `${date}<span class="break"></span>${time}<br>${room}を予約しました`; // メッセージを表示
+            // 予約されている日時をわかりやすい形に加工
+            const message = createFormattedMessage(data['start-date'], data['end-date'], data['classroom-name']);
+            showMessageArea(message + 'を予約しました', 'black'); // メッセージを表示
 
             reserveGetUser(); // 予約済み教室を更新
         }
@@ -176,6 +189,11 @@ function getData()
         if(resData['result']) {
             // let classrooms = resData['data'];
             // console.log(classrooms);
+
+            if(resData['data'].length <= 0) // 予約できる教室が0なら
+            {
+                
+            }
 
             // ボタンの設置
             resData['data'].forEach((ele) => {
