@@ -4,8 +4,7 @@ function reserveationApplication(classroomId, reserveationData)
 {
     if (!confirm('この時間・教室で予約を確定しますか？'))
     {
-        alert('予約をキャンセルしました');
-        return 0;
+        return;
     }
 
     //教室idを含めたjsonを作成

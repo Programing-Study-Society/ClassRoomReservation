@@ -4,8 +4,7 @@ function reserveDeleteAdmin(reservationId, reservationDateAndTime, userName)
 
     if (!confirm(reservationDateAndTime + '　' + userName + 'の予約を削除しますか？\n' + '※予約が削除された旨のメールが予約者に自動送信されます。'))
     {
-        alert('削除をキャンセルしました');
-        return 0;
+        return;
     }
 
     // //教室idを含めたjsonを作成
