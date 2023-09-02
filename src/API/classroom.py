@@ -145,7 +145,7 @@ def get_classrooms(mode):
                     abort(404)
                 
                 reserved_classrooms = session.query(DB.ReservableClassroom).\
-                    order_by((DB.ReservableClassroom)).all()
+                    order_by((DB.ReservableClassroom.reservable_start_time)).all()
                     
                 # classroom_values = session.query(DB.ReservableClassroom)\
                 #     .filter(~DB.ReservableClassroom.classroom_name.in_(
