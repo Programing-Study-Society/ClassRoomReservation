@@ -144,17 +144,17 @@ def get_classrooms(mode):
                 if request.method != 'GET':
                     abort(404)
                 
-                reserved_classroom = session.query(DB.ReservableClassroom)\
+                reserved_classrooms = session.query(DB.ReservableClassroom)\
                     .join(DB.Reservation, DB.Reservation.classroom_id == DB.ReservableClassroom.classroom_id).all()
                     
-                classroom_values = session.query(DB.ReservableClassroom)\
-                    .filter(~DB.ReservableClassroom.classroom_name.in_(
-                            [classroom.classroom_name for classroom in reserved_classroom]
-                        )
-                    ).all()
+                # classroom_values = session.query(DB.ReservableClassroom)\
+                #     .filter(~DB.ReservableClassroom.classroom_name.in_(
+                #             [classroom.classroom_name for classroom in reserved_classroom]
+                #         )
+                #     ).all()
                     
                 classroom_list = []
-                for classroom_value in classroom_values:
+                for classroom_value in reserved_classrooms:
                     classroom_list.append({
                         'result': True,
                         'data': classroom_value.to_dict()
@@ -199,6 +199,10 @@ def add_classroom():
                 
                 if (not name.startswith('J')) and (not name.startswith('Z')):
                     raise Post_Value_Error('存在しない教室名です')
+                
+                if len(name) >= 4:
+                    raise Post_Value_Error('教室名が長すぎます')
+                
                 
                 if (classroom_data['start-date'] >= classroom_data['end-date']):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
