@@ -160,7 +160,6 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
 // 日時を送り、空き教室を検索する関数(/classroom/get/date)(reserve_page.htmlで検索ボタンを押したときに実行される)
 function getData()
 {
-    
     // 予約ボタンの取得・初期化
     const classroomBox =  document.getElementById('classroom-box');
     classroomBox.innerHTML = '';
@@ -192,7 +191,7 @@ function getData()
 
             if(resData['data'].length <= 0) // 予約できる教室が0なら
             {
-                
+                classroomBox.textContent = '予約可能教室なし';
             }
 
             // ボタンの設置
