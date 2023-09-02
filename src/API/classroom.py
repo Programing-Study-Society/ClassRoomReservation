@@ -144,7 +144,8 @@ def get_classrooms(mode):
                 if request.method != 'GET':
                     abort(404)
                 
-                reserved_classrooms = session.query(DB.ReservableClassroom).all()
+                reserved_classrooms = session.query(DB.ReservableClassroom).\
+                    order_by((DB.ReservableClassroom)).all()
                     
                 # classroom_values = session.query(DB.ReservableClassroom)\
                 #     .filter(~DB.ReservableClassroom.classroom_name.in_(
