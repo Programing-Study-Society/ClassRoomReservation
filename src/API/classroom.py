@@ -300,7 +300,7 @@ def add_classroom():
     else:
         return jsonify({
             'result': True,
-            'data': result_list
+            'classroom': result_list
         }),200
         
 # 教室の削除をするエンドポイントです
