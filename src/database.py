@@ -62,16 +62,12 @@ class Reservation(Base):
             "end-date":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
 
-        for user in session.query(User).all() :
-            print(user.user_id)
-
-        print(f'reserved_user_id : {self.reserved_user_id}')
-
         if is_required_user_id == True :
             user = session.query(User).filter(User.user_id == self.reserved_user_id).first()
             print(user)
             if user != None :
-                reservation['user-name'] = user.user_name
+                approved_user = session.query(Approved_User).filter(Approved_User.approved_email == user.user_email).first()
+                reservation['user-name'] = approved_user.approved_user_name
                 reservation['user-email'] = user.user_email
 
         return reservation
