@@ -78,7 +78,7 @@ def default_route():
         except Exception as e :
             print(e)
             session.rollback()
-            return redirect('/')
+            return redirect('/html/login_failed.html')
 
         finally :
             session.close()
