@@ -73,7 +73,7 @@ def default_route():
         except NotApprovedUserError as e:
             print(e)
             session.rollback()
-            return redirect('/')
+            return redirect('/html/login_failed.html')
 
         except Exception as e :
             print(e)
