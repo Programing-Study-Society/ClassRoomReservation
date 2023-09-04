@@ -16,7 +16,8 @@ header{
 }
 
 
-#header-text{margin: auto;
+#header-text{
+    margin: auto;
     line-height: 60px;
     padding-left: 10px;
     font-size: medium;
@@ -28,17 +29,27 @@ nav{
     margin-right: 100px;
     margin-top: auto;
     margin-bottom: auto;
-    display: flex;;
+    display: flex;
+    @media (max-width:860px){
+        margin-right: 40px
+    }
 }
 
 .jump{
     margin-left: 15px;
-    float: left;
     border-radius: 5px;
-    background-color: #000;
     padding: 10px;
     text-decoration: underline;
     color: #fff;
+    
+}
+
+#header-text,
+nav,
+.jump{
+    @media (max-width:860px){
+        font-size: 14px
+    }
 }
 
 #margin{
@@ -83,6 +94,14 @@ footer{
     display: flex;
     text-align: center;
     justify-content: center;
+}
+
+details{
+    margin-left: 10px;
+}
+
+main h1,h2{
+    padding-left: 10px
 }
 
 /* ここからreserve_state.htmlの内容 */
@@ -161,4 +180,8 @@ input[type="text"]{
     transform: scale(1.5); /* 1.5倍に拡大 */
     transform-origin: center; /* 拡大の基準点を中心に設定 */
     margin-left: 10px; /* ゴミ箱アイコンの左側に10pxの余白を追加 */
+}
+
+main form{
+    padding-left: 10px;
 }
