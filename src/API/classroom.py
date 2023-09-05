@@ -289,6 +289,7 @@ def add_classroom():
         }), 500
     
     except Exception as e:
+        print(e)
         return jsonify({
             'result': False,
             'message': 'サービスにエラーが発生しました。'
