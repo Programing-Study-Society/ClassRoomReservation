@@ -63,7 +63,7 @@ def before_request():
 
 @login_manager.unauthorized_handler
 def unauth_handler():
-    return redirect('/back_test/html/templates/loginFaild.html')
+    return redirect('/html/login_failed.html')
 
 
 print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
