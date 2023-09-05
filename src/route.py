@@ -45,16 +45,16 @@ def default_route():
             approved_user = session.query(Approved_User).filter(Approved_User.approved_email == email).first()
 
             if approved_user is None :
-                client_session['is_admin'] = False
+                client_session['user-state'] = None
             else :
-                client_session['is_admin'] = approved_user.is_admin
+                client_session['user-state'] = approved_user.user_state
 
             user = User(user_name=name, user_id=id, user_email=email)
 
             if session.query(User).filter(User.user_id == id).first() != None :
                 login_user(user)
 
-                if approved_user.is_admin :
+                if approved_user.user_state :
                     return redirect('/html/classroom_management.html')
                 else :
                     return redirect('/html/reserve_page.html')
@@ -65,7 +65,7 @@ def default_route():
 
                 login_user(user)
 
-                if approved_user.is_admin :
+                if approved_user.user_state :
                     return redirect('/html/classroom_management.html')
                 else :
                     return redirect('/html/reserve_page.html')

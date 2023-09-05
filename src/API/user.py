@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from flask import session as client_session
 from flask_login import login_required
 from src.database import create_session, Approved_User, User, Reservation
+from src.module.function import get_user_state
 
 
 class PostValueError(Exception) :
@@ -43,6 +44,10 @@ def get_current_user():
 def get_user():
     try :
         session = create_session()
+
+        if not get_user_state(client_session).is_edit_reserve :
+            abort(404)
+
         approved_users = session.query(Approved_User).all()
 
     except Exception as e :
@@ -68,10 +73,16 @@ def add_user():
     try:
         session = create_session()
 
+        if not get_user_state(client_session).is_edit_reserve :
+            abort(404)
+
         user = request.json
         print(user)
 
         if not ('email' in user or 'user-name' in user or 'is-admin' in user) :
+            raise PostValueError('必要な情報が不足しています。')
+        
+        if user['user-name'] == None or user['user-name'] == '' or user['email'] == None or user['email'] == '' or user['is-admin'] == None :
             raise PostValueError('必要な情報が不足しています。')
 
         if len(user['email']) >= 64 or len(user['user-name']) >= 128:
@@ -80,7 +91,7 @@ def add_user():
         if session.query(Approved_User).filter(Approved_User.approved_email == user['email']).first() != None :
             raise PostValueError('同じメールが登録されています。')
 
-        session.add(Approved_User(approved_email=user['email'], approved_user_name=user['user-name'], is_admin=user['is-admin']))
+        session.add(Approved_User(approved_email=user['email'], approved_user_name=user['user-name'], user_state=user['is-admin']))
 
         session.commit()
 
@@ -113,6 +124,9 @@ def user_delete():
     try:
         session = create_session()
 
+        if not get_user_state(client_session).is_edit_reserve :
+            abort(404)
+
         data = request.json
 
         print(data)
@@ -128,7 +142,7 @@ def user_delete():
         if approved_user == None:
             raise PostValueError('存在しないユーザーです。')
         
-        if approved_user.is_admin and session.query(Approved_User).filter(Approved_User.is_admin == True).count() <= 1:
+        if approved_user.user_state and session.query(Approved_User).filter(Approved_User.user_state == True).count() <= 1:
             raise LuckOfAdministrativeUserError('管理者が不足しています。')
 
         user = session.query(User).filter(User.user_email == data['email']).first()

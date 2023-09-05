@@ -3,7 +3,7 @@ from src.database import Reservation, ReservableClassroom, Approved_User, create
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
 import re
-from src.module.function import generate_token
+from src.module.function import generate_token, get_user_state
 from flask_login import login_required
 import smtplib
 from email.mime.text import MIMEText
@@ -104,6 +104,9 @@ def register_reserve():
     try:
         session = create_session()
 
+        if not is_approved_user(session, client_session['email']) :
+            abort(404)
+
         post_datas = request.json
 
         if not ('start-date' in post_datas and 'end-date' in post_datas and 'classroom-id' in post_datas) :
@@ -152,10 +155,7 @@ def register_reserve():
         session.add(reserve)
         session.commit()
 
-        is_required_user_id = False
-
-        if 'is_admin' in client_session :
-            is_required_user_id = client_session['is_admin']
+        is_required_user_id = get_user_state(client_session).is_edit_reserve
 
         return jsonify({'result': True, 'data': reserve.to_dict(is_required_user_id=is_required_user_id)}), 200
 
@@ -192,8 +192,8 @@ def reserve_get(mode):
 
                 is_required_user_id = False
 
-                if 'is_admin' in client_session :
-                    is_required_user_id = client_session['is_admin']
+                if 'user-state' in client_session :
+                    is_required_user_id = get_user_state(client_session).is_edit_reserve
 
                 reserve_values = session.query(Reservation).join(
                         ReservableClassroom, 
@@ -243,8 +243,8 @@ def reserve_get(mode):
 
                 is_required_user_id = False
 
-                if 'is_admin' in client_session :
-                    is_required_user_id = client_session['is_admin']
+                if 'user-state' in client_session :
+                    is_required_user_id = get_user_state(client_session).is_edit_reserve
 
                 return jsonify({
                     'result': True,
@@ -277,8 +277,8 @@ def reserve_get(mode):
 
                 is_required_user_id = False
 
-                if 'is_admin' in client_session :
-                    is_required_user_id = client_session['is_admin']
+                if 'user-state' in client_session :
+                    is_required_user_id = get_user_state(client_session).is_edit_reserve
 
                 reserve_values = session.query(Reservation).filter(
                     Reservation.reserved_user_id == client_session['id']
@@ -319,8 +319,8 @@ def reserve_get(mode):
 
                 is_required_user_id = False
 
-                if 'is_admin' in client_session :
-                    is_required_user_id = client_session['is_admin']
+                if 'user-state' in client_session :
+                    is_required_user_id = get_user_state(client_session).is_edit_reserve
 
                 return jsonify({
                         'result':True,
@@ -357,7 +357,7 @@ def delete_reserve():
         if delete_data is None :
             raise PostValueError('削除する予約がありません')
         
-        if client_session['is_admin'] :
+        if get_user_state(client_session).is_edit_reserve :
             reservations_dict = delete_data.to_dict()
             mail_thread = threading.Thread(target=send_reserve_delete_mail, args=(reservations_dict,), daemon=True)
             mail_thread.start()

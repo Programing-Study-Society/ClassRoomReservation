@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, abort, session as client_session
-from sqlalchemy import or_, and_, orm
+from sqlalchemy import or_, and_
 from src.database import create_session
-from src.module.function import generate_token
+from src.module.function import generate_token, get_user_state
 from  datetime import datetime
 import src.database as DB
 import re
@@ -188,20 +188,15 @@ def get_classrooms(mode):
 def add_classroom():
     result_list = []
     try:
+        if not get_user_state(client_session).is_edit_reserve :
+            abort(404)
+
         for classroom_data in request.json:
             try:
                 session = create_session()
                 
-                name:str = classroom_data['classroom-name']
-                
                 if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
                     raise Post_Value_Error('必要な情報が不足しています')
-                
-                # if (not name.startswith('J')) and (not name.startswith('Z')):
-                #     raise Post_Value_Error('存在しない教室名です')
-                
-                # if len(name) > 4:
-                #     raise Post_Value_Error('教室名が長すぎます')
                 
                 if (classroom_data['start-date'] >= classroom_data['end-date']):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
@@ -238,8 +233,7 @@ def add_classroom():
                         )).first() != None:
                     raise Post_Value_Error('既に追加された教室です')
                 
-                else:
-                    session.add(add_classroom_data)
+                session.add(add_classroom_data)
                 session.commit()
                 
                 
@@ -306,12 +300,13 @@ def add_classroom():
             'classroom': result_list
         }),200
         
+
 # 教室の削除をするエンドポイントです
 @classroom.route('/delete',methods=['DELETE'])
 @login_required
 def delete_classroom():
     try:
-        if not client_session['is_admin'] :
+        if not get_user_state(client_session).is_edit_reserve :
             abort(404)
 
         session = create_session()

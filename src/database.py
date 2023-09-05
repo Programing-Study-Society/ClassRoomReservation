@@ -99,17 +99,26 @@ class Approved_User(Base):
     __tablename__ = 'approved_user'
     
     approved_email = Column('approved_email', String, primary_key=True)
-    approved_user_name = Column('approved_user_name',String(128))
-    is_admin = Column('is_admin', Boolean)
+    approved_user_name = Column('approved-user_name',String(128))
+    user_state = Column('user_state', String)
     
     def to_dict(self):
         approved_user = {
             "approved-user-name":self.approved_user_name,
             "approved-email":self.approved_email,
-            "is-admin":self.is_admin,
+            "user-state":self.user_state,
         }
 
         return approved_user
+    
+
+class UserStatus(Base):
+
+    __tablename__ = 'user_state'
+
+    name = Column('user_state_name', String, primary_key=True) # administrator, moderator, user のみ
+    is_edit_reserve = Column('is_edit_reserve', Boolean)
+    is_edit_user = Column('is_edit_user', Boolean)
 
 
 def create_database():
