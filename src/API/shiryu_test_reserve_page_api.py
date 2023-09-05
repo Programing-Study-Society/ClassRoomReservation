@@ -244,7 +244,7 @@ def apiTest9():
 					'end-date': '2023-09-03 10:00:00', # Date型
 				}
 			},
-		]	
+		]
 }
     return jsonify(response_data)
 
@@ -259,16 +259,19 @@ def apiTest10():
 	'result': True, # Bool型,
 	'message': '失敗メッセージ10', # String型
 	'data':[{
-		'user-name': 'プログラミング研究会101号', # String型,
-		'email': 'proken1001@gmail.com' # String型
+		'approved-user-name': 'プログラミング研究会101号', # String型,
+		'approved-email': 'proken1001@gmail.com', # String型
+		'user-state': 'Admin', # String型
 		},
         {
-		'user-name': 'プログラミング研究会102号', # String型,
-		'email': 'proken1002@gmail.com' # String型
+		'approved-user-name': 'プログラミング研究会102号', # String型,
+		'approved-email': 'proken1002@gmail.com', # String型
+		'user-state': 'Moderator' # String型
 		},
         {
-		'user-name': 'プログラミング研究会103号', # String型,
-		'email': 'proken1003@gmail.com' # String型
+		'approved-user-name': 'プログラミング研究会103号', # String型,
+		'approved-email': 'proken1003@gmail.com', # String型
+		'user-state': 'User', # String型
 		},
 	]
 }
@@ -302,4 +305,34 @@ def apiTest12():
 	'result': True, #Bool型,
 	'message': 'メッセージ12', #String型
 	}
+    return jsonify(response_data)
+
+
+
+# 権限の種類の取得(/user/authority)エンドポイントにGETリクエストがあった場合に、データを返します
+@testApi.route('/user/authority', methods=['GET'])
+def apiTest13():
+    print('/user/authorityにアクセス(API)')
+    # データを処理するなどのロジックを実装
+    response_data = {
+	'result': True, # Bool型,
+	'message': '失敗メッセージ13', # String型（失敗時のみ）
+	'data':[
+		{
+			'name': 'Admin', # String型
+			'is-edit-reserve': True, # Bool型,
+			'is-edit-user': True, # Bool型,
+		},
+		{
+			'name': 'Moderator', # String型
+			'is-edit-reserve': True, # Bool型,
+			'is-edit-user': True, # Bool型,
+		},
+		{
+			'name': 'User', # String型
+			'is-edit-reserve': False, # Bool型,
+			'is-edit-user': False, # Bool型,
+		},
+	]
+}
     return jsonify(response_data)

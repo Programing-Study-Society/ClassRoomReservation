@@ -26,13 +26,16 @@
     <main>
         <div id="margin"></div>
         <h1>ユーザ一覧</h1>
-        <details>
+        <h2 style="text-align:center;" id="no-get-user-authority"></h2>
+        <details id="user-add-details">
             <summary>ユーザの新規登録</summary>
             <form id="user-addform" onsubmit="userAdd()">
                 <label>団体名</label>
                 <input type="text" id="add-user-name" required>
                 <label>メールアドレス</label>
                 <input type="email" id="add-email" required>
+                <label>権限</label>
+                <select id="add-authority"></select required>
                 <input type="submit" value="追加">
             </form>
         </details>
@@ -50,7 +53,7 @@
             </tbody>
         </table>
         <h2 style="text-align:center;" id="no-user-sentence"></h2>
-        
+
     </main>
 
     <footer>
