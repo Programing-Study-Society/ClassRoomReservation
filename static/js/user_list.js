@@ -1,3 +1,41 @@
+// 現在ログインしているユーザーが、ユーザー追加で付与できる権限を取得する関数(/user/authority)
+function getUserAuthority()
+{
+    // データを取得するためのAPIエンドポイントにリクエストを送信します
+    fetch(LOCATION_URL + '/user/authority')
+    .then(response => response.json()) // レスポンスをJSON形式に変換します
+    .then(resData => {
+        if(resData['result']) // 成功時
+        {
+            // select要素を取得
+            const $select = document.getElementById('add-authority');
+
+            // 選択肢を追加
+            resData['data'].forEach(ele => {
+                const $option = document.createElement("option");
+                $option.text = ele['name'];
+                $option.value = ele['name'];
+                $select.appendChild($option);
+            });
+
+            // 選択肢の初期値を選択肢の一番最後の物にする
+            $select.options[resData['data'].length - 1].selected = true;
+        }
+        else // 失敗時
+        {
+            // エラーを表示
+            const $userAddDetails = document.getElementById('user-add-details');
+            $userAddDetails.style.display = "none";
+
+            const $noGetUserAuthority = document.getElementById('no-get-user-authority');
+            $noGetUserAuthority.innerHTML = resData['message'];
+            $noGetUserAuthority.style.color = 'red';
+        }
+    }).catch((err) => console.log(err)); // エラーキャッチ
+}
+
+
+
 // ユーザーを削除する関数(管理者)(/user/delete)(ユーザーの取得を行う関数より、削除ボタンに紐づけられる)
 function userDeleteAdmin(email, userName)
 {
@@ -5,7 +43,7 @@ function userDeleteAdmin(email, userName)
     {
         return;
     }
-    
+
     const EMAIL_JSON_DATA = JSON.stringify({'email' : email});
 
     // データを取得するためのAPIエンドポイントにリクエストを送信します
@@ -61,7 +99,7 @@ function userGet()
                     $newRow.appendChild($cell2);
 
                     const $cell3 = document.createElement('td');
-                    $cell3.textContent = ele['is-admin'];
+                    $cell3.textContent = ele['user-state'];
                     $newRow.appendChild($cell3);
 
 
@@ -79,7 +117,7 @@ function userGet()
 
                     // セルを表に挿入
                     $userListBox.appendChild($newRow);
-                })
+                });
             }
         }
         else // 失敗時
@@ -99,12 +137,13 @@ function userAdd()
 {
     const addUserNameValue = document.getElementById('add-user-name').value;
     const addEmailValue = document.getElementById('add-email').value;
+    const authorityValue = document.getElementById('add-authority').value;
 
     // ユーザー情報を一時保存する変数
     let userData = {};
     userData['user-name'] = addUserNameValue;
     userData['email'] = addEmailValue;
-    userData['is-admin'] = false;
+    userData['user-state'] = authorityValue;
 
     // ユーザー情報をjson形式にする
     const user_JSON_DATA = JSON.stringify(userData);
@@ -128,4 +167,5 @@ function userAdd()
 
 
 //  user_list.htmlページを開いた瞬間に実行される部分
-userGet();
+userGet(); // 現在登録されているユーザー情報の取得
+getUserAuthority(); // ログインしているユーザーの権限を取得

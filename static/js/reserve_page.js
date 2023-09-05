@@ -22,7 +22,7 @@ function createFormattedMessage(startDate, endDate, classroomName)
     console.log(date);
     console.log(time);
     console.log(room);
-    
+
     return `${date}<span class="break"></span>${time}<br>${room}`;
 }
 
@@ -204,7 +204,7 @@ function getData()
                         reserveationApplication(ele['classroom-id'], ele['classroom-name'], reserveationData);
                 });
                 classroomBox.appendChild(button); // ボタンをHTMLのbody要素に追加
-            })
+            });
         } else {
             // エラーメッセージを表示
             showMessageArea(resData['message'], 'red');

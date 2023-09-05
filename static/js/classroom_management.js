@@ -27,7 +27,7 @@ function addInputField()
             <option value="16:10">
             <option value="18:10">
             <option value="20:00">
-        </datalist>                
+        </datalist>
         教室：<select type="text" class="addform-roomname" required>
         <option value="">-選択してください-</option>
             <optgroup label="J号館">
@@ -80,7 +80,7 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
     {
         return;
     }
-    
+
     const CLASSROOM_ID_JSON_DATA = JSON.stringify({'classroom-id':classroomId});
 
     // データを取得するためのAPIエンドポイントにリクエストを送信します
@@ -163,7 +163,7 @@ function classroomGetFull()
                         const $cell3 = document.createElement('td');
                         // 予約の有無を格納する変数(失敗時：-1)
                         let reservationStatus = -1;
-                        
+
                         if(resData['result']) // 成功時
                         {
                             reservationStatus = resData['data'].length > 0 ? 1 : 0; // 予約があれば1 なければ0
@@ -191,7 +191,7 @@ function classroomGetFull()
                         $newRow.appendChild($cell4);
 
                     }).catch((err) => console.log(err)); // エラーキャッチ
-    
+
                     // セルを表に挿入
                     $tableBody.appendChild($newRow);
                 });
@@ -285,7 +285,7 @@ function classroomAdd()
                     messageAreaSentence.innerHTML += reservationDateAndTime + '　' + ele['data']['classroom-name'] + 'の登録が失敗しました：' + ele['message'] + '<br>';
                     isAllOk = false; // 失敗数を増やす
                 }
-            })
+            });
 
             if(isAllOk) // 予約可能教室の追加が全て成功 = 入力欄が0
             {
