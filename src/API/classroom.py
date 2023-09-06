@@ -228,7 +228,7 @@ def add_classroom():
                 
                 date_pattern = r'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}'
 
-                if re.match(date_pattern, start_time) is None or re.match(date_pattern, end_time) is None :
+                if re.match(date_pattern, classroom_data['start-date']) is None or re.match(date_pattern, classroom_data['end-date']) is None :
                     raise Post_Value_Error('日時が間違えています。(yyyy-mm-dd HH:MM:SS)')
                 
                 start_time = datetime.strptime(classroom_data['start-date'], '%Y-%m-%d %H:%M:%S')
@@ -347,7 +347,7 @@ def add_classroom():
         for result_value in result_list :
             if not result_value['result'] : cnt += 1
 
-        print(cnt)
+        print(f'failure classroom : {cnt}')
 
         if len(result_list) == cnt :
             raise NothingResultValueError('教室の追加に失敗しました。')
