@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify, abort, session as client_session
-from src.database import Reservation, ReservableClassroom, Approved_User, create_session
+from src.database import Reservation, ReservableClassroom, Approved_User, Authority, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
 import re
 from src.module.function import generate_token, get_user_state
 from flask_login import login_required
 import smtplib
+from email import policy
 from email.mime.text import MIMEText
 from email.utils import formatdate
 import os
@@ -52,9 +53,9 @@ def send_reserve_delete_mail(reservation) :
     
     send_txt = f"{reservation['user-name']} 様\n\n当サイトにてご予約いただいた\n\n{reservation['classroom-name']}教室　{formated_start_date} ～ {formated_end_date}\n\nの予約が取り消されました。\n\n当日は教室を貸出できないためご了承下さい。\n\n何かご不明な点がございましたら学務課までご連絡お願いいたします。"
     
-    message = MIMEText(send_txt)
+    message = MIMEText(send_txt, "plain", "utf-8", policy=policy.default)
     message['Subject'] = '【お知らせ】教室のご予約取り消しについて'
-    message['From'] = os.environ.get('MAIL_USERNAME')
+    message['From'] = os.environ.get('MAIL_SENDER')
     message['To'] = reservation['user-email']
     message['Date'] = formatdate()
 
@@ -107,13 +108,16 @@ def register_reserve():
         if not is_approved_user(session, client_session['email']) :
             abort(404)
 
-        post_datas = request.json
+        post_data = request.json
 
-        if not ('start-date' in post_datas and 'end-date' in post_datas and 'classroom-id' in post_datas) :
+        if not ('start-date' in post_data and 'end-date' in post_data and 'classroom-id' in post_data) :
             raise PostValueError('無効なデータ形式です。')
 
-        start_time = datetime.strptime(post_datas['start-date'], '%Y-%m-%d %H:%M:%S')
-        end_time = datetime.strptime(post_datas['end-date'], '%Y-%m-%d %H:%M:%S')
+        if post_data['start-date'] is None or post_data['end-date'] is None or post_data['classroom-id'] is None or post_data['start-date'] == '' or post_data['end-date'] == '' or post_data['classroom-id'] == '' :
+            raise PostValueError('データが不足しています。')
+
+        start_time = datetime.strptime(post_data['start-date'], '%Y-%m-%d %H:%M:%S')
+        end_time = datetime.strptime(post_data['end-date'], '%Y-%m-%d %H:%M:%S')
 
         if start_time < datetime.now() or end_time < datetime.now():
             raise ReserveValueError('無効な日時です。')
@@ -122,7 +126,7 @@ def register_reserve():
             raise ReserveValueError('日を跨いだ予約はできません。')
         
         classroom = session.query(ReservableClassroom).filter(
-            ReservableClassroom.classroom_id == post_datas['classroom-id']
+            ReservableClassroom.classroom_id == post_data['classroom-id']
         ).first()
 
         if classroom is None :
@@ -347,7 +351,15 @@ def delete_reserve():
     try :
         session = create_session()
 
-        post_data = request.get_json()
+        post_data = request.json
+
+        user_authority = session.query(Authority).filter(Authority.name == client_session['user-state']).first()
+
+        if user_authority is None :
+            abort(404)
+
+        if not user_authority.is_reserve :
+            abort(404)
 
         if not ('reservation-id' in post_data) :
             raise PostValueError('無効なデータ形式です。')
@@ -358,7 +370,7 @@ def delete_reserve():
             raise PostValueError('削除する予約がありません')
         
         if get_user_state(client_session).is_edit_reserve :
-            reservations_dict = delete_data.to_dict()
+            reservations_dict = delete_data.to_dict(is_required_user_id=True)
             mail_thread = threading.Thread(target=send_reserve_delete_mail, args=(reservations_dict,), daemon=True)
             mail_thread.start()
 

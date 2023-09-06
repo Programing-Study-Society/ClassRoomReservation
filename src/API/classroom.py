@@ -9,6 +9,7 @@ from flask_login import login_required
 import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
+from email import policy
 import os
 import threading
 
@@ -55,9 +56,9 @@ def send_reserve_delete_mail(reservations) :
         
         send_txt = f"{reserve['user-name']} 様\n\n当サイトにてご予約いただいた\n\n{reserve['classroom-name']}教室　{formated_start_date} ～ {formated_end_date}\n\nの予約が取り消されました。\n\n当日は教室を貸出できないためご了承下さい。\n\n何かご不明な点がございましたら学務課までご連絡お願いいたします。"
         
-        message = MIMEText(send_txt)
+        message = MIMEText(send_txt, "plain", "utf-8", policy=policy.default)
         message['Subject'] = '【お知らせ】教室のご予約取り消しについて'
-        message['From'] = os.environ.get('MAIL_USERNAME')
+        message['From'] = os.environ.get('MAIL_SENDER')
         message['To'] = reserve['user-email']
         message['Date'] = formatdate()
 
@@ -100,7 +101,7 @@ def get_classrooms(mode):
                 if  start_time > end_time:
                     raise ReservationTimeValueError('開始時刻は終了時刻より前を入力してください')
                         
-                reserved_classroom = session.query(DB.ReservableClassroom)\
+                classroom_values = session.query(DB.ReservableClassroom)\
                     .filter(and_(DB.ReservableClassroom.reservable_start_time <= start_time),
                         (DB.ReservableClassroom.reservable_end_time >= end_time)).all()
                 
@@ -111,10 +112,24 @@ def get_classrooms(mode):
                 #             [classroom.classroom_name for classroom in reserved_classroom]
                 #         )
                 #     ).all()
+
+                classroom_list = []
+                for classroom_value in classroom_values :
+
+                    classroom_dict = classroom_value.to_dict()
+
+                    reserves = session.query(DB.Reservation.classroom_id).filter(DB.Reservation.classroom_id == classroom_value.classroom_id).first()
+
+                    if reserves == None :
+                        classroom_dict['is_reserved'] = False
+                    else :
+                        classroom_dict['is_reserved'] = True
+                    
+                    classroom_list.append(classroom_dict)
                 
                 return jsonify({
                     'result': True,
-                    'data': [classroom.to_dict() for classroom in reserved_classroom],
+                    'data': classroom_list,
                 })
 
             except ReservationTimeValueError as e:
@@ -154,10 +169,17 @@ def get_classrooms(mode):
                     
                 classroom_list = []
                 for classroom_value in reserved_classrooms:
-                    classroom_list.append({
-                        'result': True,
-                        'data': classroom_value.to_dict()
-                    })
+
+                    classroom_dict = classroom_value.to_dict()
+
+                    reserves = session.query(DB.Reservation.classroom_id).filter(DB.Reservation.classroom_id == classroom_value.classroom_id).first()
+
+                    if reserves == None :
+                        classroom_dict['is_reserved'] = False
+                    else :
+                        classroom_dict['is_reserved'] = True
+                    
+                    classroom_list.append(classroom_dict)
                 
                 return jsonify({
                     'result': True,

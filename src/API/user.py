@@ -45,7 +45,7 @@ def get_user():
     try :
         session = create_session()
 
-        if not get_user_state(client_session).is_edit_reserve :
+        if not get_user_state(client_session).is_admin :
             abort(404)
 
         approved_users = session.query(Approved_User).all()
