@@ -112,13 +112,26 @@ class Approved_User(Base):
         return approved_user
     
 
-class UserStatus(Base):
+class Authority(Base):
 
     __tablename__ = 'user_state'
 
     name = Column('user_state_name', String, primary_key=True) # administrator, moderator, user のみ
+    is_reserve = Column('is_reserve', Boolean)
+    is_admin = Column('is_admin', Boolean)
     is_edit_reserve = Column('is_edit_reserve', Boolean)
     is_edit_user = Column('is_edit_user', Boolean)
+
+    def to_dict(self) :
+        authority = {
+            'is-reserve':self.is_reserve,
+            'is-admin':self.is_admin,
+            'is-edit-reserve':self.is_edit_reserve,
+            'is-edit-user':self.is_edit_user
+        }
+
+        return authority
+
 
 
 def create_database():
