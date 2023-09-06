@@ -31,7 +31,7 @@ nav{
     margin-bottom: auto;
     display: flex;
     @media (max-width:860px){
-        margin-right: 40px
+        margin-right: 40px;
     }
 }
 
@@ -41,14 +41,18 @@ nav{
     padding: 10px;
     text-decoration: underline;
     color: #fff;
-    
+    transition-delay: 0.2s;
+}
+
+.jump:hover{
+    color: #d3d3d3;
 }
 
 #header-text,
 nav,
 .jump{
     @media (max-width:860px){
-        font-size: 14px
+        font-size: 14px;
     }
 }
 
@@ -73,7 +77,7 @@ h1{
     background-color: #adc9f3;
     padding: 10px;
     border-bottom: solid 4px #778ca3;
-    color: #000000
+    color: #000000;
 }
 .user-list td,.classroom-list th{
     padding: 10px;
@@ -101,7 +105,18 @@ details{
 }
 
 main h1,h2{
-    padding-left: 10px
+    padding-left: 10px;
+}
+
+input[type="email"]{
+    position: relative;
+    padding: 0 10px;
+    width: 150px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
 }
 
 /* ここからreserve_state.htmlの内容 */
@@ -115,7 +130,7 @@ main h1,h2{
     background-color: #fff;
     padding: 10px;
     border-bottom: solid 4px #778ca3;
-    color: #000
+    color: #000;
 }
 .reserve-list td{
     padding: 5px;
@@ -139,17 +154,7 @@ input[type="date"] {
     color: #000;
 }
 
-input[type="time"]{
-    position: relative;
-    padding: 0 10px;
-    width: 100px;
-    height: 36px;
-    border: 2px solid #000;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #000;
-}
-
+input[type="time"],
 input[type="text"]{
     position: relative;
     padding: 0 10px;
