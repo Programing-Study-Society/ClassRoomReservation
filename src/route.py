@@ -94,6 +94,8 @@ def logout():
     # Session情報の削除
     client_session.pop("id", None)
     client_session.pop("name", None)
+    client_session.pop("email", None)
+    client_session.pop("user-state", None)
 
     #ログアウト処理
     logout_user()
