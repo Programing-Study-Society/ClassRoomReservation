@@ -136,20 +136,20 @@ def apiTest6():
 		'data':[{
 			'classroom-id': 'cID601', #String型
 			'classroom-name': 'J601', #String型,
-			'start-date': '2023-06-01 06:00:00', #Date型,
-			'end-date': '2023-06-01 07:00:00', #Date型
+			'reservable-start-date': '2023-06-01 06:00:00', #Date型,
+			'reservable-end-date': '2023-06-01 07:00:00', #Date型
 			},
 			{
 				'classroom-id': 'cID602', #String型
 				'classroom-name': 'J602', #String型,
-				'start-date': '2023-06-02 06:00:00', #Date型,
-				'end-date': '2023-06-02 07:00:00', #Date型
+				'reservable-start-date': '2023-06-02 06:00:00', #Date型,
+				'reservable-end-date': '2023-06-02 07:00:00', #Date型
 			},
             {
 				'classroom-id': 'cID603', #String型
 				'classroom-name': 'J603', #String型,
-				'start-date': '2023-06-03 06:00:00', #Date型,
-				'end-date': '2023-06-03 07:00:00', #Date型
+				'reservable-start-date': '2023-06-03 06:00:00', #Date型,
+				'reservable-end-date': '2023-06-03 07:00:00', #Date型
 			},
 		]
 	}
