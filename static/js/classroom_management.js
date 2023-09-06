@@ -45,6 +45,19 @@ function addInputField()
     `;
 
     addformParent.appendChild(newForm);
+
+
+
+
+
+    // const $addformParent = document.getElementById('addform-parent');
+
+    // const $addformChild = document.createElement('div');
+    // $addformChild.className = 'addform-child';
+
+    // const $dataInput = document.createElement('input');
+
+
 }
 
 // form削除機能
@@ -272,25 +285,56 @@ function classroomAdd()
 
         if(resData['result']) { // 成功時
             let isAllOk = true; // 追加が失敗した件数を格納する変数
+            // 予約可能な教室追加欄の一番上の要素をそれぞれ取得
+            const $date = addformElements[0].querySelector('.addform-today');
+            const $startTime = addformElements[0].querySelector('.addform-start-time');
+            const $endTime = addformElements[0].querySelector('.addform-end-time');
+            const $roomName = addformElements[0].querySelector('.addform-roomname');
+
+            console.log("resData['classroom']");
+            console.log(resData['classroom']);
+
             resData['classroom'].forEach((ele, index) =>{
+                console.log("ele['data']" + index);
+                console.log(ele['data']);
+
                 if(ele['result']) // 予約可能教室の追加が成功していたら
                 {
                     // 追加が成功した入力欄を削除する
-                    if(addformElements.length > index) addformElements[index].remove();
+                    if(index === 0) // index == 0なら値のみ削除
+                    {
+                        $date.value = '';
+                        $startTime.value = '';
+                        $endTime.value = '';
+                        $roomName.value = '';
+                    }
+                    else // それ以外なら要素ごと削除
+                    {
+                        addformElements[index].remove();
+                    }
                 }
                 else // 予約可能教室の追加が失敗していたら
                 {
+                    if(isAllOk) // isAllOkがtrue → 予約可能な教室追加欄の一番上が空なので、そこに値追加
+                    {
+                        isAllOk = false; // 失敗を記録する
+                        $date.value = addformElements[index].querySelector('.addform-today').value;
+                        $startTime.value = addformElements[index].querySelector('.addform-start-time').value;
+                        $endTime.value = addformElements[index].querySelector('.addform-end-time').value;
+                        $roomName.value = addformElements[index].querySelector('.addform-roomname').value;
+                        addformElements[index].remove();
+                    }
                     // 追加が失敗したメッセージを表示する
                     const reservationDateAndTime = timeFormating(ele['data']['start-date'], ele['data']['end-date']);
                     messageAreaSentence.innerHTML += reservationDateAndTime + '　' + ele['data']['classroom-name'] + 'の登録が失敗しました：' + ele['message'] + '<br>';
-                    isAllOk = false; // 失敗数を増やす
                 }
             });
 
-            if(isAllOk) // 予約可能教室の追加が全て成功 = 入力欄が0
-            {
-                addInputField(); // 入力欄を一つ追加する
-            }
+            // 機能追加後削除
+            // if(isAllOk) // 予約可能教室の追加が全て成功 = 入力欄が0
+            // {
+            //     addInputField(); // 入力欄を一つ追加する
+            // }
 
             classroomGetFull() // 現在の予約可能教室を更新する
 
