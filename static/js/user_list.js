@@ -1,8 +1,8 @@
-// 現在ログインしているユーザーが、ユーザー追加で付与できる権限を取得する関数(/user/authority)
+// 現在ログインしているユーザーが、ユーザー追加で付与できる権限を取得する関数(/user/get-authority)
 function getUserAuthority()
 {
     // データを取得するためのAPIエンドポイントにリクエストを送信します
-    fetch(LOCATION_URL + '/user/authority')
+    fetch(LOCATION_URL + '/user/get-authority')
     .then(response => response.json()) // レスポンスをJSON形式に変換します
     .then(resData => {
         if(resData['result']) // 成功時
