@@ -15,8 +15,16 @@ header{
     justify-content: space-between;
 }
 
-
 #header-text{
+    margin: auto;
+    line-height: 60px;
+    padding-left: 10px;
+    font-size: medium;
+    text-decoration: none;
+    color: #fff;
+}
+
+.logout {
     margin: auto;
     line-height: 60px;
     padding-left: 10px;
@@ -54,6 +62,10 @@ nav,
     @media (max-width:860px){
         font-size: 14px;
     }
+}
+
+.logout {
+    margin-left: 10px;
 }
 
 #margin{

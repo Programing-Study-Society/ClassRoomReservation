@@ -13,6 +13,14 @@ body {
     color: white;
 }
 
+.logout {
+    margin: auto;
+    line-height: 60px;
+    padding-left: 10px;
+    font-size: medium;
+    color: #fff;
+}
+
 #header-text{
     line-height: 60px;
     padding-left: 10px;
