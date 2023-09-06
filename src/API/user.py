@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from flask import session as client_session
 from flask_login import login_required
-from src.database import create_session, Approved_User, User, Reservation
+from src.database import create_session, Approved_User, User, Reservation, Authority
 from src.module.function import get_user_state
 
 
@@ -45,7 +45,7 @@ def get_user():
     try :
         session = create_session()
 
-        if not get_user_state(client_session).is_edit_reserve :
+        if not get_user_state(client_session).is_admin :
             abort(404)
 
         approved_users = session.query(Approved_User).all()
@@ -142,7 +142,7 @@ def user_delete():
         if approved_user == None:
             raise PostValueError('存在しないユーザーです。')
         
-        if approved_user.user_state and session.query(Approved_User).filter(Approved_User.user_state == True).count() <= 1:
+        if approved_user.user_state and session.query(Approved_User).filter(Approved_User.user_state == 'administrator').count() <= 1:
             raise LuckOfAdministrativeUserError('管理者が不足しています。')
 
         user = session.query(User).filter(User.user_email == data['email']).first()
@@ -184,5 +184,29 @@ def user_delete():
             'message':'サービスにエラーが発生しました。'
         }), 500
 
+    finally :
+        session.close()
+
+
+@user_api.route('/get-authority')
+def get_authority():
+    try :
+        session = create_session()
+
+        authorities = session.query(Authority).all()
+
+        return jsonify({
+            'result':True,
+            'data':[authority.to_dict() for authority in authorities]
+        })
+
+    except Exception as e :
+        print(e)
+        session.rollback()
+        return jsonify({
+            'result':False,
+            'message':'サービスにエラーが発生しました。'
+        }), 500
+    
     finally :
         session.close()

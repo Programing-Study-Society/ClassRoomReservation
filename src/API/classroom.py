@@ -9,11 +9,16 @@ from flask_login import login_required
 import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
+from email import policy
 import os
 import threading
 
 
 classroom = Blueprint('classroom', __name__, url_prefix='/classroom')
+
+
+class LuckOfInformationError(Exception):
+    pass
 
 
 class ReservationTimeValueError(Exception):
@@ -55,9 +60,9 @@ def send_reserve_delete_mail(reservations) :
         
         send_txt = f"{reserve['user-name']} 様\n\n当サイトにてご予約いただいた\n\n{reserve['classroom-name']}教室　{formated_start_date} ～ {formated_end_date}\n\nの予約が取り消されました。\n\n当日は教室を貸出できないためご了承下さい。\n\n何かご不明な点がございましたら学務課までご連絡お願いいたします。"
         
-        message = MIMEText(send_txt)
+        message = MIMEText(send_txt, "plain", "utf-8", policy=policy.default)
         message['Subject'] = '【お知らせ】教室のご予約取り消しについて'
-        message['From'] = os.environ.get('MAIL_USERNAME')
+        message['From'] = os.environ.get('MAIL_SENDER')
         message['To'] = reserve['user-email']
         message['Date'] = formatdate()
 
@@ -84,7 +89,6 @@ def get_classrooms(mode):
                     abort(404)
                 
                 post_data = request.json
-                print(post_data)
             
 
                 if re.match(r'\d+-\d+-\d+', post_data['start-date']) is None or \
@@ -101,7 +105,7 @@ def get_classrooms(mode):
                 if  start_time > end_time:
                     raise ReservationTimeValueError('開始時刻は終了時刻より前を入力してください')
                         
-                reserved_classroom = session.query(DB.ReservableClassroom)\
+                classroom_values = session.query(DB.ReservableClassroom)\
                     .filter(and_(DB.ReservableClassroom.reservable_start_time <= start_time),
                         (DB.ReservableClassroom.reservable_end_time >= end_time)).all()
                 
@@ -112,10 +116,24 @@ def get_classrooms(mode):
                 #             [classroom.classroom_name for classroom in reserved_classroom]
                 #         )
                 #     ).all()
+
+                classroom_list = []
+                for classroom_value in classroom_values :
+
+                    classroom_dict = classroom_value.to_dict()
+
+                    reserves = session.query(DB.Reservation.classroom_id).filter(DB.Reservation.classroom_id == classroom_value.classroom_id).first()
+
+                    if reserves == None :
+                        classroom_dict['is_reserved'] = False
+                    else :
+                        classroom_dict['is_reserved'] = True
+                    
+                    classroom_list.append(classroom_dict)
                 
                 return jsonify({
                     'result': True,
-                    'data': [classroom.to_dict() for classroom in reserved_classroom],
+                    'data': classroom_list,
                 })
 
             except ReservationTimeValueError as e:
@@ -155,10 +173,17 @@ def get_classrooms(mode):
                     
                 classroom_list = []
                 for classroom_value in reserved_classrooms:
-                    classroom_list.append({
-                        'result': True,
-                        'data': classroom_value.to_dict()
-                    })
+
+                    classroom_dict = classroom_value.to_dict()
+
+                    reserves = session.query(DB.Reservation.classroom_id).filter(DB.Reservation.classroom_id == classroom_value.classroom_id).first()
+
+                    if reserves == None :
+                        classroom_dict['is_reserved'] = False
+                    else :
+                        classroom_dict['is_reserved'] = True
+                    
+                    classroom_list.append(classroom_dict)
                 
                 return jsonify({
                     'result': True,
@@ -194,12 +219,27 @@ def add_classroom():
         for classroom_data in request.json:
             try:
                 session = create_session()
-                
+            
                 if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
-                    raise Post_Value_Error('必要な情報が不足しています')
+                    raise LuckOfInformationError('必要な情報が不足しています')
                 
-                if (classroom_data['start-date'] >= classroom_data['end-date']):
+                if len(classroom_data['start-date'] and classroom_data['end-date'] and classroom_data['classroom-name']) == 0:
+                    raise LuckOfInformationError('必要な情報の値がありません')
+                
+                date_pattern = r'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}'
+
+                if re.match(date_pattern, start_time) is None or re.match(date_pattern, end_time) is None :
+                    raise Post_Value_Error('日時が間違えています。(yyyy-mm-dd HH:MM:SS)')
+                
+                start_time = datetime.strptime(classroom_data['start-date'], '%Y-%m-%d %H:%M:%S')
+                end_time = datetime.strptime(classroom_data['end-date'], '%Y-%m-%d %H:%M:%S')
+                now_time = datetime.now()
+                
+                if (start_time >= end_time):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
+                
+                if (start_time <= now_time):
+                    raise Post_Value_Error('過去の日時は指定出来ません')
                 
                 cnt = 0
                 while True:
@@ -243,13 +283,35 @@ def add_classroom():
                         'data': add_classroom_data.to_dict()
                     }
                 )
+
+            except LuckOfInformationError as e :
+                print(e)
+                
+                classroom_name = classroom_data['classroom-name'] if 'classroom-name' in classroom_data else None
+                start_date = classroom_data['start-date'] if 'start-date' in classroom_data else None
+                end_date = classroom_data['end-date'] if 'end-date' in classroom_data else None
+
+                result_list.append({
+                    'result': False,
+                    'message': e.args[0],
+                    'data':{
+                        'classroom-name':classroom_name,
+                        'start-date':start_date,
+                        'end-date':end_date
+                    }
+                })
                 
             except ReservationTimeValueError as e:
                 print(e)
                 session.rollback()
                 result_list.append({
                     'result': False,
-                    'message': e.args[0]
+                    'message': e.args[0],
+                    'data':{
+                        'classroom-name':classroom_data['classroom-name'],
+                        'start-date':classroom_data['start-date'],
+                        'end-date':classroom_data['end-date']
+                    }
                 })
                 
             except Post_Value_Error as e:
@@ -257,7 +319,12 @@ def add_classroom():
                 session.rollback()
                 result_list.append({
                     'result': False,
-                    'message': e.args[0]
+                    'message': e.args[0],
+                    'data':{
+                        'classroom-name':classroom_data['classroom-name'],
+                        'start-date':classroom_data['start-date'],
+                        'end-date':classroom_data['end-date']
+                    }
                 })
                 
             except Exception as e:
@@ -265,7 +332,12 @@ def add_classroom():
                 session.rollback()
                 result_list.append({
                     'result':False,
-                    'message': 'サービスにエラーが発生しました。'
+                    'message': 'サービスにエラーが発生しました。',
+                    'data':{
+                        'classroom-name':classroom_data['classroom-name'],
+                        'start-date':classroom_data['start-date'],
+                        'end-date':classroom_data['end-date']
+                    }
                 })
                 
             finally :
@@ -286,7 +358,7 @@ def add_classroom():
             'result': False,
             'message': e.args[0],
             'errors':result_list
-        }), 500
+        }), 400
     
     except Exception as e:
         print(e)

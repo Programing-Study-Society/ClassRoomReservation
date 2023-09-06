@@ -309,10 +309,10 @@ def apiTest12():
 
 
 
-# 権限の種類の取得(/user/authority)エンドポイントにGETリクエストがあった場合に、データを返します
-@testApi.route('/user/authority', methods=['GET'])
+# 権限の種類の取得(/user/get-authority)エンドポイントにGETリクエストがあった場合に、データを返します
+@testApi.route('/user/get-authority', methods=['GET'])
 def apiTest13():
-    print('/user/authorityにアクセス(API)')
+    print('/user/get-authorityにアクセス(API)')
     # データを処理するなどのロジックを実装
     response_data = {
 	'result': True, # Bool型,
