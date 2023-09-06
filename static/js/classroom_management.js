@@ -1,63 +1,9 @@
 // 入力欄を追加する関数
 function addInputField()
 {
-    const addformParent = document.getElementById('addform-parent');
-
-    // 新しいフォームを作成
-    let newForm = document.createElement('div');
-    newForm.className = 'addform-child';
-
-    // フォームのHTMLを設定
-    newForm.innerHTML = `
-        日付：<input type="date" class="addform-today" required>
-        開始時刻：<input type="time" list="start-time-datalist" autocomplete="off" class="addform-start-time" required>
-        <datalist id="start-time-datalist">
-            <option value="09:00">
-            <option value="10:40">
-            <option value="13:00">
-            <option value="14:40">
-            <option value="16:20">
-            <option value="18:00">
-        </datalist>
-        終了時刻：<input type="time" list="end-time-datalist" autocomplete="off" class="addform-end-time" required>
-        <datalist id="end-time-datalist">
-            <option value="10:30">
-            <option value="12:10">
-            <option value="14:30">
-            <option value="16:10">
-            <option value="18:10">
-            <option value="20:00">
-        </datalist>
-        教室：<select type="text" class="addform-roomname" required>
-        <option value="">-選択してください-</option>
-            <optgroup label="J号館">
-                <option value="J401">J401</option>
-                <option value="J402">J402</option>
-                <option value="J403">J403</option>
-                <option value="J404">J404</option>
-                <option value="J501">J501</option>
-                <option value="J502">J502</option>
-                <option value="J503">J503</option>
-                <option value="J504">J504</option>
-            </optgroup>
-        </select>
-        <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
-    `;
-
-    addformParent.appendChild(newForm);
-
-
-
-
-
-    // const $addformParent = document.getElementById('addform-parent');
-
-    // const $addformChild = document.createElement('div');
-    // $addformChild.className = 'addform-child';
-
-    // const $dataInput = document.createElement('input');
-
-
+    const $addformParent = document.getElementById('addform-parent');
+    const $addformChild = document.getElementById("addform-child-template").content.cloneNode(true);
+    $addformParent.appendChild($addformChild);
 }
 
 // form削除機能
@@ -126,12 +72,12 @@ function classroomGetFull()
         if(resData['result']){ // 成功時
             if(resData['data'] <= 0) // dataが0件なら
             {
-                // 予約が無いことを表示
+                // 予約可能教室が無いことを表示
                 const $noClassroomSentence = document.getElementById('no-classroom-sentence');
                 $noClassroomSentence.innerHTML = '予約可能教室なし';
                 $noClassroomSentence.style.color = 'black';
             }
-            else // 予約が存在するなら
+            else // 予約可能教室が存在するなら
             {
                 // classroom-list-box(tbodyタグ)を取得
                 const $tableBody = document.getElementById('classroom-list-box');
@@ -140,10 +86,8 @@ function classroomGetFull()
 
                 resData['data'].forEach(ele => {
 
-                    const resValue = ele['data'];
-
                     // 予約可能日時を見やすい形に加工する
-                    const reservationDateAndTime = timeFormating(resValue['reservable-start-date'], resValue['reservable-end-date']);
+                    const reservationDateAndTime = timeFormating(ele['reservable-start-date'], ele['reservable-end-date']);
 
                     // trタグのclassroom-list-box-rowを作成
                     const $newRow = document.createElement('tr');
@@ -155,55 +99,24 @@ function classroomGetFull()
                     $newRow.appendChild($cell1);
 
                     const $cell2 = document.createElement('td');
-                    $cell2.textContent = resValue['classroom-name'];
+                    $cell2.textContent = ele['classroom-name'];
                     $newRow.appendChild($cell2);
 
+                    const $cell3 = document.createElement('td');
+                    $cell3.textContent = ele['is_reserved'] ? 'あり' : 'なし';
+                    $newRow.appendChild($cell3);
 
-                    // clasrromIdをjson形式に変換
-                    const CLASSROOM_ID_JSON_DATA = JSON.stringify({'classroom-id' : resValue['classroom-id']});
-
-                    // データを取得するためのAPIエンドポイントにリクエストを送信します
-                    fetch(LOCATION_URL + '/reserve/get/classroom-id', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json'
-                        },
-                        body: CLASSROOM_ID_JSON_DATA
-                    })
-                    .then(response => response.json()) // レスポンスをJSON形式に変換します
-                    .then(resData => {
-
-                        const $cell3 = document.createElement('td');
-                        // 予約の有無を格納する変数(失敗時：-1)
-                        let reservationStatus = -1;
-
-                        if(resData['result']) // 成功時
-                        {
-                            reservationStatus = resData['data'].length > 0 ? 1 : 0; // 予約があれば1 なければ0
-                            $cell3.textContent = reservationStatus ? 'あり' : 'なし';
-                            $cell3.style.color = 'black';
-                        }
-                        else // 失敗時
-                        {
-                            $cell3.textContent = resData['message'];
-                            $cell3.style.color = 'red';
-                        }
-
-                        $newRow.appendChild($cell3);
-
-                        // 新しいボタン要素を作成
-                        const $cancelButton = document.createElement('button');
-                        $cancelButton.className = 'classroom-delete';
-                        $cancelButton.textContent = '削除';
-                        $cancelButton.addEventListener("click", function() {
-                            classroomDeleteAdmin(resValue['classroom-id'], reservationDateAndTime + '　' + resValue['classroom-name'], reservationStatus);
-                        });
-                        // // ボタンをセルに追加
-                        const $cell4 = document.createElement('td');
-                        $cell4.appendChild($cancelButton);
-                        $newRow.appendChild($cell4);
-
-                    }).catch((err) => console.log(err)); // エラーキャッチ
+                    // 新しいボタン要素を作成
+                    const $cancelButton = document.createElement('button');
+                    $cancelButton.className = 'classroom-delete';
+                    $cancelButton.textContent = '削除';
+                    $cancelButton.addEventListener("click", function() {
+                        classroomDeleteAdmin(ele['classroom-id'], reservationDateAndTime + '　' + ele['classroom-name'], ele['is_reserved']);
+                    });
+                    // // ボタンをセルに追加
+                    const $cell4 = document.createElement('td');
+                    $cell4.appendChild($cancelButton);
+                    $newRow.appendChild($cell4);
 
                     // セルを表に挿入
                     $tableBody.appendChild($newRow);
@@ -257,8 +170,6 @@ function classroomAdd()
         roomData['start-date'] = dateValue + ' ' + startTimeValue + ':00';
         roomData['end-date'] = dateValue + ' ' + endTimeValue + ':00';
         roomData['classroom-name'] = roomNameValue;
-
-        console.log('roomdata:' + roomData);
         roomDatas.push(roomData);
     });
 
@@ -291,33 +202,27 @@ function classroomAdd()
             const $endTime = addformElements[0].querySelector('.addform-end-time');
             const $roomName = addformElements[0].querySelector('.addform-roomname');
 
-            console.log("resData['classroom']");
-            console.log(resData['classroom']);
-
             resData['classroom'].forEach((ele, index) =>{
-                console.log("ele['data']" + index);
-                console.log(ele['data']);
 
                 if(ele['result']) // 予約可能教室の追加が成功していたら
                 {
-                    // 追加が成功した入力欄を削除する
-                    if(index === 0) // index == 0なら値のみ削除
+                    if(index == 0) // 予約可能教室の追加の一番上(削除ボタン無しver)の処理
                     {
                         $date.value = '';
                         $startTime.value = '';
                         $endTime.value = '';
                         $roomName.value = '';
                     }
-                    else // それ以外なら要素ごと削除
+                    else
                     {
+                        // 追加が成功した入力欄を削除する
                         addformElements[index].remove();
                     }
                 }
                 else // 予約可能教室の追加が失敗していたら
                 {
-                    if(isAllOk) // isAllOkがtrue → 予約可能な教室追加欄の一番上が空なので、そこに値追加
+                    if(isAllOk && index != 0) // isAllOkがtrue → 予約可能な教室追加欄の一番上が空なので、そこに値追加
                     {
-                        isAllOk = false; // 失敗を記録する
                         $date.value = addformElements[index].querySelector('.addform-today').value;
                         $startTime.value = addformElements[index].querySelector('.addform-start-time').value;
                         $endTime.value = addformElements[index].querySelector('.addform-end-time').value;
@@ -327,21 +232,22 @@ function classroomAdd()
                     // 追加が失敗したメッセージを表示する
                     const reservationDateAndTime = timeFormating(ele['data']['start-date'], ele['data']['end-date']);
                     messageAreaSentence.innerHTML += reservationDateAndTime + '　' + ele['data']['classroom-name'] + 'の登録が失敗しました：' + ele['message'] + '<br>';
+
+                    isAllOk = false; // 失敗を記録する
                 }
             });
-
-            // 機能追加後削除
-            // if(isAllOk) // 予約可能教室の追加が全て成功 = 入力欄が0
-            // {
-            //     addInputField(); // 入力欄を一つ追加する
-            // }
 
             classroomGetFull() // 現在の予約可能教室を更新する
 
         }
         else // 失敗時(全ての教室の追加が失敗時)
         {
-            messageAreaSentence.innerHTML = resData['message'];
+            messageAreaSentence.innerHTML = resData['message'] + '<br>';
+
+            resData['errors'].forEach(ele => {
+                const reservationDateAndTime = timeFormating(ele['data']['start-date'], ele['data']['end-date']);
+                messageAreaSentence.innerHTML += reservationDateAndTime + '　' + ele['data']['classroom-name'] + 'の登録が失敗しました：' + ele['message'] + '<br>';
+            });
         }
     }).catch((err) => console.log(err)); // エラーキャッチ
 }
