@@ -205,7 +205,7 @@ def add_classroom():
                 if (start_time >= end_time):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
                 
-                if (start_time >= now_time):
+                if (start_time <= now_time):
                     raise Post_Value_Error('過去の日時は指定出来ません')
                 
                 cnt = 0
