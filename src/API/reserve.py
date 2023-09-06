@@ -115,15 +115,18 @@ def register_reserve():
 
         if post_data['start-date'] is None or post_data['end-date'] is None or post_data['classroom-id'] is None or post_data['start-date'] == '' or post_data['end-date'] == '' or post_data['classroom-id'] == '' :
             raise PostValueError('データが不足しています。')
+            
+        if re.match(r'\d+-\d+-\d+', post_data['start-date']) is None or  re.match(r'\d+-\d+-\d+', post_data['end-date']) is None:
+            raise PostValueError('日時が間違っています。')
 
         start_time = datetime.strptime(post_data['start-date'], '%Y-%m-%d %H:%M:%S')
         end_time = datetime.strptime(post_data['end-date'], '%Y-%m-%d %H:%M:%S')
 
         if start_time < datetime.now() or end_time < datetime.now():
-            raise ReserveValueError('無効な日時です。')
+            raise PostValueError('無効な日時です。')
 
         if start_time.date() != end_time.date():
-            raise ReserveValueError('日を跨いだ予約はできません。')
+            raise PostValueError('日を跨いだ予約はできません。')
         
         classroom = session.query(ReservableClassroom).filter(
             ReservableClassroom.classroom_id == post_data['classroom-id']
@@ -162,6 +165,11 @@ def register_reserve():
         is_required_user_id = get_user_state(client_session).is_edit_reserve
 
         return jsonify({'result': True, 'data': reserve.to_dict(is_required_user_id=is_required_user_id)}), 200
+    
+    except PostValueError as e :
+        print(e)
+        session.rollback()
+        return jsonify({'result': False, 'message': e.args[0]}), 400
 
     except ReserveValueError as e:
         print(e)
