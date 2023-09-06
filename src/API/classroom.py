@@ -194,12 +194,19 @@ def add_classroom():
         for classroom_data in request.json:
             try:
                 session = create_session()
+            
+                start_time = datetime.strptime(classroom_data['start-date'], '%Y-%m-%d %H:%M:%S')
+                end_time = datetime.strptime(classroom_data['end-date'], '%Y-%m-%d %H:%M:%S')
+                now_time = datetime.now()
                 
                 if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
                     raise Post_Value_Error('必要な情報が不足しています')
                 
-                if (classroom_data['start-date'] >= classroom_data['end-date']):
+                if (start_time >= end_time):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
+                
+                if (start_time >= now_time):
+                    raise Post_Value_Error('過去の日時は指定出来ません')
                 
                 cnt = 0
                 while True:
