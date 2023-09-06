@@ -79,10 +79,10 @@ def add_user():
         user = request.json
         print(user)
 
-        if not ('email' in user or 'user-name' in user or 'is-admin' in user) :
+        if not ('email' in user or 'user-name' in user or 'user-state' in user) :
             raise PostValueError('必要な情報が不足しています。')
         
-        if user['user-name'] == None or user['user-name'] == '' or user['email'] == None or user['email'] == '' or user['is-admin'] == None :
+        if user['user-name'] == None or user['user-name'] == '' or user['email'] == None or user['email'] == '' or user['user-state'] == None :
             raise PostValueError('必要な情報が不足しています。')
 
         if len(user['email']) >= 64 or len(user['user-name']) >= 128:
@@ -91,7 +91,7 @@ def add_user():
         if session.query(Approved_User).filter(Approved_User.approved_email == user['email']).first() != None :
             raise PostValueError('同じメールが登録されています。')
 
-        session.add(Approved_User(approved_email=user['email'], approved_user_name=user['user-name'], user_state=user['is-admin']))
+        session.add(Approved_User(approved_email=user['email'], approved_user_name=user['user-name'], user_state=user['user-state']))
 
         session.commit()
 
