@@ -1,4 +1,4 @@
-from src.database import User, Approved_User, create_session
+from src.database import User, Approved_User, UserStatus, create_session
 from flask import Blueprint, request, redirect, abort
 from flask import session as client_session
 from google.auth import jwt
@@ -50,11 +50,12 @@ def default_route():
                 client_session['user-state'] = approved_user.user_state
 
             user = User(user_name=name, user_id=id, user_email=email)
+            user_authority = session.query(UserStatus).filter(UserStatus.name == approved_user.user_state).first()
 
             if session.query(User).filter(User.user_id == id).first() != None :
                 login_user(user)
 
-                if approved_user.user_state :
+                if user_authority.is_edit_reserve :
                     return redirect('/html/classroom_management.html')
                 else :
                     return redirect('/html/reserve_page.html')
@@ -65,7 +66,7 @@ def default_route():
 
                 login_user(user)
 
-                if approved_user.user_state :
+                if user_authority.is_edit_reserve :
                     return redirect('/html/classroom_management.html')
                 else :
                     return redirect('/html/reserve_page.html')
