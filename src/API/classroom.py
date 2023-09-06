@@ -84,7 +84,6 @@ def get_classrooms(mode):
                     abort(404)
                 
                 post_data = request.json
-                print(post_data)
             
 
                 if re.match(r'\d+-\d+-\d+', post_data['start-date']) is None or \
@@ -195,12 +194,15 @@ def add_classroom():
             try:
                 session = create_session()
             
+                if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
+                    raise Post_Value_Error('必要な情報が不足しています')
+                
+                if len(classroom_data['start-date'] and classroom_data['end-date'] and classroom_data['classroom-name']) == 0:
+                    raise Post_Value_Error('必要な情報の値がありません')
+                
                 start_time = datetime.strptime(classroom_data['start-date'], '%Y-%m-%d %H:%M:%S')
                 end_time = datetime.strptime(classroom_data['end-date'], '%Y-%m-%d %H:%M:%S')
                 now_time = datetime.now()
-                
-                if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
-                    raise Post_Value_Error('必要な情報が不足しています')
                 
                 if (start_time >= end_time):
                     raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
@@ -293,7 +295,7 @@ def add_classroom():
             'result': False,
             'message': e.args[0],
             'errors':result_list
-        }), 500
+        }), 400
     
     except Exception as e:
         print(e)
