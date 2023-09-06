@@ -124,6 +124,7 @@ class Authority(Base):
 
     def to_dict(self) :
         authority = {
+            'name':self.name,
             'is-reserve':self.is_reserve,
             'is-admin':self.is_admin,
             'is-edit-reserve':self.is_edit_reserve,
