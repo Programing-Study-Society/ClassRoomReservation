@@ -6,21 +6,21 @@ user_status = [
     {
         'name':'administrator',
         'is-reserve':True,
-        'is-adimn':True,
+        'is-admin':True,
         'is-edit-reserve':True,
         'is-edit-user':True
     },
     {
         'name':'moderator',
         'is-reserve':False,
-        'is-adimn':True,
+        'is-admin':True,
         'is-edit-reserve':True,
         'is-edit-user':False
     },
     {
         'name':'user',
         'is-reserve':True,
-        'is-adimn':False,
+        'is-admin':False,
         'is-edit-reserve':False,
         'is-edit-user':False
     }
@@ -53,7 +53,13 @@ session = create_session()
 
 for i, user_state in enumerate(user_status) :
     print(user_state)
-    session.add(Authority(name=user_state['name'], is_edit_reserve=user_state['is-edit-reserve'], is_edit_user=user_state['is-edit-user']))
+    session.add(Authority(
+        name=user_state['name'],
+        is_reserve=user_state['is-reserve'],
+        is_admin=user_state['is-admin'],
+        is_edit_reserve=user_state['is-edit-reserve'], 
+        is_edit_user=user_state['is-edit-user']
+    ))
 
 for user in users :
     session.add(Approved_User(approved_email=user['email'], approved_user_name=user['name'], user_state=user['user-state']))
