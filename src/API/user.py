@@ -189,11 +189,18 @@ def user_delete():
 
 
 @user_api.route('/get-authority')
+@login_required
 def get_authority():
     try :
         session = create_session()
 
-        authorities = session.query(Authority).all()
+        authorities = None
+        
+        if client_session['user-state'] == 'administrator' :
+            authorities = session.query(Authority).all()
+
+        if client_session['user-state'] == 'moderator' :
+            authorities = session.query(Authority).filter(Authority.name == 'user').all()
 
         return jsonify({
             'result':True,
