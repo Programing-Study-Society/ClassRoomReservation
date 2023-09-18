@@ -1,5 +1,7 @@
+let authorityList = [];
+
 // 現在ログインしているユーザーが、ユーザー追加で付与できる権限を取得する関数(/user/get-authority)
-function getUserAuthority()
+function getUserAuthority(callback)
 {
     // データを取得するためのAPIエンドポイントにリクエストを送信します
     fetch(LOCATION_URL + '/user/get-authority')
@@ -13,13 +15,17 @@ function getUserAuthority()
             // 選択肢を追加
             resData['data'].forEach(ele => {
                 const $option = document.createElement("option");
-                $option.text = ele['name'];
-                $option.value = ele['name'];
+                const authorityName = ele['name'];
+                $option.text = authorityName;
+                $option.value = authorityName;
+                authorityList.push(authorityName);
                 $select.appendChild($option);
             });
 
             // 選択肢の初期値を選択肢の一番最後の物にする
             $select.options[resData['data'].length - 1].selected = true;
+
+            callback(); // 現在登録されているユーザー情報の取得
         }
         else // 失敗時
         {
@@ -102,18 +108,25 @@ function userGet()
                     $cell3.textContent = ele['user-state'];
                     $newRow.appendChild($cell3);
 
-
-                    // 新しいボタン要素を作成
-                    const $cancelButton = document.createElement('button');
-                    $cancelButton.className = 'user-delete';
-                    $cancelButton.textContent = '削除';
-                    $cancelButton.addEventListener("click", function() {
-                        userDeleteAdmin(ele['approved-email'], ele['approved-user-name']);
-                    });
-                    // // ボタンをセルに追加
-                    const $cell4 = document.createElement('td');
-                    $cell4.appendChild($cancelButton);
-                    $newRow.appendChild($cell4);
+                    if(authorityList.includes(ele['user-state']))
+                    {
+                        // 新しいボタン要素を作成
+                        const $cancelButton = document.createElement('button');
+                        $cancelButton.className = 'user-delete';
+                        $cancelButton.textContent = '削除';
+                        $cancelButton.addEventListener("click", function() {
+                            userDeleteAdmin(ele['approved-email'], ele['approved-user-name']);
+                        });
+                        // // ボタンをセルに追加
+                        const $cell4 = document.createElement('td');
+                        $cell4.appendChild($cancelButton);
+                        $newRow.appendChild($cell4);
+                    }
+                    else
+                    {
+                        const $cell4 = document.createElement('td');
+                        $newRow.appendChild($cell4);
+                    }
 
                     // セルを表に挿入
                     $userListBox.appendChild($newRow);
@@ -167,5 +180,4 @@ function userAdd()
 
 
 //  user_list.htmlページを開いた瞬間に実行される部分
-userGet(); // 現在登録されているユーザー情報の取得
-getUserAuthority(); // ログインしているユーザーの権限を取得
+getUserAuthority(userGet); // ログインしているユーザーの権限を取得
