@@ -56,7 +56,7 @@ def default_route():
                 login_user(user)
 
                 if user_authority.is_admin :
-                    return redirect('/html/classroom_management.html')
+                    return redirect('/html/management/classroom_management.html')
                 else :
                     return redirect('/html/reserve_page.html')
 
@@ -67,7 +67,7 @@ def default_route():
                 login_user(user)
 
                 if user_authority.is_admin :
-                    return redirect('/html/classroom_management.html')
+                    return redirect('/html/management/classroom_management.html')
                 else :
                     return redirect('/html/reserve_page.html')
 

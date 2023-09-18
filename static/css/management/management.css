@@ -1,6 +1,7 @@
 /* user_list.htmlの内容 */
-body {
-    margin: 0 0 0 0;
+* {
+    margin: 0;
+    padding: 0;
 }
 
 header{
@@ -22,6 +23,10 @@ header{
     font-size: medium;
     text-decoration: none;
     color: #fff;
+}
+
+main {
+    margin-bottom: 50px;
 }
 
 .logout {
@@ -147,58 +152,4 @@ input[type="email"]{
 .reserve-list td{
     padding: 5px;
     border-bottom: solid 1px #778ca3;
-}
-
-/* ここからclassroom_management.htmlの内容 */
-input{
-    margin-right: 15px;
-    margin-bottom: 10px;
-}
-
-input[type="date"] {
-    position: relative;
-    padding: 0 10px;
-    width: 150px;
-    height: 36px;
-    border: 2px solid #000;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #000;
-}
-
-input[type="time"],
-input[type="text"]{
-    position: relative;
-    padding: 0 10px;
-    width: 100px;
-    height: 36px;
-    border: 2px solid #000;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #000;
-}
-
-.addform-roomname {
-    position: relative;
-    padding: 0 10px;
-    width: 180px;
-    height: 36px;
-    border: 2px solid #000;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #000;
-}
-
-#border{
-    border-top: 3px dotted #000;
-}
-
-.form-delete-button{
-    transform: scale(1.5); /* 1.5倍に拡大 */
-    transform-origin: center; /* 拡大の基準点を中心に設定 */
-    margin-left: 10px; /* ゴミ箱アイコンの左側に10pxの余白を追加 */
-}
-
-main form{
-    padding-left: 10px;
 }
