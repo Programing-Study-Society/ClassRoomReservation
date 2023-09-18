@@ -13,6 +13,10 @@ class LuckOfAdministrativeUserError(Exception):
     pass
 
 
+class AuthorityError(Exception) :
+    pass
+
+
 user_api = Blueprint(
     'user',
     __name__,
@@ -142,7 +146,13 @@ def user_delete():
         if approved_user == None:
             raise PostValueError('存在しないユーザーです。')
         
-        if approved_user.user_state and session.query(Approved_User).filter(Approved_User.user_state == 'administrator').count() <= 1:
+        client_authority = session.query(Authority).filter(Authority.name == client_session['user-state']).first()
+        delete_user_authority = session.query(Authority).filter(Authority.name == approved_user.user_state).first()
+
+        if not client_authority.is_edit_user and delete_user_authority.is_edit_user :
+            raise AuthorityError('このユーザーは削除出来ません。')
+        
+        if approved_user.user_state and session.query(Approved_User).filter(Approved_User.user_state == 'administrator').count() <= 2:
             raise LuckOfAdministrativeUserError('管理者が不足しています。')
 
         user = session.query(User).filter(User.user_email == data['email']).first()
@@ -170,6 +180,13 @@ def user_delete():
         }), 400
     
     except LuckOfAdministrativeUserError as e :
+        print(e)
+        return jsonify({
+            'result':False,
+            'message':e.args[0]
+        }), 400
+    
+    except AuthorityError as e :
         print(e)
         return jsonify({
             'result':False,

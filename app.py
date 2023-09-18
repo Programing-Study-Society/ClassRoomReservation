@@ -122,7 +122,7 @@ def check_past_reservations():
 
 
     schedule.every().day.at('00:00').do(delete_past_reservations)
-    schedule.every().day.at('15:09').do(delete_past_classrooms)
+    schedule.every().day.at('00:00').do(delete_past_classrooms)
     while True:
         schedule.run_pending()
         sleep(1)
