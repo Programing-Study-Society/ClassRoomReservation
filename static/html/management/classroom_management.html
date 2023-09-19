@@ -29,7 +29,7 @@
 
     <main>
         <h1 class="page-title">予約可能な教室の管理</h1>
-        <h2>追加</h2>
+        <h2 class="section-title">追加</h2>
         <div id="message-area">
             <h2 id="message-area-sentence" style="color: red">
                 <!-- 予約可能教室追加時のエラー等表示場所 -->
@@ -57,6 +57,7 @@
                     <option value="20:00">
                 </datalist>
 
+                <!-- 予約可能教室のフォームのテンプレ -->
                 <template id="addform-child-template">
                     <div class="addform-child">
                         <label>
@@ -71,11 +72,13 @@
                         <label>
                             教室：<select type="text" class="addform-roomname" required>
                                 <option value="">-選択してください-</option>
-                                <optgroup label="J号館">
+                                <optgroup label="J号館 --４階--">
                                     <option value="J401">J401</option>
                                     <option value="J402">J402</option>
                                     <option value="J403">J403</option>
                                     <option value="J404">J404</option>
+                                </optgroup>
+                                <optgroup label="J号館 --５階--">
                                     <option value="J501">J501</option>
                                     <option value="J502">J502</option>
                                     <option value="J503">J503</option>
@@ -87,7 +90,7 @@
                     </div>
                 </template>
 
-                <div class="addform-child">
+                <!-- <div class="addform-child">
                     <label>
                         日付：<input type="date" class="addform-today" required>
                     </label>
@@ -100,11 +103,13 @@
                     <label>
                         教室：<select type="text" class="addform-roomname" required>
                             <option value="">-選択してください-</option>
-                            <optgroup label="J号館">
+                            <optgroup label="J号館 --４階--">
                                 <option value="J401">J401</option>
                                 <option value="J402">J402</option>
                                 <option value="J403">J403</option>
                                 <option value="J404">J404</option>
+                            </optgroup>
+                            <optgroup label="J号館 --５階--">
                                 <option value="J501">J501</option>
                                 <option value="J502">J502</option>
                                 <option value="J503">J503</option>
@@ -112,15 +117,12 @@
                             </optgroup>
                         </select>
                     </label>
-                    <!--
-                        <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
-                    -->
-                </div>
+                </div> -->
             </div>
         </form>
 
         <div id="border"></div>
-        <h2>一覧・削除</h2>
+        <h2 class="section-title">一覧・削除</h2>
         <div id="classroom-list-div">
             <table class="classroom-list">
                 <thead>
@@ -132,6 +134,7 @@
                     </tr>
                 </thead>
                 <tbody id="classroom-list-box">
+                    <!-- ここに予約可能教室が入る -->
                 </tbody>
             </table>
         </div>
@@ -144,8 +147,17 @@
 
     <script>
         (() => {
+            
             document.getElementById("classroom-addform")
                 .addEventListener("submit", (e) => e.preventDefault());
+
+            // 初期のテンプレを生成
+            const $addClassroomForm = document.getElementById("addform-child-template").content.cloneNode(true);
+            const $deleteButton = $addClassroomForm.querySelector(".form-delete-button");
+            $deleteButton.remove();
+            const $addClassroomFormBase = document.getElementById("classroom-addform").querySelector("#addform-parent");
+            $addClassroomFormBase.appendChild($addClassroomForm);
+
         })();
     </script>
 </body>

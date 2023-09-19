@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登録ユーザ一覧</title>
     <link rel="stylesheet" href="/css/management/management.css">
+    <link rel="stylesheet" href="/css/management/user_list.css">
     <script src = "/js/user_get.js"></script>
     <script src="/js/function.js" defer="defer"></script>
     <script src="/js/user_list.js" defer="defer"></script>
@@ -26,7 +27,7 @@
         <h1 class="page-title">ユーザ一覧</h1>
         <h2 style="text-align:center;" id="no-get-user-authority"></h2>
         <details id="user-add-details">
-            <summary>ユーザの新規登録</summary>
+            <summary id="expanding-user-add-form">ユーザの新規登録</summary>
             <form id="user-addform" onsubmit="userAdd()">
                 <label>団体名：<input type="text" id="add-user-name" required></label>
                 <label>メールアドレス：<input type="email" id="add-email" required></label>
