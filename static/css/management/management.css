@@ -1,128 +1,156 @@
-/* user_list.htmlの内容 */
 * {
     margin: 0;
     padding: 0;
 }
 
+:root {
+    --element-min-width: 900px;
+}
+
+
+/* ホンへ */
+body {
+    height: 100%;
+    width: max(var(--element-min-width), 100%);
+    overflow: scroll;
+}
+
+
+/* header関係 */
 header{
     z-index: 999;
     position: fixed;
     top: 0px;
     width: 100%;
-    max-height: 60px;
-    padding: 5px;
     background: #000;
-    display: flex;
+    display: block;
+    flex-wrap: nowrap;
     justify-content: space-between;
 }
 
 #header-text{
-    margin: auto;
+    margin-left: 10px;
     line-height: 60px;
     padding-left: 10px;
     font-size: medium;
     text-decoration: none;
     color: #fff;
-}
-
-main {
-    margin-bottom: 50px;
-}
-
-.logout {
-    margin: auto;
-    line-height: 60px;
-    padding-left: 10px;
-    font-size: medium;
-    text-decoration: none;
-    color: #fff;
+    white-space: nowrap
 }
 
 nav{
-    margin-right: 100px;
-    margin-top: auto;
-    margin-bottom: auto;
     display: flex;
-    @media (max-width:860px){
-        margin-right: 40px;
-    }
+    background-color: #474747;
+    width: 100%;
+    line-height: 45px;
+    justify-content: space-around;
 }
 
 .jump{
-    margin-left: 15px;
+    vertical-align: middle;
+    margin: 0 10px;
     border-radius: 5px;
-    padding: 10px;
-    text-decoration: underline;
+    text-decoration: none;
     color: #fff;
-    transition-delay: 0.2s;
+    transition-delay: 0.1s;
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 600px) {
+    .jump:nth-of-type(1) {
+        margin-left: calc(525px - 70vw);
+    }
+    nav {
+        overflow: scroll;
+        overflow-y: hidden;
+    }
 }
 
 .jump:hover{
     color: #d3d3d3;
 }
 
-#header-text,
-nav,
-.jump{
-    @media (max-width:860px){
-        font-size: 14px;
-    }
-}
-
 .logout {
-    margin-left: 10px;
+    color: #ff9898;
 }
 
-#margin{
-    margin-top: 100px;
-}
-#margin-narrow{
-    margin-top: 30px;
+
+/* メインパート */
+main {
+    margin: 145px 0;
 }
 
-h1{
+h1,h2{
+    padding-left: 10px;
+}
+
+.page-title {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
     border-bottom: 6px double #000;
 }
 
-.user-list,.classroom-list{
-    width: 100%;
-    text-align: center;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-.user-list th,.classroom-list th{
-    background-color: #adc9f3;
-    padding: 10px;
-    border-bottom: solid 4px #778ca3;
-    color: #000000;
-}
-.user-list td,.classroom-list th{
-    padding: 10px;
-    border-bottom: solid 1px #778ca3;
-}
-
-footer{
-    max-width: 800px;
-    margin-left: 150px;
-    margin:0 auto;
-}
-.contact-address{
-    margin: 2em 0.5em 0.5em 0.5em;
-    padding: 1em 0.5em 0.5em;
-    position: relative;
-    border: 1px solid #81d4fa;
-    background-color: #e1f5fe;
-    display: flex;
-    text-align: center;
-    justify-content: center;
+#margin-narrow{
+    margin-top: 30px;
 }
 
 details{
     margin-left: 10px;
 }
 
-main h1,h2{
+
+/* table関係 */
+table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th{
+    background-color: #adc9f3;
+    padding: 10px;
+    border-bottom: solid 4px #778ca3;
+    color: #000000;
+}
+
+td{
+    padding: 10px;
+    border-bottom: solid 1px #778ca3;
+}
+
+
+/* form関係 */
+form {
     padding-left: 10px;
+}
+
+input{
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+input[type="date"] {
+    position: relative;
+    padding: 0 10px;
+    width: 150px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+input[type="time"],
+input[type="text"]{
+    position: relative;
+    padding: 0 10px;
+    width: 100px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
 }
 
 input[type="email"]{
@@ -136,20 +164,32 @@ input[type="email"]{
     color: #000;
 }
 
-/* ここからreserve_state.htmlの内容 */
-.reserve-list{
-    width: 100%;
-    text-align: center;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-.reserve-list th{
-    background-color: #fff;
-    padding: 10px;
-    border-bottom: solid 4px #778ca3;
+select {
+    position: relative;
+    padding: 0 10px;
+    width: 180px;
+    height: 36px;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    font-size: 14px;
     color: #000;
 }
-.reserve-list td{
-    padding: 5px;
-    border-bottom: solid 1px #778ca3;
+
+
+/* footer関係 */
+footer{
+    max-width: 800px;
+    margin-left: 150px;
+    margin:0 auto;
+}
+
+.contact-address{
+    margin: 2em 0.5em 0.5em 0.5em;
+    padding: 1em 0.5em 0.5em;
+    position: relative;
+    border: 1px solid #81d4fa;
+    background-color: #e1f5fe;
+    display: flex;
+    text-align: center;
+    justify-content: center;
 }

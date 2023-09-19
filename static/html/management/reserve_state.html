@@ -11,22 +11,19 @@
 </head>
 <body>
     <header>
-        <div>
-            <p id="header-text">
-                OECU 教室予約   ---管理者ページ---
-                <a class="jump logout" href="/logout">ログアウト</a>
-            </p>
+        <div id="header-text">
+            OECU 教室予約   ---管理者ページ---
         </div>
         <nav>
             <a class="jump" href="/html/management/classroom_management.html">予約可能な教室の管理</a>
             <a class="jump" href="/html/management/user_list.html">登録ユーザ一覧</a>
             <a class="jump" href="/html/management/reserve_state.html">予約状況の確認</a>
+            <a class="jump logout" href="/logout">ログアウト</a>
         </nav>
     </header>
 
     <main>
-        <div id="margin"></div>
-        <h1>予約状況</h1>
+        <h1 class="page-title">予約状況</h1>
 
         <table class="reserve-list">
             <thead>

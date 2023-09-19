@@ -14,22 +14,21 @@
 </head>
 <body>
     <header>
-        <div>
-            <p id="header-text">
-                OECU 教室予約   ---管理者ページ---
-                <a class="jump logout" href="/logout">ログアウト</a>
-            </p>
+        <div id="header-text">
+            OECU 教室予約   ---管理者ページ---
         </div>
-        <nav>
-            <a class="jump" href="/html/management/classroom_management.html">予約可能な教室の管理</a>
-            <a class="jump" href="/html/management/user_list.html">登録ユーザ一覧</a>
-            <a class="jump" href="/html/management/reserve_state.html">予約状況の確認</a>
-        </nav>
+        <div class="nav-list">
+            <nav>
+                <a class="jump" href="/html/management/classroom_management.html">予約可能な教室の管理</a>
+                <a class="jump" href="/html/management/user_list.html">登録ユーザ一覧</a>
+                <a class="jump" href="/html/management/reserve_state.html">予約状況の確認</a>
+                <a class="jump logout" href="/logout">ログアウト</a>
+            </nav>
+        </div>
     </header>
 
     <main>
-        <div id="margin"></div>
-        <h1>予約可能な教室の管理</h1>
+        <h1 class="page-title">予約可能な教室の管理</h1>
         <h2>追加</h2>
         <div id="message-area">
             <h2 id="message-area-sentence" style="color: red">
@@ -60,9 +59,45 @@
 
                 <template id="addform-child-template">
                     <div class="addform-child">
+                        <label>
+                            日付：<input type="date" class="addform-today" required>
+                        </label>
+                        <label>
+                            開始時刻：<input type="time" list="start-time-datalist" autocomplete="off" class="addform-start-time" required>
+                        </label>
+                        <label>
+                            終了時刻：<input type="time" list="end-time-datalist" autocomplete="off" class="addform-end-time" required>
+                        </label>
+                        <label>
+                            教室：<select type="text" class="addform-roomname" required>
+                                <option value="">-選択してください-</option>
+                                <optgroup label="J号館">
+                                    <option value="J401">J401</option>
+                                    <option value="J402">J402</option>
+                                    <option value="J403">J403</option>
+                                    <option value="J404">J404</option>
+                                    <option value="J501">J501</option>
+                                    <option value="J502">J502</option>
+                                    <option value="J503">J503</option>
+                                    <option value="J504">J504</option>
+                                </optgroup>
+                            </select>
+                        </label>
+                        <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
+                    </div>
+                </template>
+
+                <div class="addform-child">
+                    <label>
                         日付：<input type="date" class="addform-today" required>
+                    </label>
+                    <label>
                         開始時刻：<input type="time" list="start-time-datalist" autocomplete="off" class="addform-start-time" required>
+                    </label>
+                    <label>
                         終了時刻：<input type="time" list="end-time-datalist" autocomplete="off" class="addform-end-time" required>
+                    </label>
+                    <label>
                         教室：<select type="text" class="addform-roomname" required>
                             <option value="">-選択してください-</option>
                             <optgroup label="J号館">
@@ -76,38 +111,17 @@
                                 <option value="J504">J504</option>
                             </optgroup>
                         </select>
-                        <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
-                    </div>
-                </template>
-
-                <div class="addform-child">
-                    日付：<input type="date" class="addform-today" required>
-                    開始時刻：<input type="time" list="start-time-datalist" autocomplete="off" class="addform-start-time" required>
-                    終了時刻：<input type="time" list="end-time-datalist" autocomplete="off" class="addform-end-time" required>
-                    教室：<select type="text" class="addform-roomname" required>
-                        <option value="">-選択してください-</option>
-                        <optgroup label="J号館">
-                            <option value="J401">J401</option>
-                            <option value="J402">J402</option>
-                            <option value="J403">J403</option>
-                            <option value="J404">J404</option>
-                            <option value="J501">J501</option>
-                            <option value="J502">J502</option>
-                            <option value="J503">J503</option>
-                            <option value="J504">J504</option>
-                        </optgroup>
-                    </select>
+                    </label>
                     <!--
                         <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
                     -->
                 </div>
             </div>
-            <div id="margin-narrow"></div>
         </form>
 
-        <div id="margin-narrow"></div>
         <div id="border"></div>
-        <h2 id=>一覧・削除</h2>
+        <h2>一覧・削除</h2>
+        <div id="classroom-list-div">
             <table class="classroom-list">
                 <thead>
                     <tr>
@@ -120,7 +134,8 @@
                 <tbody id="classroom-list-box">
                 </tbody>
             </table>
-            <h2 style="text-align:center;" id="no-classroom-sentence"></h2>
+        </div>
+        <h2 style="text-align:center;" id="no-classroom-sentence"></h2>
     </main>
 
     <footer>

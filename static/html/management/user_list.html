@@ -11,32 +11,26 @@
 </head>
 <body>
     <header>
-        <div>
-            <p id="header-text">
-                OECU 教室予約   ---管理者ページ---
-                <a class="jump logout" href="/logout">ログアウト</a>
-            </p>
+        <div id="header-text">
+            OECU 教室予約   ---管理者ページ---
         </div>
         <nav>
             <a class="jump" href="/html/management/classroom_management.html">予約可能な教室の管理</a>
             <a class="jump" href="/html/management/user_list.html">登録ユーザ一覧</a>
             <a class="jump" href="/html/management/reserve_state.html">予約状況の確認</a>
+            <a class="jump logout" href="/logout">ログアウト</a>
         </nav>
     </header>
 
     <main>
-        <div id="margin"></div>
-        <h1>ユーザ一覧</h1>
+        <h1 class="page-title">ユーザ一覧</h1>
         <h2 style="text-align:center;" id="no-get-user-authority"></h2>
         <details id="user-add-details">
             <summary>ユーザの新規登録</summary>
             <form id="user-addform" onsubmit="userAdd()">
-                <label>団体名</label>
-                <input type="text" id="add-user-name" required>
-                <label>メールアドレス</label>
-                <input type="email" id="add-email" required>
-                <label>権限</label>
-                <select id="add-authority"></select required>
+                <label>団体名：<input type="text" id="add-user-name" required></label>
+                <label>メールアドレス：<input type="email" id="add-email" required></label>
+                <label>権限：<select id="add-authority"></select required></label>
                 <input type="submit" value="追加">
             </form>
         </details>
