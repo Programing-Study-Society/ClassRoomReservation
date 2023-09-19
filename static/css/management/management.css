@@ -5,6 +5,7 @@
 
 :root {
     --element-min-width: 900px;
+    --background-navbar: rgba(55, 55, 55, 0.98);
 }
 
 
@@ -43,23 +44,28 @@ nav{
     background-color: #474747;
     width: 100%;
     line-height: 45px;
-    justify-content: space-around;
+}
+
+.nav-content {
+    width: 100%;
+    min-width: 190px;
+    text-align: center;
+    pointer-events: none;
 }
 
 .jump{
+    display: inline-block;
     vertical-align: middle;
-    margin: 0 10px;
+    width: 100%;
     border-radius: 5px;
     text-decoration: none;
     color: #fff;
     transition-delay: 0.1s;
     white-space: nowrap;
+    pointer-events: auto;
 }
 
-@media screen and (max-width: 600px) {
-    .jump:nth-of-type(1) {
-        margin-left: calc(525px - 70vw);
-    }
+@media screen and (max-width: 800px) {
     nav {
         overflow: scroll;
         overflow-y: hidden;
@@ -68,6 +74,10 @@ nav{
 
 .jump:hover{
     color: #d3d3d3;
+}
+
+.nav-content:hover {
+    background-color: #636363;
 }
 
 .logout {
