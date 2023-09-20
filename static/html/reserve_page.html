@@ -15,43 +15,42 @@
 
 <body>
     <header class="header">
-        <div>
-            <a href="/" id="header-text">
-                OECU 教室予約フォーム
-                <a class="jump logout" href="/logout">ログアウト</a>
-            </a>
+        <div id="header-text">
+            OECU 教室予約フォーム
         </div>
+        <nav>
+            <a class="jump logout" href="/logout">
+                ログアウト
+            </a>
+        </nav>
     </header>
     <main>
-        <div class="main-sentence">
-            <div class="sentence-title">
-                空き教室の検索
+        <div class="explanation-box">
+            <div class="explanation-title">空き教室の検索</div>
+            <div class="explanation-area">
+                日時を入力すると空き教室を検索することができます。
+                利用可能な教室一覧から教室を選択し、予約してください。
             </div>
-            <h4>日時を入力すると空き教室を検索することができます。<br>
-            利用可能な教室一覧から教室を選択し、予約してください。
-            </h4>
         </div>
-        <div id="message-area">
-            <h1 id="message-area-sentence">
+        <div id="message-box">
+            <h1 id="message-area">
 
             </h1>
         </div>
-        <div class="listbox">
-            <div class="listbox-sentence">
-                予約済み教室
-            </div>
-            <h4 id="reserved-classroom-print-area">
+        <div class="reserved-classroom-box">
+            <div class="reserved-classroom-title">予約済み教室</div>
+            <div class="reserved-classroom-area">
 
-            </h4>
+            </div>
         </div>
         <form id="search-classroom-form" onsubmit="getData()">
-            <label for="date">予約する日付：
-                <input type="date" id="reserveation-date" required>
+            <label for="date">予約する日付<sup class="ast"></sup>
+                <input type="date" id="reserveation-date">
             </label>
 
 
             <div class="time">
-                <label for="time">利用開始時刻：
+                <label for="time">利用開始時刻<sup class="ast"></sup>
                     <input type="time" id="start-time" list="start-time-datalist" autocomplete="off" required>
                     <datalist id="start-time-datalist">
                         <option value="09:00">
@@ -63,7 +62,7 @@
                     </datalist>
                 </label>
                 <br>
-                <label for="time">利用終了時刻：
+                <label for="time">利用終了時刻<sup class="ast"></sup>
                     <input type="time" id="end-time" list="end-time-datalist" autocomplete="off" required>
                     <datalist id="end-time-datalist">
                         <option value="10:30">
@@ -80,9 +79,9 @@
             </div>
 
         </form>
-        <div class="available-class">
-            <h3 class="box-title">利用可能な教室一覧</h3>
-            <div id="classroom-box">
+        <div class="available-box">
+            <div class="available-title">利用可能な教室一覧</div>
+            <div id="available-list-area">
                 <!--<input type="button" class="classroom-button" value="教室" onclick="reserve();">-->
             </div>
         </div>
