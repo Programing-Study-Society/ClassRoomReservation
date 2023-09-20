@@ -89,35 +89,7 @@
                         <button class="form-delete-button fas fa-trash" type="button" onclick="formDeleteButton(this)"></button>
                     </div>
                 </template>
-
-                <!-- <div class="addform-child">
-                    <label>
-                        日付：<input type="date" class="addform-today" required>
-                    </label>
-                    <label>
-                        開始時刻：<input type="time" list="start-time-datalist" autocomplete="off" class="addform-start-time" required>
-                    </label>
-                    <label>
-                        終了時刻：<input type="time" list="end-time-datalist" autocomplete="off" class="addform-end-time" required>
-                    </label>
-                    <label>
-                        教室：<select type="text" class="addform-roomname" required>
-                            <option value="">-選択してください-</option>
-                            <optgroup label="J号館 --４階--">
-                                <option value="J401">J401</option>
-                                <option value="J402">J402</option>
-                                <option value="J403">J403</option>
-                                <option value="J404">J404</option>
-                            </optgroup>
-                            <optgroup label="J号館 --５階--">
-                                <option value="J501">J501</option>
-                                <option value="J502">J502</option>
-                                <option value="J503">J503</option>
-                                <option value="J504">J504</option>
-                            </optgroup>
-                        </select>
-                    </label>
-                </div> -->
+                
             </div>
         </form>
 
@@ -138,7 +110,7 @@
                 </tbody>
             </table>
         </div>
-        <h2 style="text-align:center;" id="no-classroom-sentence"></h2>
+        <h2 class="error-at-table" id="no-classroom-sentence"></h2>
     </main>
 
     <footer>

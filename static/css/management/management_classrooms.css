@@ -8,3 +8,7 @@
     transform-origin: center; /* 拡大の基準点を中心に設定 */
     margin-left: 10px; /* ゴミ箱アイコンの左側に10pxの余白を追加 */
 }
+
+#classroom-addform {
+    user-select: none;
+}

@@ -44,6 +44,19 @@ nav{
     background-color: #474747;
     width: 100%;
     line-height: 45px;
+    scrollbar-width: thin;
+    scrollbar-color: red #000;
+}
+
+nav::-webkit-scrollbar {
+    background: #6e6e6e;
+    height: 7.5px;
+}
+
+nav::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    height: 5px;
+    background-color: rgb(229, 229, 229);
 }
 
 .nav-content {
@@ -131,6 +144,11 @@ th{
 td{
     padding: 10px;
     border-bottom: solid 1px #778ca3;
+}
+
+.error-at-table {
+    margin-top: 10px;
+    text-align: center;
 }
 
 
