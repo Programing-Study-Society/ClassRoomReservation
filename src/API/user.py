@@ -155,6 +155,7 @@ def user_delete():
         if approved_user.user_state and session.query(Approved_User).filter(Approved_User.user_state == 'administrator').count() <= 2:
             raise LuckOfAdministrativeUserError('管理者が不足しています。')
 
+        # must change
         user = session.query(User).filter(User.user_email == data['email']).first()
 
         if user != None:
