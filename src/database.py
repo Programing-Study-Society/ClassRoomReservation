@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
+from sqlalchemy import create_engine, Column, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base, scoped_session
 from flask_login import UserMixin
 
@@ -62,6 +62,7 @@ class Reservation(Base):
             "end-date":self.end_time.strftime('%Y-%m-%d %H:%M:%S')
         }
 
+        # must change
         if is_required_user_id == True :
             user = session.query(User).filter(User.user_id == self.reserved_user_id).first()
             print(user)
@@ -73,6 +74,7 @@ class Reservation(Base):
         return reservation
 
 
+# must change
 class User(UserMixin, Base):
 
     __tablename__ = 'user'
@@ -94,6 +96,7 @@ class User(UserMixin, Base):
         return user
     
 
+# must change
 class Approved_User(Base):
     
     __tablename__ = 'approved_user'

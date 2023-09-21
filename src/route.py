@@ -49,6 +49,7 @@ def default_route():
             else :
                 client_session['user-state'] = approved_user.user_state
 
+            # must change
             user = User(user_name=name, user_id=id, user_email=email)
             user_authority = session.query(Authority).filter(Authority.name == approved_user.user_state).first()
 

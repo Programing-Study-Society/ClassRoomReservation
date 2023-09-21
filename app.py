@@ -47,6 +47,7 @@ login_manager.login_view = 'route.default_route'
 def load_user(user_id):
 
     session = create_session()
+    # must change
     loaded_user = session.query(User).filter(User.user_id == user_id).first()
     session.close()
 
