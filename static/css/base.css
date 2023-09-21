@@ -15,6 +15,7 @@
     background: #333;
     color: white;
     min-width: 390px;
+    max-width: 
 }
 
 .logout {
@@ -48,7 +49,6 @@ main{
 .available-box{
     margin-top: 25px;
 }
-
 
 .explanation-title{
     background-color: #4c9ac0;
@@ -99,6 +99,12 @@ main{
     margin-top: 20px;
 }
 
+.head{
+    padding: 1px 10px;
+    border-left: 5px solid #2589d0;
+    color: #333333;
+}
+
 input[type="date"],
 input[type="time"]{
     display: flex;
@@ -115,28 +121,31 @@ input[type="time"]{
     color: #000;
 }
 
-#search-button{
+.search-button {
     display: flex;
-	text-align: center;
-	align-items: center;
     justify-content: center;
-	text-decoration: none;
-    /*height: 8px;*/
-	width: 32px;
-	margin-top: 20px;
-	padding: 0.5rem 4rem;
-	font-weight: bold;
-	background-image: linear-gradient(to top, #D8D9DB 0%, #fff 80%, #FDFDFD 100%);
-	border-radius: 100vh;
-	color: #333;
-	border: 1px solid #999;
-	text-shadow: 0 1px #fff;
-	box-shadow: 0 3px 2px 1px #fcfcfc, 0 4px 6px #cecfd1, 0 -2px 2px #cecfd1, 0 -4px 2px #eee, inset 0 0 2px 2px #cecfd1;
-	transition: 0.5s;
+    align-items: center;
+    min-width: 200px;
+    margin: 40px .1vw ;
+    padding: 6px 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
 }
 
-#search-button :hover{
-	opacity: 0.5;
+.search-button:hover {
+    background-color: #1579c0;
+}
+
+.search-button::before {
+    width: 1em;
+    height: 1em;
+    margin-right: 10px;
+    background: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M23.7%2020.8%2019%2016.1c-.2-.2-.5-.3-.8-.3h-.8c1.3-1.7%202.1-3.7%202.1-6%200-5.4-4.4-9.7-9.7-9.7S0%204.4%200%209.8s4.4%209.7%209.7%209.7c2.3%200%204.3-.8%206-2.1v.8c0%20.3.1.6.3.8l4.7%204.7c.4.4%201.2.4%201.6%200l1.3-1.3c.5-.5.5-1.2.1-1.6zm-14-5c-3.3%200-6-2.7-6-6s2.7-6%206-6%206%202.7%206%206-2.6%206-6%206z%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fsvg%3E') no-repeat center;
+    content: '';
 }
 
 a.btn_08:hover {
