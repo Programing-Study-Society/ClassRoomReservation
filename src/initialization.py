@@ -1,4 +1,12 @@
-from database import create_database, create_session, Approved_User, Authority
+from database import create_database, create_session, User, Authority
+import string
+import secrets
+
+# 予約IDを設定します
+def generate_token(len:int):
+    include_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
+    return ''.join(secrets.choice(include_chars) for _ in range(len))
+
 
 create_database()
 
@@ -62,7 +70,12 @@ for i, user_state in enumerate(user_status) :
     ))
 
 for user in users :
-    session.add(Approved_User(approved_email=user['email'], approved_user_name=user['name'], user_state=user['user-state']))
+    session.add(User(
+            user_email=user['email'], 
+            user_name=user['name'], 
+            user_state=user['user-state'], 
+            user_id=generate_token(32)
+        ))
 
 session.commit()
 

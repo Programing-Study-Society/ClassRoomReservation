@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, abort, session as client_session
-from src.database import Reservation, ReservableClassroom, Approved_User, Authority, create_session
+from src.database import Reservation, ReservableClassroom, User, Authority, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime
 import re
@@ -41,12 +41,16 @@ def send_reserve_delete_mail(reservation) :
         port=os.environ.get('MAIL_PORT')
         )
     
+    print('connected !')
+    
     mail.starttls()
 
     mail.login(
         user = os.environ.get('MAIL_USERNAME'),
         password = os.environ.get('MAIL_PASSWORD')
     )
+
+    print('logined')
                 
     formated_start_date = reservation['start-date'].replace('-', '/')
     formated_end_date = reservation['end-date'].replace('-', '/')
@@ -89,10 +93,6 @@ def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime,
     return None
 
 
-def is_approved_user(session:orm.Session, email:str):
-    return session.query(Approved_User).filter(Approved_User.approved_email == email).first() != None
-
-
 @reserve.errorhandler(404)
 def notfound():
     return jsonify({'result':False, 'message':'Not found'}), 404
@@ -105,7 +105,9 @@ def register_reserve():
     try:
         session = create_session()
 
-        if not is_approved_user(session, client_session['email']) :
+        reserved_user = session.query(User).filter(User.user_sub == client_session['id']).first()
+
+        if reserved_user == None :
             abort(404)
 
         post_data = request.json
@@ -154,7 +156,7 @@ def register_reserve():
         reserve = Reservation(
             reservation_id=reservation_id,
             classroom_id=classroom.classroom_id,
-            reserved_user_id=client_session['id'],
+            reserved_user_id=reserved_user.user_id,
             start_time=start_time,
             end_time=end_time,
         )
@@ -379,6 +381,7 @@ def delete_reserve():
         
         if get_user_state(client_session).is_edit_reserve :
             reservations_dict = delete_data.to_dict(is_required_user_id=True)
+            print(reservations_dict)
             mail_thread = threading.Thread(target=send_reserve_delete_mail, args=(reservations_dict,), daemon=True)
             mail_thread.start()
 

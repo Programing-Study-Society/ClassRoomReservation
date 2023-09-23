@@ -67,52 +67,58 @@ class Reservation(Base):
             user = session.query(User).filter(User.user_id == self.reserved_user_id).first()
             print(user)
             if user != None :
-                approved_user = session.query(Approved_User).filter(Approved_User.approved_email == user.user_email).first()
-                reservation['user-name'] = approved_user.approved_user_name
+                reservation['user-name'] = user.user_name
                 reservation['user-email'] = user.user_email
 
         return reservation
 
 
 # must change
-class User(UserMixin, Base):
+# class User(UserMixin, Base):
 
+#     __tablename__ = 'user'
+    
+#     user_id = Column('user_id',String(64),primary_key=True)
+#     user_name = Column('user_name',String(128))
+#     user_email = Column('user_email', String)
+
+#     def get_id(self):
+#         return self.user_id
+    
+#     def to_dict(self):
+#         user = {
+#             "user-id":self.user_id,
+#             "user-name":self.user_name,
+#             "user-email":self.user_email
+#         }
+
+#         return user
+    
+
+class User(UserMixin, Base):
+    
     __tablename__ = 'user'
     
-    user_id = Column('user_id',String(64),primary_key=True)
-    user_name = Column('user_name',String(128))
+    user_id = Column('user_id', String(64), primary_key=True)
     user_email = Column('user_email', String)
+    user_name = Column('user_name',String(128))
+    user_state = Column('user_state', String)
+    user_sub = Column('user_sub', String, nullable=True)
 
     def get_id(self):
         return self.user_id
     
+    # must change
     def to_dict(self):
         user = {
-            "user-id":self.user_id,
-            "user-name":self.user_name,
-            "user-email":self.user_email
+            "approved-user-id":self.user_id,
+            "approved-user-name":self.user_name,
+            "approved-email":self.user_email,
+            "user-state":self.user_state,
+            "approved-user-sub":self.user_sub
         }
 
         return user
-    
-
-# must change
-class Approved_User(Base):
-    
-    __tablename__ = 'approved_user'
-    
-    approved_email = Column('approved_email', String, primary_key=True)
-    approved_user_name = Column('approved-user_name',String(128))
-    user_state = Column('user_state', String)
-    
-    def to_dict(self):
-        approved_user = {
-            "approved-user-name":self.approved_user_name,
-            "approved-email":self.approved_email,
-            "user-state":self.user_state,
-        }
-
-        return approved_user
     
 
 class Authority(Base):

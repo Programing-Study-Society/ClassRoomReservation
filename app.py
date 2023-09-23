@@ -47,7 +47,6 @@ login_manager.login_view = 'route.default_route'
 def load_user(user_id):
 
     session = create_session()
-    # must change
     loaded_user = session.query(User).filter(User.user_id == user_id).first()
     session.close()
 
@@ -58,7 +57,7 @@ def load_user(user_id):
 def before_request():
     # リクエストのたびにセッションの寿命を更新する
     client_session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=5)
+    app.permanent_session_lifetime = timedelta(minutes=15)
     client_session.modified = True
 
 
