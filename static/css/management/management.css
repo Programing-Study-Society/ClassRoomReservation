@@ -4,7 +4,7 @@
 }
 
 :root {
-    --element-min-width: 900px;
+    --element-min-width: 950px;
     --background-navbar: rgba(55, 55, 55, 0.98);
 }
 
@@ -125,6 +125,11 @@ details{
     margin-left: 10px;
 }
 
+#border{
+    border-top: 3px dotted #000;
+    margin: 20px 0;
+}
+
 
 /* table関係 */
 table {
@@ -205,6 +210,27 @@ select {
     box-sizing: border-box;
     font-size: 14px;
     color: #000;
+}
+
+button {
+    display: flex;
+    padding: 6px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+    user-select: none;
+}
+
+button:hover {
+    background-color: #1579c0;
+}
+
+.submit-button:hover {
+    background-color: #51fd76;
 }
 
 

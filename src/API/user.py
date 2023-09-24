@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from flask import session as client_session
 from flask_login import login_required
-from src.database import create_session, User, Authority
+from src.database import create_session, User, Authority, Reservation
 from src.module.function import get_user_state, generate_token
 
 
@@ -162,21 +162,26 @@ def user_delete():
         if len(data['email']) >= 64:
             raise PostValueError('文字の長さが長すぎます。')
 
-        user_user = session.query(User).filter(User.user_email == data['email']).first()
+        delete_user = session.query(User).filter(User.user_email == data['email']).first()
 
-        if user_user == None:
+        if delete_user == None:
             raise PostValueError('存在しないユーザーです。')
         
         client_authority = session.query(Authority).filter(Authority.name == client_session['user-state']).first()
-        delete_user_authority = session.query(Authority).filter(Authority.name == user_user.user_state).first()
+        delete_user_authority = session.query(Authority).filter(Authority.name == delete_user.user_state).first()
 
         if not client_authority.is_edit_user and delete_user_authority.is_edit_user :
             raise AuthorityError('このユーザーは削除出来ません。')
         
-        if user_user.user_state and session.query(User).filter(User.user_state == 'administrator').count() <= 2:
+        if delete_user.user_state and session.query(User).filter(User.user_state == 'administrator').count() <= 2:
             raise LuckOfAdministrativeUserError('管理者が不足しています。')
+        
+        delete_user_reserves = session.query(Reservation).filter(Reservation.reserved_user_id == delete_user.get_id()).all()
 
-        session.delete(user_user)
+        for reserve in delete_user_reserves :
+            session.delete(reserve)
+
+        session.delete(delete_user)
 
         session.commit()
 
