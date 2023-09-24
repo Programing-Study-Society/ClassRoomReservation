@@ -1,7 +1,7 @@
 // メッセージをメッセージエリアに表示する関数
 function showMessageArea(message, color)
 {
-    const messageAreaSentence = document.getElementById('message-area-sentence');
+    const messageAreaSentence = document.getElementById('message-area');
     messageAreaSentence.innerHTML = message;
     messageAreaSentence.style.color = color;
 }
@@ -67,7 +67,7 @@ function reserveGetUser()
     .then(resData => {
 
         // reservedClassroomPrintAreaの取得と初期化
-        const reservedClassroomPrintArea = document.getElementById('reserved-classroom-print-area');
+        const reservedClassroomPrintArea = document.getElementsByClassName('reserved-classroom-area')[0];
         reservedClassroomPrintArea.innerHTML = '';
 
         if(resData['result']) { // 成功時
@@ -161,7 +161,7 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
 function getData()
 {
     // 予約ボタンの取得・初期化
-    const classroomBox =  document.getElementById('classroom-box');
+    const classroomBox =  document.getElementById('available-list-area');
     classroomBox.innerHTML = '';
 
     // 予約時間を一時保存する変数
