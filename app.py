@@ -83,13 +83,11 @@ def check_past_reservations():
                 return
             
             for reservation in reservations_delete:
-                print(f'{reservation.reservation_id} was deleted!')
                 session.delete(reservation)
 
             session.commit()
 
         except Exception as e:
-            print(e)
             session.rollback()
             return
         
@@ -107,7 +105,6 @@ def check_past_reservations():
                 return
             
             for classroom in classroom_delete:
-                print(f'{classroom.classroom_id} was deleted!')
                 session.delete(classroom)
 
             session.commit()

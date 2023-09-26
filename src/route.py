@@ -9,6 +9,10 @@ class NotApprovedUserError(Exception):
     pass
 
 
+class AuthenticationFailed(Exception):
+    pass
+
+
 route = Blueprint('route', __name__, url_prefix='/', static_folder='./static', static_url_path='')
 
 
@@ -28,13 +32,17 @@ def default_route():
 
             # Googleから送られてきたPOSTを辞書型に
             data = request.form.to_dict()
+
+            if not ('credential' in data) :
+                raise AuthenticationFailed('ログインにエラーが発生しました。')
+
             # デコードをして読み取れる形に
             persed_request = jwt.decode(data['credential'], verify=False)
             sub_id = persed_request['sub']
             email = persed_request['email']
 
             if not check_user_user(session, email) :
-                raise NotApprovedUserError('登録されているユーザーではありません')
+                raise NotApprovedUserError('登録されているユーザーではありません。')
 
             # cookieに情報を保存
             client_session['id'] = sub_id

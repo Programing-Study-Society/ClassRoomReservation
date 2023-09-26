@@ -347,8 +347,6 @@ def add_classroom():
         for result_value in result_list :
             if not result_value['result'] : cnt += 1
 
-        print(f'failure classroom : {cnt}')
-
         if len(result_list) == cnt :
             raise NothingResultValueError('教室の追加に失敗しました。')
         
