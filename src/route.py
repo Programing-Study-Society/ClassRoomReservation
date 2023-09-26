@@ -30,16 +30,18 @@ def default_route():
             data = request.form.to_dict()
             # デコードをして読み取れる形に
             persed_request = jwt.decode(data['credential'], verify=False)
-            id = persed_request['sub']
+            sub_id = persed_request['sub']
             email = persed_request['email']
 
             if not check_user_user(session, email) :
                 raise NotApprovedUserError('登録されているユーザーではありません')
 
-            client_session['id'] = id
+            # cookieに情報を保存
+            client_session['id'] = sub_id
 
             user_user = session.query(User).filter(User.user_email == email).first()
 
+            # cookieに情報を保存
             if user_user is None :
                 client_session['user-state'] = None
             else :
@@ -48,7 +50,7 @@ def default_route():
             user_authority = session.query(Authority).filter(Authority.name == user_user.user_state).first()
 
             if user_user.user_sub == None :
-                user_user.user_sub = id
+                user_user.user_sub = sub_id
                 session.commit()
 
             login_user(user_user)
