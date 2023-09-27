@@ -60,7 +60,6 @@ users = [
 session = create_session()
 
 for i, user_state in enumerate(user_status) :
-    print(user_state)
     session.add(Authority(
         name=user_state['name'],
         is_reserve=user_state['is-reserve'],

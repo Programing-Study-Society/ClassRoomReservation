@@ -84,7 +84,6 @@ def add_user():
             abort(404)
 
         user = request.json
-        print(user)
 
         if not ('email' in user or 'user-name' in user or 'user-state' in user) :
             raise PostValueError('必要な情報が不足しています。')
@@ -153,8 +152,6 @@ def user_delete():
             abort(404)
 
         data = request.json
-
-        print(data)
 
         if (not 'email' in data):
             raise PostValueError('必要な情報が不足しています。')
