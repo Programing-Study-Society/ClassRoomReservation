@@ -8,7 +8,7 @@
     <!-- ↓ゴミ箱マーク用↓ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>教室予約</title>
-    <script src = "/js/user_get.js"></script>
+    <script src="/js/user_get.js"></script>
     <script src="/js/function.js" defer="defer"></script>
     <script src="/js/reserve_page.js" defer="defer"></script>
 </head>
@@ -25,62 +25,83 @@
         </nav>
     </header>
     <main>
-        <div class="explanation-box">
-            <div class="explanation-title">空き教室の検索</div>
-            <div class="explanation-area">
-                日時を入力すると空き教室を検索することができます。
-                利用可能な教室一覧から教室を選択し、予約してください。
-            </div>
+        
+        <div class="modal-btn">
+            <button class="modal-open" id="js-modal-open">
+                <div class="tooltip-005">
+                    <img src="/image/question.svg">
+                    <p>サイトの概要</p>
+                </div>
+            </button>
         </div>
-        <div id="message-box">
-            <h1 id="message-area">
-
-            </h1>
-        </div>
+        
         <div class="reserved-classroom-box">
-            <div class="reserved-classroom-title">予約済み教室</div>
+            <div class="reserved-classroom-title">あなたの予約済み教室</div>
             <div class="reserved-classroom-area">
-
+        
             </div>
         </div>
+        
+        <!-- モーダル本体 -->
+        <div class="modal" id="js-modal">
+            <div class="modal-container">
+                <!-- モーダルを閉じるボタン -->
+                <div class="modal-close" id="js-modal-close">×</div>
+                <!-- モーダル内部のコンテンツ -->
+                <div class="modal-content">
+                <header class="header-modal">
+                    <div>
+                        教室予約フォームの概要
+                    </div>
+                </header>
+                <p>日付と時刻を選択、入力すると空き教室を検索することが出来ます。</p><br>
+                <p>利用可能な教室一覧から教室を選択し、予約することが出来ます。</p><br>
+                </div>
+            </div>
+        </div>
+        
         <form id="search-classroom-form" onsubmit="getData()">
-            <label for="date">
-                <h4 class="head">予約する日付<sup class="ast"></sup></h4>
-                <input type="date" id="reserveation-date">
-            </label>
-
+            <div class="date">
+                <label>
+                    <h4 class="head">予約する日付<sup class="req"></sup></h4>
+                    <input type="date" id="reserveation-date">
+                </label>
+            </div>
 
             <div class="time">
-                <label for="time-form">
-                    <h4 class="head">利用開始時刻<sup class="ast"></sup></h4>
+                <label>
+                    <h4 class="head">利用開始時刻<sup class="req"></sup></h4>
                     <input type="time" id="start-time" list="start-time-datalist" autocomplete="off" required>
                     <datalist id="start-time-datalist">
                         <option value="09:00">
                         <option value="10:40">
-                        <option value="13:00">
-                        <option value="14:40">
+                            <option value="13:00">
+                            <option value="14:40">
                         <option value="16:20">
-                        <option value="18:00">
-                    </datalist>
+                            <option value="18:00">
+                        </datalist>
                 </label>
-                <br>
-                <label for="time-form">
-                    <h4 class="head">利用終了時刻<sup class="ast"></sup></h4>
+                <label>
+                    <h4 class="head">利用終了時刻<sup class="req"></sup></h4>
                     <input type="time" id="end-time" list="end-time-datalist" autocomplete="off" required>
                     <datalist id="end-time-datalist">
                         <option value="10:30">
                         <option value="12:10">
-                        <option value="14:30">
+                            <option value="14:30">
                         <option value="16:10">
-                        <option value="18:10">
-                        <option value="20:00">
-                    </datalist>
-                </label>
-            </div>
+                            <option value="18:10">
+                                <option value="20:00">
+                                </datalist>
+                            </label>
+                        </div>
             <div class="search">
                 <button type="submit" class="search-button">検索</button>
+                <div id="message-box">
+                    <h1 id="message-area">
+            
+                    </h1>
+                </div>
             </div>
-
         </form>
         <div class="available-box">
             <div class="available-title">利用可能な教室一覧</div>
@@ -89,7 +110,7 @@
             </div>
         </div>
     </main>
-
+    
     <script>
         (() => {
             document.getElementById("search-classroom-form")
@@ -97,6 +118,34 @@
         })();
     </script>
 
+    <!-- モーダル用js -->
+    <script>
+    const modal = document.getElementById('js-modal'),
+          open = document.getElementById('js-modal-open'),
+          close = document.getElementById('js-modal-close');
+
+        //クリックしてモーダルを開く
+        function modalOpen() {
+        modal.classList.add('is-active');
+        console.log('開いた')
+        }
+        open.addEventListener('click', modalOpen);
+
+        //クリックしてモーダルを閉じる
+        function modalClose() {
+        modal.classList.remove('is-active');
+        }
+        close.addEventListener('click', modalClose);
+
+        //モーダルの外側をクリックしてモーダルを閉じる
+        function modalOut(e) {
+        if (e.target == modal) {
+                modal.classList.remove('is-active');
+            }
+        }
+            
+        addEventListener('click', modalOut);
+    </script>
 
 </body>
 </html>
