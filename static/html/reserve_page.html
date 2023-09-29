@@ -42,12 +42,9 @@
             </div>
         </div>
         
-        <!-- モーダル本体 -->
         <div class="modal" id="js-modal">
             <div class="modal-container">
-                <!-- モーダルを閉じるボタン -->
                 <div class="modal-close" id="js-modal-close">×</div>
-                <!-- モーダル内部のコンテンツ -->
                 <div class="modal-content">
                 <header class="header-modal">
                     <div>
@@ -105,7 +102,7 @@
         </form>
         <div class="available-box">
             <div class="available-title">利用可能な教室一覧</div>
-            <div id="available-list-area">
+            <div class="available-list-area">
                 <!--<input type="button" class="classroom-button" value="教室" onclick="reserve();">-->
             </div>
         </div>
@@ -124,20 +121,17 @@
           open = document.getElementById('js-modal-open'),
           close = document.getElementById('js-modal-close');
 
-        //クリックしてモーダルを開く
         function modalOpen() {
         modal.classList.add('is-active');
         console.log('開いた')
         }
         open.addEventListener('click', modalOpen);
 
-        //クリックしてモーダルを閉じる
         function modalClose() {
         modal.classList.remove('is-active');
         }
         close.addEventListener('click', modalClose);
 
-        //モーダルの外側をクリックしてモーダルを閉じる
         function modalOut(e) {
         if (e.target == modal) {
                 modal.classList.remove('is-active');
