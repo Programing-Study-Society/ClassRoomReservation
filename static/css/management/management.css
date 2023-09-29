@@ -11,7 +11,6 @@
 
 /* ホンへ */
 body {
-    height: 100%;
     width: max(var(--element-min-width), 100%);
     overflow: scroll;
 }
@@ -100,7 +99,8 @@ nav::-webkit-scrollbar-thumb {
 
 /* メインパート */
 main {
-    margin: 145px 0;
+    margin-top: 145px;
+    margin-bottom: 0;
 }
 
 h1,h2{
@@ -236,19 +236,16 @@ button:hover {
 
 /* footer関係 */
 footer{
-    max-width: 800px;
-    margin-left: 150px;
-    margin:0 auto;
-    margin-top: 50px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 }
 
 .contact-address{
-    margin: 2em 0.5em 0.5em 0.5em;
-    padding: 1em 0.5em 0.5em;
-    position: relative;
-    border: 1px solid #81d4fa;
-    background-color: #e1f5fe;
-    display: flex;
+    padding: 1.25em 0;
+    border: 1px solid #2c2c2c;
+    background-color: #414141;
+    color: #dddddd;
     text-align: center;
     justify-content: center;
 }
