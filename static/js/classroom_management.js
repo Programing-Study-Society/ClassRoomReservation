@@ -70,15 +70,18 @@ function classroomGetFull()
     .then(response => response.json()) // レスポンスをJSON形式に変換します
     .then(resData => {
         if(resData['result']){ // 成功時
+            const $noClassroomSentence = document.getElementById('no-classroom-sentence');
             if(resData['data'] <= 0) // dataが0件なら
             {
                 // 予約可能教室が無いことを表示
-                const $noClassroomSentence = document.getElementById('no-classroom-sentence');
                 $noClassroomSentence.innerHTML = '予約可能教室なし';
                 $noClassroomSentence.style.color = 'black';
             }
             else // 予約可能教室が存在するなら
             {
+                $noClassroomSentence.innerHTML = '';
+                $noClassroomSentence.style.color = 'black';
+
                 // classroom-list-box(tbodyタグ)を取得
                 const $tableBody = document.getElementById('classroom-list-box');
 
