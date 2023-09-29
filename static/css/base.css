@@ -8,6 +8,7 @@ body{
 }
 :root{
   --element-min-width: 360px;
+  --base-color: #333;
 }
 
 .header {
@@ -18,7 +19,7 @@ body{
   justify-content: space-between;
   width: max(var(--element-min-width),100%);
   height: 60px;
-  background: #333;
+  background: var(--base-color);
   color: white;
 }
 
@@ -182,14 +183,14 @@ body{
   margin: 0;
   font-size: 20px;
   font-weight: bold;
-  border-bottom: 1px solid #9E9696;
 }
 
 .reserved-classroom-area,
-.available-list-area{
-  padding: 10px 20px;
+#available-list-area{
+  margin: 0 auto;
+  width: max(var(--element-min-width),90%);
   min-height: 120px;
-  border-bottom: 1px solid #9E9696;
+  border: 1px solid #9E9696;
 }
 
 .req::after {
@@ -225,7 +226,7 @@ input[type="time"] {
   flex-direction: coulmn;
   position: relative;
   padding: 0 10px;
-  width: 200px;
+  width: max(var(--element-min-width),80vw);
   height: 36px;
   border: 2px solid #000;
   border-radius: 5px;
@@ -238,7 +239,7 @@ input[type="time"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 200px;
+  width: max(var(--element-min-width),80vw);
   margin: 40px 0.1vw;
   padding: 6px 25px;
   border: none;
@@ -269,9 +270,11 @@ a.btn_08:hover {
 }
 
 #available-list-area {
-  padding: 10px 20px;
   min-height: 120px;
   border: 2px solid #4c9ac0;
+  text-align: center;
+  padding-top: 10px;
+  overflow: scroll;
 }
 
 .classroom-button {
@@ -281,12 +284,29 @@ a.btn_08:hover {
   position: relative;
   display: inline-block;
   padding: 0.5rem 2rem;
+  margin: 2px;
   cursor: pointer;
   text-align: center;
   vertical-align: middle;
   letter-spacing: 0.1em;
-  color: #ffffff;
+  color: #fff;
   border-radius: 0.5rem;
-  background-color: #0043eb;
-  right: 3px;
+  background-color: var(--base-color);
+  width: 90%;
+}
+
+/* footer関係 */
+footer{
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.contact-address{
+  padding: 1.25em 0;
+  border: 1px solid #2c2c2c;
+  background-color: #414141;
+  color: #dddddd;
+  text-align: center;
+  justify-content: center;
 }

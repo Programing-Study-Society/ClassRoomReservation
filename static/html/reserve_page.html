@@ -61,7 +61,7 @@
             <div class="date">
                 <label>
                     <h4 class="head">予約する日付<sup class="req"></sup></h4>
-                    <input type="date" id="reserveation-date">
+                    <input type="date" id="reserveation-date" required>
                 </label>
             </div>
 
@@ -102,10 +102,14 @@
         </form>
         <div class="available-box">
             <div class="available-title">利用可能な教室一覧</div>
-            <div class="available-list-area">
+            <div id="available-list-area">
                 <!--<input type="button" class="classroom-button" value="教室" onclick="reserve();">-->
             </div>
         </div>
+        <footer>
+            <h4 class="contact-address">お問い合わせ<br>
+                https://forms.gle/6QD4e9BuW8eF5dvX8</h4>
+        </footer>
     </main>
     
     <script>
