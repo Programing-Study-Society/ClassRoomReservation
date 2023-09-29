@@ -6,8 +6,8 @@
 :root {
     --element-min-width: 950px;
     --background-navbar: rgba(55, 55, 55, 0.98);
+    --hover-submit-button: rgb(151, 219, 120);
 }
-
 
 /* ホンへ */
 body {
@@ -230,7 +230,7 @@ button:hover {
 }
 
 .submit-button:hover {
-    background-color: #51fd76;
+    background-color: var(--hover-submit-button);
 }
 
 
