@@ -4,7 +4,8 @@
 }
 
 body{
-    overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 :root{
   --element-min-width: 360px;
@@ -24,7 +25,7 @@ body{
 }
 
 .logout {
-  margin-right: 10vw;
+  margin-right: 6vw;
   justify-content: center;
   line-height: 60px;
   text-decoration: none;
@@ -59,20 +60,34 @@ body{
 }
 
 .modal{
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 0;
   left: 0;
   width: max(var(--element-min-width),100%);
   height: 100%;
   background: rgba(0, 0, 0, 50%);
-  padding: 40px 20px;
-  overflow: auto;
   visibility: hidden;
   transition: 0.3s;
   box-sizing: border-box;
   display: flex;
   align-items: center;
+  overscroll-behavior: contain;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.modal::-webkit-scrollbar{
+  display: none;
+}
+
+.modal::before,
+.modal::after {
+  content: "";
+  width: 1px;
+  height: calc(100vh + 1px);
+  display: flex;
 }
 
 /* クラスが追加された時の指定 */
@@ -97,9 +112,9 @@ body{
   align-items: center;
   justify-content: center;
   top: -20px;
-  right: -10px;
-  width: 40px;
-  height: 40px;
+  right: -7px;
+  width: 35px;
+  height: 35px;
   color: #fff;
   background: #000;
   border-radius: 50%;
