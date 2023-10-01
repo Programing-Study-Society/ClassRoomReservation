@@ -125,7 +125,7 @@ def get_classrooms(mode):
                                 and_(DB.Reservation.start_time >= start_time, DB.Reservation.end_time <= end_time),
                                 and_(DB.Reservation.start_time <= start_time, DB.Reservation.end_time >= end_time),
                             )
-                        ).first() != None and session.query(DB.Authority).filter(DB.Authority == user.user_state).first().is_admin:
+                        ).first() != None and not session.query(DB.Authority).filter(DB.Authority.name == user.user_state).first().is_admin:
                         continue
                     
                     classroom_dict = classroom_value.to_dict()
