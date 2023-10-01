@@ -148,6 +148,8 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
             showMessageArea(message + 'を予約しました', 'black'); // メッセージを表示
 
             reserveGetUser(); // 予約済み教室を更新
+            const classroomBox =  document.getElementById('available-list-area'); // 予約ボタン標示欄の取得
+            classroomBox.innerHTML = ''; // 初期化
         }
         else
         {
@@ -160,9 +162,12 @@ function reserveationApplication(classroomId, classroomName, reserveationData)
 // 日時を送り、空き教室を検索する関数(/classroom/get/date)(reserve_page.htmlで検索ボタンを押したときに実行される)
 function getData()
 {
-    // 予約ボタンの取得・初期化
+    // 予約ボタン標示欄の取得・初期化
     const classroomBox =  document.getElementById('available-list-area');
     classroomBox.innerHTML = '';
+
+    // メッセージ欄を初期化
+    showMessageArea('', 'black');
 
     // 予約時間を一時保存する変数
     let reserveationData = {};
