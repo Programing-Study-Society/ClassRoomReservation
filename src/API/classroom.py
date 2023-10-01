@@ -107,15 +107,10 @@ def get_classrooms(mode):
                         
                 classroom_values = session.query(DB.ReservableClassroom)\
                     .filter(and_(DB.ReservableClassroom.reservable_start_time <= start_time),
-                        (DB.ReservableClassroom.reservable_end_time >= end_time)).all()
-                
-                #予約済みの教室を除いた教室
-                
-                # classrooms = session.query(DB.ReservableClassroom)\
-                #     .filter(~DB.ReservableClassroom.classroom_name.in_(
-                #             [classroom.classroom_name for classroom in reserved_classroom]
-                #         )
-                #     ).all()
+                        (DB.ReservableClassroom.reservable_end_time >= end_time))\
+                    .order_by(DB.ReservableClassroom.reservable_start_time, 
+                              DB.ReservableClassroom.classroom_name)\
+                    .all()
 
                 classroom_list = []
                 for classroom_value in classroom_values :
@@ -163,13 +158,10 @@ def get_classrooms(mode):
                     abort(404)
                 
                 reserved_classrooms = session.query(DB.ReservableClassroom).\
-                    order_by((DB.ReservableClassroom.reservable_start_time)).all()
-                    
-                # classroom_values = session.query(DB.ReservableClassroom)\
-                #     .filter(~DB.ReservableClassroom.classroom_name.in_(
-                #             [classroom.classroom_name for classroom in reserved_classroom]
-                #         )
-                #     ).all()
+                    order_by((DB.ReservableClassroom.reservable_start_time))\
+                    .order_by(DB.ReservableClassroom.reservable_start_time, 
+                              DB.ReservableClassroom.classroom_name)\
+                    .all()
                     
                 classroom_list = []
                 for classroom_value in reserved_classrooms:
