@@ -95,7 +95,7 @@ def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime,
         Reservation.start_time >= start_time.date(),
         Reservation.start_time <= start_time.date() + timedelta(days=1)
     ).count() >= 1 :
-        return '予約は１日１回限りです。'
+        return 'その日はすでに予約しています。'
     
     return None
 
