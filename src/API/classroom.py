@@ -89,7 +89,8 @@ def get_classrooms(mode):
                     abort(404)
                 
                 post_data = request.json
-            
+
+                user = session.query(DB.User).filter(DB.User.user_sub == client_session['id']).first()
 
                 if re.match(r'\d+-\d+-\d+', post_data['start-date']) is None or \
                     re.match(r'\d+-\d+-\d+', post_data['end-date']) is None:
@@ -115,6 +116,18 @@ def get_classrooms(mode):
                 classroom_list = []
                 for classroom_value in classroom_values :
 
+                    if session.query(DB.Reservation)\
+                        .filter(
+                            DB.Reservation.classroom_id == classroom_value.classroom_id,
+                            or_(
+                                and_(DB.Reservation.start_time >= start_time, DB.Reservation.start_time <= end_time),
+                                and_(DB.Reservation.end_time >= start_time, DB.Reservation.end_time <= end_time),
+                                and_(DB.Reservation.start_time >= start_time, DB.Reservation.end_time <= end_time),
+                                and_(DB.Reservation.start_time <= start_time, DB.Reservation.end_time >= end_time),
+                            )
+                        ).first() != None and session.query(DB.Authority).filter(DB.Authority == user.user_state).first().is_admin:
+                        continue
+                    
                     classroom_dict = classroom_value.to_dict()
 
                     reserves = session.query(DB.Reservation.classroom_id).filter(DB.Reservation.classroom_id == classroom_value.classroom_id).first()
