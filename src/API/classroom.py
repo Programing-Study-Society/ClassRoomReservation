@@ -120,10 +120,10 @@ def get_classrooms(mode):
                         .filter(
                             DB.Reservation.classroom_id == classroom_value.classroom_id,
                             or_(
-                                and_(DB.Reservation.start_time >= start_time, DB.Reservation.start_time <= end_time),
-                                and_(DB.Reservation.end_time >= start_time, DB.Reservation.end_time <= end_time),
-                                and_(DB.Reservation.start_time >= start_time, DB.Reservation.end_time <= end_time),
-                                and_(DB.Reservation.start_time <= start_time, DB.Reservation.end_time >= end_time),
+                                and_(DB.Reservation.start_time > start_time, DB.Reservation.start_time < end_time),
+                                and_(DB.Reservation.end_time > start_time, DB.Reservation.end_time < end_time),
+                                and_(DB.Reservation.start_time > start_time, DB.Reservation.end_time < end_time),
+                                and_(DB.Reservation.start_time < start_time, DB.Reservation.end_time > end_time),
                             )
                         ).first() != None and not session.query(DB.Authority).filter(DB.Authority.name == user.user_state).first().is_admin:
                         continue

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort, session as client_session
 from src.database import Reservation, ReservableClassroom, User, Authority, create_session
 from sqlalchemy import and_, or_, orm
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from src.module.function import generate_token, get_user_state
 from flask_login import login_required
@@ -69,7 +69,7 @@ def send_reserve_delete_mail(reservation) :
     
 
 # 予約時間が予約可能かチェックします
-def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime) -> str | None:
+def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime, end_time:datetime, user:User) -> str | None:
     if session.query(ReservableClassroom).filter(
         ReservableClassroom.classroom_id == classroom_id,
         and_(
@@ -89,6 +89,13 @@ def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime,
         )
     ).first() != None :
         return '既に予約が入っています。'
+    
+    if session.query(Reservation).filter(
+        Reservation.reserved_user_id == user.get_id(),
+        Reservation.start_time >= start_time.date(),
+        Reservation.start_time <= start_time.date() + timedelta(days=1)
+    ).count() >= 1 :
+        return '予約は１日１回限りです。'
     
     return None
 
@@ -137,7 +144,7 @@ def register_reserve():
         if classroom is None :
             raise ReserveValueError('この教室は予約できません。')
 
-        reserve_state = check_reservable(session, classroom.classroom_id, start_time, end_time)
+        reserve_state = check_reservable(session, classroom.classroom_id, start_time, end_time, reserved_user)
 
         if reserve_state != None :
             raise ReserveValueError(reserve_state)
