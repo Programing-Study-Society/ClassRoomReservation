@@ -82,8 +82,8 @@ def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime,
     if session.query(Reservation).filter(
         Reservation.classroom_id == classroom_id,
         or_(
-            and_(Reservation.start_time >= start_time, Reservation.start_time <= end_time),
-            and_(Reservation.end_time >= start_time, Reservation.end_time <= end_time),
+            and_(Reservation.start_time >= start_time, Reservation.start_time < end_time),
+            and_(Reservation.end_time > start_time, Reservation.end_time <= end_time),
             and_(Reservation.start_time >= start_time, Reservation.end_time <= end_time),
             and_(Reservation.start_time <= start_time, Reservation.end_time >= end_time),
         )
