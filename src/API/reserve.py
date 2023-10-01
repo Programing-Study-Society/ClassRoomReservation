@@ -29,6 +29,10 @@ class NotLoginError(Exception):
     pass
 
 
+class NonExistentUser(Exception) :
+    pass
+
+
 reserve = Blueprint('reserve', __name__, url_prefix='/reserve')
 
 
@@ -290,8 +294,13 @@ def reserve_get(mode):
                 if 'user-state' in client_session :
                     is_required_user_id = get_user_state(client_session).is_edit_reserve
 
+                user = session.query(User).filter(User.user_sub == client_session['id']).first()
+
+                if user == None :
+                    raise NonExistentUser('存在しないユーザーです。')
+
                 reserve_values = session.query(Reservation).filter(
-                    Reservation.reserved_user_id == client_session['id']
+                    Reservation.reserved_user_id == user.get_id()
                 ).all()
 
                 return jsonify({
@@ -303,6 +312,11 @@ def reserve_get(mode):
                 print(e)
                 session.rollback()
                 return jsonify({'result':False, 'message':e.args[0]}), 400
+            
+            except NonExistentUser as e :
+                print(e)
+                session.rollback()
+                return jsonify({'result': False, 'message': e.args[0]}), 400
 
             except Exception as e:
                 print(e)
