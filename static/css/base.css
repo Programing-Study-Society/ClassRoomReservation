@@ -151,7 +151,7 @@ body{
   height: 20px;
 }
 
-.tooltip-005 p {
+.tooltip p {
   display: flex;
   justify-content: center;
   visibility: hidden;
@@ -169,12 +169,12 @@ body{
   position: absolute;
 }
 
-.tooltip-005:hover p {
+.tooltip:hover p {
   visibility: visible;
   opacity: 1;
 }
 
-.tooltip-005 p::before {
+.tooltip p::before {
   position: absolute;
   top: -6px;
   width: 9px;
