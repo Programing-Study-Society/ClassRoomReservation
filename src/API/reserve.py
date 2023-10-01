@@ -131,7 +131,7 @@ def register_reserve():
         start_time = datetime.strptime(post_data['start-date'], '%Y-%m-%d %H:%M:%S')
         end_time = datetime.strptime(post_data['end-date'], '%Y-%m-%d %H:%M:%S')
 
-        if start_time < datetime.now() or end_time < datetime.now():
+        if start_time < datetime.now() or end_time < datetime.now() or start_time == end_time:
             raise PostValueError('無効な日時です。')
 
         if start_time.date() != end_time.date():

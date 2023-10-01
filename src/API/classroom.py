@@ -103,7 +103,7 @@ def get_classrooms(mode):
                 if start_time < now_time or end_time < now_time:
                     raise ReservationTimeValueError('現在時刻より後の時刻を入力してください')
 
-                if  start_time > end_time:
+                if  start_time >= end_time:
                     raise ReservationTimeValueError('開始時刻は終了時刻より前を入力してください')
                         
                 classroom_values = session.query(DB.ReservableClassroom)\
