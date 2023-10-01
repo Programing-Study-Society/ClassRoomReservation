@@ -52,7 +52,8 @@
                     </div>
                 </header>
                 <p>日付と時刻を選択、入力すると空き教室を検索することが出来ます。</p>
-                <p>利用可能な教室一覧から教室を選択し、予約することが出来ます。</p><br>
+                <p>利用可能な教室一覧から教室を選択し、予約することが出来ます。</p>
+                <p>同日に複数の予約は可能ですが、予約日に予約可能な教室は1つまでです。</p>
                 <footer>
                     <h4 class="contact-address">お問い合わせ<br>
                         <a href="https://forms.gle/6QD4e9BuW8eF5dvX8">
@@ -74,15 +75,15 @@
             <div class="time">
                 <label>
                     <h4 class="head">利用開始時刻<sup class="req"></sup></h4>
-                    <input type="time" id="start-time" list="start-time-datalist" autocomplete="off" required>
+                    <input value="" type="time" id="start-time" list="start-time-datalist" autocomplete="off" required>
                     <datalist id="start-time-datalist">
                         <option value="09:00">
                         <option value="10:40">
-                            <option value="13:00">
-                            <option value="14:40">
+                        <option value="13:00">
+                        <option value="14:40">
                         <option value="16:20">
-                            <option value="18:00">
-                        </datalist>
+                        <option value="18:00">
+                    </datalist>
                 </label>
                 <label>
                     <h4 class="head">利用終了時刻<sup class="req"></sup></h4>
@@ -90,13 +91,14 @@
                     <datalist id="end-time-datalist">
                         <option value="10:30">
                         <option value="12:10">
-                            <option value="14:30">
+                        <option value="14:30">
                         <option value="16:10">
-                            <option value="18:10">
-                                <option value="20:00">
-                                </datalist>
-                            </label>
-                        </div>
+                        <option value="18:10">
+                        <option value="20:00">
+                        </datalist>
+                </label>
+            </div>
+            
             <div class="search">
                 <button type="submit" class="search-button">検索</button>
                 <div id="message-box">

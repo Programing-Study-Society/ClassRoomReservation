@@ -78,6 +78,9 @@ function reserveGetUser()
             }
             else // 予約が存在するなら
             {
+                reserveList_ul = document.createElement('ul'); //ul要素作成
+                reservedClassroomPrintArea.appendChild(reserveList_ul); //htmlにul要素を追加
+
                 // 予約済み教室(data)の数だけ繰り返して予約済み教室を表示する
                 resData['data'].forEach((ele) => {
 
@@ -97,9 +100,9 @@ function reserveGetUser()
                     });
 
                     reserveList = document.createElement('li'); // li要素を作成
+                    reserveList_ul.append(reserveList); //ul要素にli要素を入れる
                     reserveList.appendChild(message); // li要素にmessageを入れる
                     reserveList.appendChild(button); // li要素にbuttonを入れる
-                    reservedClassroomPrintArea.appendChild(reserveList); // li要素をHTMLのbody要素に追加
                 });
             }
         }
@@ -199,6 +202,11 @@ function getData()
                 classroomBox.textContent = '予約可能教室なし';
             }
 
+            classroom_ul = document.createElement('ul'); //ul要素作成
+            classroom_li = document.createElement('li'); //li要素を作成
+            classroom_ul.append(classroom_li); //ul要素にli要素を入れる
+            classroomBox.appendChild(classroom_ul); //htmlにul要素を追加
+
             // ボタンの設置
             resData['data'].forEach((ele) => {
                 const button = document.createElement("button"); // ボタン要素を作成
@@ -208,7 +216,7 @@ function getData()
                 button.addEventListener("click", function() {
                         reserveationApplication(ele['classroom-id'], ele['classroom-name'], reserveationData);
                 });
-                classroomBox.appendChild(button); // ボタンをHTMLのbody要素に追加
+                classroom_li.appendChild(button); // ボタンをHTMLのbody要素に追加
             });
         } else {
             // エラーメッセージを表示

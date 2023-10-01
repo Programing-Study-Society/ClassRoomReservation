@@ -47,8 +47,8 @@ body{
 
 .modal-btn{
   position: fixed;
-  position: fixed;
   right: 10vw;
+  z-index: 100;
 }
 
 .modal-open {
@@ -200,12 +200,24 @@ body{
   font-weight: bold;
 }
 
-.reserved-classroom-area,
-#available-list-area{
+.reserved-classroom-area ul{
+  display:flex;
+  justify-content: center;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.reserved-classroom-area li{
+  margin: 5px 6px 5px 6px;
+}
+
+.reserved-classroom-area{
   margin: 0 auto;
-  width: max(var(--element-min-width),90%);
-  min-height: 120px;
+  width: max(var(--element-min-width),80vw);
+  height: 100px;
+  overflow-y: auto;
   border: 1px solid #9E9696;
+  border-radius: 3px;
 }
 
 .req::after {
@@ -285,10 +297,20 @@ a.btn_08:hover {
 }
 
 #available-list-area {
+  margin: 0 auto;
   min-height: 120px;
-  border: 2px solid #4c9ac0;
+  width: max(var(--element-min-width),80vw);
   text-align: center;
-  padding-top: 10px;
+  border: 2px solid #4c9ac0;
+  border-radius: 3px;
+}
+
+#available-list-area ul{
+  display:flex;
+  justify-content: center;
+  list-style: none;
+  flex-wrap: wrap;
+  margin: 5px 6px 5px 6px;
 }
 
 .classroom-button {
@@ -297,8 +319,8 @@ a.btn_08:hover {
   line-height: 1.5;
   position: relative;
   display: inline-block;
-  padding: 0.5rem 2rem;
-  margin: 2px;
+  padding: 4px 14px;
+  margin: 5px;
   cursor: pointer;
   text-align: center;
   vertical-align: middle;
@@ -306,7 +328,7 @@ a.btn_08:hover {
   color: #fff;
   border-radius: 0.5rem;
   background-color: var(--base-color);
-  width: 90%;
+  width: 80px;
 }
 
 /* footer関係 */
