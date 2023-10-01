@@ -66,6 +66,11 @@ def unauth_handler():
     return redirect('/html/login_failed.html')
 
 
+@app.errorhandler(404)
+def not_found(e) :
+    return redirect('/html/notfound.html')
+
+
 print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
 
 

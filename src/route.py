@@ -20,6 +20,11 @@ def check_user_user(session:orm.Session, user_email:str) -> bool :
     return session.query(User).filter(User.user_email == user_email).first() != None
 
 
+@route.errorhandler(404)
+def not_found() :
+    return redirect('/html/notfound.html')
+
+
 @route.route('/', methods=['GET', 'POST'])
 def default_route():
     if request.method == 'GET':

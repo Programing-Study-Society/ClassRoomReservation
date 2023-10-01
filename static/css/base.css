@@ -9,7 +9,7 @@ body{
 }
 :root{
   --element-min-width: 360px;
-  --base-color: #333;
+  --base-color: #000000;
 }
 
 .header {

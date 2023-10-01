@@ -17,36 +17,41 @@
     </header>
     <div id="margin"></div>
     <main>
-        <div class="sentence-title">
-            ログインページ
-        </div>
-        <div class="sentence">
-            <ul>
-                <li>J号館の教室を予約することができます</li>
-                <li>以下のボタンからGoogleアカウントにログインしてください</li>
-            </ul>
+        <div class="page-intro">
+            <div class="page-title">
+                <h2 class="sentence-title">ログインページ</h2>
+            </div>
+            <div class="sentence">
+                <ul>
+                    <li>J号館の教室を予約することができます</li>
+                    <li>以下のボタンからGoogleアカウントにログインしてください</li>
+                </ul>
+
+                <div id="google-login">
+                    <script src="https://accounts.google.com/gsi/client" async defer></script>
+                    <div id="g_id_onload"
+                        data-client_id="298118280458-k6q7l7bh7ieborj8iltkc0cgc17aruri.apps.googleusercontent.com"
+                        data-context="signup"
+                        data-ux_mode="redirect"
+                        data-login_uri="http://localhost:8000"
+                        data-auto_prompt="false">
+                    </div>
+        
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="signup_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                    </div>
+                    
+                </div>
+
+            </div>
         </div>
 
-        <div id="google-login">
-            <script src="https://accounts.google.com/gsi/client" async defer></script>
-            <div id="g_id_onload"
-                data-client_id="298118280458-k6q7l7bh7ieborj8iltkc0cgc17aruri.apps.googleusercontent.com"
-                data-context="signup"
-                data-ux_mode="redirect"
-                data-login_uri="http://localhost:8000"
-                data-auto_prompt="false">
-            </div>
 
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signup_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
-            
-        </div>
     </main>
     <footer>
         <div id="information">
