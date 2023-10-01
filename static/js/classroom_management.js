@@ -85,8 +85,6 @@ function classroomGetFull()
                 // classroom-list-box(tbodyタグ)を取得
                 const $tableBody = document.getElementById('classroom-list-box');
 
-                console.log(resData);
-
                 resData['data'].forEach(ele => {
 
                     // 予約可能日時を見やすい形に加工する
@@ -107,6 +105,7 @@ function classroomGetFull()
 
                     const $cell3 = document.createElement('td');
                     $cell3.textContent = ele['is_reserved'] ? 'あり' : 'なし';
+                    $cell3.style.color = ele['is_reserved'] ? 'red' : 'black';
                     $newRow.appendChild($cell3);
 
                     // 新しいボタン要素を作成
