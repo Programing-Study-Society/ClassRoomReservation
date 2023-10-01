@@ -281,7 +281,6 @@ def add_classroom():
                 session.add(add_classroom_data)
                 session.commit()
                 
-                
                 result_list.append(
                     {
                         'result':True,

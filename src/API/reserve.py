@@ -90,12 +90,14 @@ def check_reservable(session:orm.Session, classroom_id:str, start_time:datetime,
     ).first() != None :
         return '既に予約が入っています。'
     
+    start_date = datetime(start_time.year, start_time.month, start_time.day, 0, 0, 0)
+    
     if session.query(Reservation).filter(
         Reservation.reserved_user_id == user.get_id(),
-        Reservation.start_time >= start_time.date(),
-        Reservation.start_time <= start_time.date() + timedelta(days=1)
+        Reservation.start_time >= start_date,
+        Reservation.start_time <= start_date + timedelta(days=1)
     ).count() >= 1 :
-        return 'その日はすでに予約しています。'
+        return '既に予約されている日付には予約出来ません。'
     
     return None
 
