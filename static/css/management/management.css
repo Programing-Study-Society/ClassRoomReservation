@@ -100,7 +100,7 @@ nav::-webkit-scrollbar-thumb {
 /* メインパート */
 main {
     margin-top: 145px;
-    margin-bottom: 0;
+    margin-bottom: 200px;
 }
 
 h1,h2{
@@ -236,7 +236,7 @@ button:hover {
 
 /* footer関係 */
 footer{
-    position: absolute;
+    position: fixed;
     width: 100%;
     bottom: 0;
 }
