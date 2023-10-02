@@ -100,9 +100,9 @@ class User(UserMixin, Base):
 
 class Authority(Base):
 
-    __tablename__ = 'user_state'
+    __tablename__ = 'authority'
 
-    name = Column('user_state_name', String, primary_key=True) # administrator, moderator, user のみ
+    name = Column('user_state_name', String, primary_key=True)
     is_reserve = Column('is_reserve', Boolean)
     is_admin = Column('is_admin', Boolean)
     is_edit_reserve = Column('is_edit_reserve', Boolean)
