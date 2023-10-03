@@ -50,7 +50,7 @@
 
 .addform-child {
     display: inline-block;
-    vertical-align: baseline;
+    width: max(100%, var(--element-min-width));
 }
 
 .classroom-delete {
