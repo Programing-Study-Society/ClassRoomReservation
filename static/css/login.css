@@ -50,11 +50,11 @@ body{
     font-weight: bold;
     font-size: 1.5em;
     background-color: #81d4fa;
-    color: #fff;
-    -webkit-text-stroke: 0.75px #111;
+    color: #ffffff;
     z-index: 2;
     margin: 0;
-    padding: 0 10px;
+    padding: 7.5px 10px;
+    border-radius: 5px;
 }
 
 .sentence{
@@ -78,10 +78,10 @@ body{
     justify-content: center;
 }
 
-#information{
+footer {
     position: fixed;
     bottom: 0;
-    width: 100%;
+    width: max(100%, var(--element-min-width));
     background-color: #D9D9D9;
     text-align: center;
 }
