@@ -36,6 +36,11 @@ class NonExistentUser(Exception) :
 reserve = Blueprint('reserve', __name__, url_prefix='/reserve')
 
 
+@reserve.errorhandler(404)
+def notfound():
+    return jsonify({'result':False, 'message':'Not found'}), 404
+
+
 MAX_ATTEMPTS = 2000
 
 

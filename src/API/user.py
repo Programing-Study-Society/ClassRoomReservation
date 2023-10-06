@@ -32,6 +32,11 @@ user_api = Blueprint(
     )
 
 
+@user_api.errorhandler(404)
+def notfound():
+    return jsonify({'result':False, 'message':'Not found'}), 404
+
+
 @user_api.route('/current-user', methods=['GET'])
 def get_current_user():
     if 'id' in client_session.keys() :

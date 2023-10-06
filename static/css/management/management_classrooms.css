@@ -23,6 +23,23 @@
     width: 120px;
 }
 
+label[for="csv-file-input"] {
+    display: flex;
+    padding: 6px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+    user-select: none;
+}
+
+label[for="csv-file-input"]:hover {
+    background-color: #1579c0;
+}
+
 .submit-button {
     width: 120px;
 }

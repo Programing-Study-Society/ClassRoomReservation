@@ -57,7 +57,7 @@ def load_user(user_id):
 def before_request():
     # リクエストのたびにセッションの寿命を更新する
     client_session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=15)
+    app.permanent_session_lifetime = timedelta(hours=2)
     client_session.modified = True
 
 

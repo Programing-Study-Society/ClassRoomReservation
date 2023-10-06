@@ -4,6 +4,7 @@ from flask import session as client_session
 from google.auth import jwt
 from flask_login import login_user, login_required, logout_user
 from sqlalchemy import orm
+from datetime import datetime
 
 class NotApprovedUserError(Exception):
     pass
@@ -52,21 +53,21 @@ def default_route():
             # cookieに情報を保存
             client_session['id'] = sub_id
 
-            user_user = session.query(User).filter(User.user_email == email).first()
+            user = session.query(User).filter(User.user_email == email).first()
 
             # cookieに情報を保存
-            if user_user is None :
+            if user is None :
                 client_session['user-state'] = None
             else :
-                client_session['user-state'] = user_user.user_state
+                client_session['user-state'] = user.user_state
 
-            user_authority = session.query(Authority).filter(Authority.name == user_user.user_state).first()
+            user_authority = session.query(Authority).filter(Authority.name == user.user_state).first()
 
-            if user_user.user_sub == None :
-                user_user.user_sub = sub_id
+            if user.user_sub == None :
+                user.user_sub = sub_id
                 session.commit()
 
-            login_user(user_user)
+            login_user(user)
 
             if user_authority.is_admin :
                 return redirect('/html/management/classroom_management.html')
