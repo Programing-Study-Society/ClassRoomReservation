@@ -161,8 +161,6 @@
 
             // 初期のテンプレを生成
             const $addClassroomForm = document.getElementById("addform-child-template").content.cloneNode(true);
-            const $deleteButton = $addClassroomForm.querySelector(".form-delete-button");
-            $deleteButton.remove();
             const $addClassroomFormBase = document.getElementById("classroom-addform").querySelector("#addform-parent");
             $addClassroomFormBase.appendChild($addClassroomForm);
 
