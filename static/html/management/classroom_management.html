@@ -34,7 +34,7 @@
             <!-- 送信ボタン -->
             <div class="button-field">
                 <label for="csv-file-input">csvファイルをインポート</label>
-                <input type="file" id="csv-file-input" accept=".csv" onclick="this.value=null" onchange="handleFile(event)" />
+                <input type="file" id="csv-file-input" accept=".csv" onclick="this.value=null" onchange="handleFile(event)" style="display: none;">
                 <button id="addbutton" type="button" onclick="addInputField()">入力欄を追加</button>
                 <button class="submit-button" type="submit"> 送信 </button>
             </div>
