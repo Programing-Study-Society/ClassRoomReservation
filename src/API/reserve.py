@@ -141,6 +141,9 @@ def register_reserve():
         if start_time < datetime.now() or end_time < datetime.now() or start_time == end_time:
             raise PostValueError('無効な日時です。')
 
+        if start_time.date() == datetime.today().date() :
+            raise PostValueError('当日の予約はできません。')
+
         if start_time.date() != end_time.date():
             raise PostValueError('日を跨いだ予約はできません。')
         
