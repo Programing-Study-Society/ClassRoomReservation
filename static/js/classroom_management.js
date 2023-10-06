@@ -290,7 +290,11 @@ function handleFile(event) {
     let rows = [];
     // csvファイルの中からlengthが4のデータだけを抽出する
     originalCSV.forEach((ele) => {
-        const columns = ele.trim().split(','); // 最後尾の空白をトリムし、「,」区切りで要素に分ける
+        let originalColumns = ele.split(','); //「,」区切りで要素に分ける
+        let columns = originalColumns.map(function(element){ // 各要素に対して、前と後ろの空白を削除する
+            return element.trim();
+        });
+
         if(columns.length === 4) // 1行が4項目(4要素)なら
         {
             if(!columns.every(row => row === "")) // 4項目中、データが1項目でも入っていたら
@@ -335,6 +339,10 @@ function handleFile(event) {
         day = day.replace(/-(\d)\b/g, '-0$1'); // 数字1桁の場合、その数字の前に0を追加
         const startTime = rows[i][1].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
         const endTime = rows[i][2].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
+
+        console.log(i);
+        console.log(startTime);
+        console.log(endTime);
 
         // AddformElementに値を代入
         newAddformElements[i].querySelector('.addform-today').value = day;
