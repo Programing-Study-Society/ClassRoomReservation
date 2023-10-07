@@ -355,7 +355,7 @@ def add_classroom():
             if not result_value['result'] : cnt += 1
 
         if len(result_list) == cnt :
-            raise NothingResultValueError('教室の追加に失敗しました。')
+            raise NothingResultValueError('全ての教室の追加に失敗しました。')
         
     except NothingResultValueError as e :
         print(e)
