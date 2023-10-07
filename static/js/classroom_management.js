@@ -8,6 +8,14 @@ function addInputField()
 
 // form削除機能
 function formDeleteButton(button) {
+
+    // formが1以下の場合は削除させない(アラートを出す)
+    if(document.querySelectorAll('.addform-child').length <= 1)
+    {
+        alert('入力欄はこれ以上消せません');
+        return;
+    }
+
     // ボタンの親要素を取得し、削除します。
     let parentDiv = button.parentNode;
     parentDiv.parentNode.removeChild(parentDiv);
@@ -32,8 +40,8 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
 {
     // confirmで表示するメッセージを格納する変数
     let confirmMessage = reservationDateAndTime + '　' +'の予約可能教室を削除しますか？';
-    if(reservationStatus == 1) confirmMessage += '\n※予約が削除された旨のメールが予約者に自動送信されます。';
-    if(reservationStatus == -1) confirmMessage += '\n※予約状況が取得できていません。\n※予約者がいる場合、予約が削除された旨のメールが予約者に自動送信されます。';
+    if(reservationStatus === 1) confirmMessage += '\n※予約が削除された旨のメールが予約者に自動送信されます。';
+    if(reservationStatus === -1) confirmMessage += '\n※予約状況が取得できていません。\n※予約者がいる場合、予約が削除された旨のメールが予約者に自動送信されます。';
 
     if (!confirm(confirmMessage))
     {
@@ -208,11 +216,11 @@ function classroomAdd()
 
                 if(ele['result']) // 予約可能教室の追加が成功していたら
                 {
-                    if(index == 0) // 予約可能教室の追加の一番上(削除ボタン無しver)の処理
+                    if(index === 0) // 予約可能教室の追加の一番上(削除ボタン無しver)の処理
                     {
                         $date.value = '';
                         $startTime.value = '';
-                        $endTime.value = '';
+                        $endTime.value = '20:00';
                         $roomName.value = '';
                     }
                     else
@@ -254,6 +262,95 @@ function classroomAdd()
     }).catch((err) => console.log(err)); // エラーキャッチ
 }
 
+function handleFile(event) {
+
+    if (!confirm("入力欄がcsvファイルの内容で上書きされます。\n続けますか？"))
+    {
+        return;
+    }
+
+    const fileInput = event.target;
+    const file = fileInput.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        const content = event.target.result;
+        parseCSV(content);
+      };
+      reader.readAsText(file);
+    }
+  }
+
+  function parseCSV(csvContent) {
+    const addformElements = document.querySelectorAll('.addform-child');
+    originalCSV = csvContent.split('\n');
+
+    let rows = [];
+    // csvファイルの中からlengthが4のデータだけを抽出する
+    originalCSV.forEach((ele) => {
+        let originalColumns = ele.split(','); //「,」区切りで要素に分ける
+        let columns = originalColumns.map(function(element){ // 各要素に対して、前と後ろの空白を削除する
+            return element.trim();
+        });
+
+        if(columns.length === 4) // 1行が4項目(4要素)なら
+        {
+            if(!columns.every(row => row === "")) // 4項目中、データが1項目でも入っていたら
+            {
+                rows.push(columns);
+            }
+        }
+    })
+
+    // 対象のデータが無かった時にメッセージを表示
+    if(rows.length <= 0) {
+        alert('対象のデータが見つかりませんでした');
+        return;
+    }
+
+    // csvファイルの行数だけaddformElementsを作る
+    const addformLen = addformElements.length;
+    if(rows.length > addformLen)
+    {
+        const $addformParent = document.getElementById('addform-parent');
+
+        for(let i = addformLen;  i < rows.length; i++)
+        {
+            const $addformChild = document.getElementById("addform-child-template").content.cloneNode(true);
+            $addformParent.appendChild($addformChild);
+        }
+    }
+    else
+    {
+        for(let i = rows.length; i < addformLen; i++)
+        {
+            addformElements[i].remove();
+        }
+    }
+
+    // 数が増減したAddformElementsを格納しなおす
+    const newAddformElements = document.querySelectorAll('.addform-child');
+
+    for(let i = 0; i < rows.length && i < newAddformElements.length; i++)
+    {
+        let day = rows[i][0].replace(/\//g, '-'); // /を-に変更
+        day = day.replace(/-(\d)\b/g, '-0$1'); // 数字1桁の場合、その数字の前に0を追加
+        const startTime = rows[i][1].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
+        const endTime = rows[i][2].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
+
+        console.log(i);
+        console.log(startTime);
+        console.log(endTime);
+
+        // AddformElementに値を代入
+        newAddformElements[i].querySelector('.addform-today').value = day;
+        newAddformElements[i].querySelector('.addform-start-time').value = startTime;
+        newAddformElements[i].querySelector('.addform-end-time').value = endTime;
+        newAddformElements[i].querySelector('.addform-roomname').value = rows[i][3];
+    }
+}
 
 // classroom_management.htmlページを開いた瞬間に実行される部分
 classroomGetFull();

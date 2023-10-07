@@ -87,8 +87,9 @@ footer {
 }
 
 .login-failed{
-    padding: 40px 0;
+    padding: 40px 20px;
     margin: 0 auto;
+    border-radius: 5px;
     width: max(40vw, var(--element-min-width));
     background-color: #c0ccff;
     text-align: center;

@@ -226,10 +226,10 @@ def add_classroom():
                 session = create_session()
             
                 if not ('classroom-name' in classroom_data and 'start-date' in classroom_data and 'end-date' in classroom_data) :
-                    raise LuckOfInformationError('必要な情報が不足しています')
+                    raise LuckOfInformationError('必要な情報が不足しています。')
                 
                 if len(classroom_data['start-date'] and classroom_data['end-date'] and classroom_data['classroom-name']) == 0:
-                    raise LuckOfInformationError('必要な情報の値がありません')
+                    raise LuckOfInformationError('必要な情報の値がありません。')
                 
                 date_pattern = r'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}'
 
@@ -241,10 +241,13 @@ def add_classroom():
                 now_time = datetime.now()
                 
                 if (start_time >= end_time):
-                    raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください')
+                    raise Post_Value_Error('開始時刻は終了時刻よりも前の時間にしてください。')
                 
                 if (start_time <= now_time):
                     raise Post_Value_Error('過去の日時は指定出来ません')
+                
+                if start_time.hour < 8 or (end_time.hour > 20 or (end_time.hour == 20 and end_time.minute > 0)):
+                    raise Post_Value_Error('8:00 から 20:00 までの時間にしてください。')
                 
                 cnt = 0
                 while True:
