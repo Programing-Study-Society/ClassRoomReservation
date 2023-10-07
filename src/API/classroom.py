@@ -246,7 +246,7 @@ def add_classroom():
                 if (start_time <= now_time):
                     raise Post_Value_Error('過去の日時は指定出来ません')
                 
-                if ((start_time.hour < 8) or (end_time.hour >= 8 and end_time.minute > 0)):
+                if start_time.hour < 8 or (end_time.hour > 20 or (end_time.hour == 20 and end_time.minute > 0)):
                     raise Post_Value_Error('8:00 から 20:00 までの時間にしてください。')
                 
                 cnt = 0
