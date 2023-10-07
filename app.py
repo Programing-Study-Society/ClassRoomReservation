@@ -59,6 +59,7 @@ def before_request():
     client_session.permanent = True
     app.permanent_session_lifetime = timedelta(hours=2)
     client_session.modified = True
+    
 
 
 @login_manager.unauthorized_handler
