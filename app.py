@@ -1,4 +1,4 @@
-from flask import Flask, redirect, session as client_session
+from flask import Flask, redirect, session as client_session, request, jsonify
 from src.route import route
 from src.API.reserve import reserve
 from src.API.classroom import classroom
@@ -63,6 +63,11 @@ def before_request():
 
 @login_manager.unauthorized_handler
 def unauth_handler():
+    if request.method == 'GET' :
+        return redirect('/html/login_failed.html')
+    if request.method == 'POST' :
+        return jsonify({'result':False, 'message':'Session error occurred.'}), 400
+    
     return redirect('/html/login_failed.html')
 
 
