@@ -125,3 +125,7 @@ a.page-back {
   margin: 0 auto;
   max-width: 250px;
 }
+
+a.page-back:hover{
+    text-decoration: underline;
+}
