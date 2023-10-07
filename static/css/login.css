@@ -81,6 +81,7 @@ body{
 footer {
     position: fixed;
     bottom: 0;
+    z-index: 3;
     width: max(100%, var(--element-min-width));
     background-color: #D9D9D9;
     text-align: center;
