@@ -61,7 +61,6 @@ def before_request():
     client_session.modified = True
     
 
-
 @login_manager.unauthorized_handler
 def unauth_handler():
     return redirect('/html/login_failed.html')

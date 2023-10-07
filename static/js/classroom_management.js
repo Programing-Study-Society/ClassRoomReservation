@@ -220,7 +220,7 @@ function classroomAdd()
                     {
                         $date.value = '';
                         $startTime.value = '';
-                        $endTime.value = '';
+                        $endTime.value = '20:00';
                         $roomName.value = '';
                     }
                     else
