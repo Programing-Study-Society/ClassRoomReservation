@@ -40,8 +40,8 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
 {
     // confirmで表示するメッセージを格納する変数
     let confirmMessage = reservationDateAndTime + '　' +'の予約可能教室を削除しますか？';
-    if(reservationStatus === 1) confirmMessage += '\n※予約が削除された旨のメールが予約者に自動送信されます。';
-    if(reservationStatus === -1) confirmMessage += '\n※予約状況が取得できていません。\n※予約者がいる場合、予約が削除された旨のメールが予約者に自動送信されます。';
+    if(reservationStatus === true) confirmMessage += '\n※予約が削除された旨のメールが予約者に自動送信されます。';
+    // if(reservationStatus == -1) confirmMessage += '\n※予約状況が取得できていません。\n※予約者がいる場合、予約が削除された旨のメールが予約者に自動送信されます。';
 
     if (!confirm(confirmMessage))
     {
@@ -216,7 +216,7 @@ function classroomAdd()
 
                 if(ele['result']) // 予約可能教室の追加が成功していたら
                 {
-                    if(index === 0) // 予約可能教室の追加の一番上(削除ボタン無しver)の処理
+                    if(index === 0) // 予約可能教室の追加の一番上(削除無しver)の処理
                     {
                         $date.value = '';
                         $startTime.value = '';
