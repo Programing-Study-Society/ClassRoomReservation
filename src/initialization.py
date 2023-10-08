@@ -15,12 +15,12 @@ session = create_session()
 registered_authorities = session.query(Authority).all()
 registered_users = session.query(User).all()
 
-if registered_authorities is None :
+if len(registered_authorities) == 0 :
 
     user_status = [
         {
             'name':'administrator',
-            'is-reserve':True,
+            'is-reserve':False,
             'is-admin':True,
             'is-edit-reserve':True,
             'is-edit-user':True
@@ -50,9 +50,9 @@ if registered_authorities is None :
             is_edit_reserve=user_state['is-edit-reserve'], 
             is_edit_user=user_state['is-edit-user']
         ))
+
         
-        
-if registered_users is None : 
+if len(registered_users) == 0 : 
 
     users = [
         {
@@ -86,6 +86,6 @@ if registered_users is None :
             ))
         
 
-    session.commit()
+session.commit()
 
-    session.close()
+session.close()
