@@ -138,3 +138,9 @@ def check_past_reservations():
 thread1 = threading.Thread(target=check_past_reservations, daemon=True)
 
 thread1.start()
+
+if __name__ == '__main__' :
+    host = os.environ.get('FLASK_RUN_HOST')
+    port = os.environ.get('FLASK_RUN_PORT')
+    is_debug = os.environ.get('FLASK_DEBUG')
+    app.run(host=host, port=port, debug=is_debug)
