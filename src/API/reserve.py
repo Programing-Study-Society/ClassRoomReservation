@@ -395,7 +395,7 @@ def delete_reserve():
         if user_authority is None :
             abort(404)
 
-        if not user_authority.is_reserve :
+        if not user_authority.is_edit_reserve :
             abort(404)
 
         if not ('reservation-id' in post_data) :

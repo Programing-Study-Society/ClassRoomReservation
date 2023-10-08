@@ -308,7 +308,7 @@ input[type="time"] {
 #message-area{
   letter-spacing: 0.1rem;
   text-align: center;
-  font-size: 1.6rem;
+  font-size: 2.5rem;
   font-weight: bold;
 }
 
@@ -325,6 +325,7 @@ a.btn_08:hover {
   text-align: center;
   border: 2px solid #4c9ac0;
   border-radius: 3px;
+  font-size: 30px;
 }
 
 #available-list-area ul {
