@@ -17,6 +17,36 @@
     </header>
     <div id="margin"></div>
     <main>
+
+        <div class="modal-btn">
+            <button class="modal-open" id="js-modal-open">
+                <div class="tooltip">
+                    <img src="/image/question.svg">
+                    <p>フォームの概要</p>
+                </div>
+            </button>
+        </div>
+
+        <div class="modal" id="js-modal">
+            <div class="modal-container">
+                <div class="modal-close" id="js-modal-close">×</div>
+                <div class="modal-content">
+                    <header class="header-modal">
+                        <div>
+                            ログインページの概要
+                        </div>
+                    </header>
+                    <p>このサイトは事前にユーザー登録されたアカウントしかログインすることができません。</p>
+                    <p>ログインに関する不具合については以下の連絡先へお問い合わせください。</p>
+                    <footer>
+                        <p class="contact-address">
+                            お問い合わせ ClassroomReservationProject@gmail.com<br>
+                        </p>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        
         <div class="page-intro">
             <div class="page-title">
                 <h2 class="sentence-title">ログインページ</h2>
@@ -51,17 +81,33 @@
             </div>
         </div>
 
-
     </main>
-    <footer>
-        <h2>ログインに関する注意</h2>
-        <p class="information-sentence">
-        ・このサイトは事前にユーザー登録されたアカウントしかログインすることができません<br>
-        ・ログインに関する不具合については以下の連絡先へお問い合わせください。</p>
-        <div class="contact">
-            <p>連絡先 : ClassroomReservationProject@gmail.com</p>
-        </div>
-    </footer>
+
+    <!-- モーダル用js -->
+    <script>
+        const modal = document.getElementById('js-modal'),
+              open = document.getElementById('js-modal-open'),
+              close = document.getElementById('js-modal-close');
+    
+            function modalOpen() {
+            modal.classList.add('is-active');
+            console.log('開いた')
+            }
+            open.addEventListener('click', modalOpen);
+    
+            function modalClose() {
+            modal.classList.remove('is-active');
+            }
+            close.addEventListener('click', modalClose);
+    
+            function modalOut(e) {
+            if (e.target == modal) {
+                    modal.classList.remove('is-active');
+                }
+            }
+                
+            addEventListener('click', modalOut);
+        </script>
     
 </body>
 </html>
