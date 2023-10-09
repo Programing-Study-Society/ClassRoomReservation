@@ -277,6 +277,10 @@ input[type="time"] {
   color: #000;
 }
 
+.search{
+  width: max(var(--element-min-width), 80%);
+}
+
 .search-button {
   display: flex;
   justify-content: center;
