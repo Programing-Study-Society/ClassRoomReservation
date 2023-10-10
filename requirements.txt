@@ -1,6 +1,6 @@
-flask==3.0.0
-flask-login==0.6.2
-Werkzeug==2.3.6
+Werkzeug==2.3.7
+flask==2.3.3
+flask-login==0.6.0
 sqlalchemy==2.0.21
 python-dotenv==1.0.0
 google-auth==2.23.2
