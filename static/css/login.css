@@ -172,7 +172,6 @@ a.page-back:hover {
   background: rgba(0, 0, 0, 50%);
   visibility: hidden;
   display: flex;
-  transition: 0.3s;
   box-sizing: border-box;
   align-items: center;
   overscroll-behavior: contain;
