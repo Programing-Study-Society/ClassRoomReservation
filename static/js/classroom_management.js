@@ -60,11 +60,11 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
     })
     .then(response => response.json()) // レスポンスをJSON形式に変換します
     .then(resData => {
-        if(resData['result']) // 予約削除成功時
+        if(resData['result']) // 教室削除成功時
         {
             classroomGetFull(); // 教室情報を更新
         }
-        else {alert('予約を削除できませんでした\n' + resData['message']);} // エラーメッセージをメッセージエリアに表示
+        else {alert('予約可能教室を削除できませんでした\n' + resData['message']);} // エラーメッセージをアラートに表示
     }).catch((err) => console.log(err)); // エラーキャッチ
 }
 
