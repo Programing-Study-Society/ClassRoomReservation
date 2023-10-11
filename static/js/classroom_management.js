@@ -62,7 +62,7 @@ function classroomDeleteAdmin(classroomId, reservationDateAndTime, reservationSt
     .then(resData => {
         if(resData['result']) // 予約削除成功時
         {
-            location.reload(); // ページをリロード
+            classroomGetFull(); // 教室情報を更新
         }
         else {alert('予約を削除できませんでした\n' + resData['message']);} // エラーメッセージをメッセージエリアに表示
     }).catch((err) => console.log(err)); // エラーキャッチ
