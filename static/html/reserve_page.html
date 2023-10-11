@@ -11,6 +11,7 @@
     <script src="/js/user_get.js"></script>
     <script src="/js/function.js" defer="defer"></script>
     <script src="/js/reserve_page.js" defer="defer"></script>
+    <script src="/js/modal.js" defer="defer"></script>
 </head>
 
 <body>
@@ -116,39 +117,5 @@
             </div>
         </div>
     </main>
-    
-    <script>
-        (() => {
-            document.getElementById("search-classroom-form")
-                .addEventListener("submit", (e) => e.preventDefault());
-        })();
-    </script>
-
-    <!-- モーダル用js -->
-    <script>
-    const modal = document.getElementById('js-modal'),
-          open = document.getElementById('js-modal-open'),
-          close = document.getElementById('js-modal-close');
-
-        function modalOpen() {
-        modal.classList.add('is-active');
-        console.log('開いた')
-        }
-        open.addEventListener('click', modalOpen);
-
-        function modalClose() {
-        modal.classList.remove('is-active');
-        }
-        close.addEventListener('click', modalClose);
-
-        function modalOut(e) {
-        if (e.target == modal) {
-                modal.classList.remove('is-active');
-            }
-        }
-            
-        addEventListener('click', modalOut);
-    </script>
-
 </body>
 </html>

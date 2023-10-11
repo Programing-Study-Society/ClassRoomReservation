@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/login.css">
+    <script src="/js/modal.js" defer="defer"></script>
     <title>OECU 教室予約フォーム</title>
-    
 </head>
 <body>
     <header class="header">
@@ -17,7 +17,6 @@
     </header>
     <div id="margin"></div>
     <main>
-
         <div class="modal-btn">
             <button class="modal-open" id="js-modal-open">
                 <div class="tooltip">
@@ -36,15 +35,7 @@
                             ログインページの概要
                         </div>
                     </header>
-                    <p>このサイトは事前にユーザー登録されたアカウントしかログインすることができません。</p>
-                    <p>ログインに関する不具合については以下の連絡先へお問い合わせください。</p>
-                    <footer>
-                        <h4 class="contact-address">お問い合わせ
-                            <p>
-                                ClassroomReservationProject@gmail.com<br>
-                            </p>
-                        </h4>
-                    </footer>
+                    <p>教室予約フォームはユーザー登録されたOECUアカウントしかログインすることができません。</p>
                 </div>
             </div>
         </div>
@@ -68,12 +59,12 @@
                         data-login_uri="http://localhost:8000"
                         data-auto_prompt="false">
                     </div>
-        
+                    
                     <div class="g_id_signin"
-                        data-type="standard"
-                        data-shape="rectangular"
-                        data-theme="outline"
-                        data-text="signup_with"
+                    data-type="standard"
+                    data-shape="rectangular"
+                    data-theme="outline"
+                    data-text="signup_with"
                         data-size="large"
                         data-logo_alignment="left">
                     </div>
@@ -82,34 +73,16 @@
 
             </div>
         </div>
-
     </main>
 
-    <!-- モーダル用js -->
-    <script>
-        const modal = document.getElementById('js-modal'),
-              open = document.getElementById('js-modal-open'),
-              close = document.getElementById('js-modal-close');
-    
-            function modalOpen() {
-            modal.classList.add('is-active');
-            console.log('開いた')
-            }
-            open.addEventListener('click', modalOpen);
-    
-            function modalClose() {
-            modal.classList.remove('is-active');
-            }
-            close.addEventListener('click', modalClose);
-    
-            function modalOut(e) {
-            if (e.target == modal) {
-                    modal.classList.remove('is-active');
-                }
-            }
-                
-            addEventListener('click', modalOut);
-        </script>
-    
+    <footer>
+        <h4 class="contact-address">お問い合わせ
+            <p>
+                ClassroomReservationProject@gmail.com<br>
+            </p>
+        </h4>
+        <p class="copyright">© 2023 プログラミング研究会</p>
+    </footer>
+
 </body>
 </html>
