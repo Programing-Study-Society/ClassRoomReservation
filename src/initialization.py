@@ -1,8 +1,91 @@
-from database import create_database, create_session, Classroom
+from database import create_database, create_session, User, Authority
+import string
+import secrets
+
+# 予約IDを設定します
+def generate_token(len:int):
+    include_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
+    return ''.join(secrets.choice(include_chars) for _ in range(len))
+
 
 create_database()
-rooms = ['J301', 'J302', 'J303', 'J304', 'J401', 'J402', 'J403', 'J404']
+
 session = create_session()
-for room in rooms :
-    session.add(Classroom(classroom_name=room))
-    session.commit()
+
+registered_authorities = session.query(Authority).all()
+registered_users = session.query(User).all()
+
+if len(registered_authorities) == 0 :
+
+    user_status = [
+        {
+            'name':'administrator',
+            'is-reserve':False,
+            'is-admin':True,
+            'is-edit-reserve':True,
+            'is-edit-user':True
+        },
+        {
+            'name':'moderator',
+            'is-reserve':False,
+            'is-admin':True,
+            'is-edit-reserve':True,
+            'is-edit-user':False
+        },
+        {
+            'name':'user',
+            'is-reserve':True,
+            'is-admin':False,
+            'is-edit-reserve':False,
+            'is-edit-user':False
+        }
+    ]
+
+
+    for i, user_state in enumerate(user_status) :
+        session.add(Authority(
+            name=user_state['name'],
+            is_reserve=user_state['is-reserve'],
+            is_admin=user_state['is-admin'],
+            is_edit_reserve=user_state['is-edit-reserve'], 
+            is_edit_user=user_state['is-edit-user']
+        ))
+
+        
+if len(registered_users) == 0 : 
+
+    users = [
+        {
+            'email':'gp22a074@oecu.jp',
+            'name':'haruto',
+            'user-state':'administrator'
+        },
+        {
+            'email':'gp22a043@oecu.jp',
+            'name':'hajime',
+            'user-state':'administrator'
+        },
+        {
+            'email':'gp22a030@oecu.jp',
+            'name':'shiryu',
+            'user-state':'administrator'
+        },
+        {
+            'email':'mm23a008@oecu.jp',
+            'name':'shuto',
+            'user-state':'administrator'
+        }
+    ]
+
+    for user in users :
+        session.add(User(
+                user_email=user['email'], 
+                user_name=user['name'], 
+                user_state=user['user-state'], 
+                user_id=generate_token(32)
+            ))
+        
+
+session.commit()
+
+session.close()

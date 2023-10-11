@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約状況</title>
+    <link rel="stylesheet" href="/css/management/management.css">
+    <link rel="stylesheet" href="/css/management/reserve_state.css">
+    <!-- ↓ゴミ箱マーク用↓ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src = "/js/user_get.js"></script>
+    <script src="/js/function.js" defer="defer"></script>
+    <script src="/js/reserve_state.js" defer="defer"></script>
+</head>
+<body>
+    <header>
+        <div id="header-text">
+            OECU 教室予約   ---管理者ページ---
+        </div>
+        <div class="nav-list">
+            <nav>
+                <div class="nav-content"><a class="jump" href="/html/management/classroom_management.html">予約可能教室</a></div>
+                <div class="nav-content"><a class="jump" href="/html/management/user_list.html">登録ユーザー</a></div>
+                <div class="nav-content"><a class="jump" href="/html/management/reserve_state.html">予約状況</a></div>
+                <div class="nav-content"><a class="jump logout" href="/logout">ログアウト</a></div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-title">予約状況</h1>
+
+        <table class="reserve-list">
+            <thead>
+                <tr>
+                    <th>予約時間</th>
+                    <th>教室</th>
+                    <th>団体名</th>
+                    <th>メールアドレス</th>
+                    <th>予約の取消</th>
+                </tr>
+            </thead>
+            <tbody id="reservation-list-box">
+                <tr id="reservation-list-box-row">
+                </tr>
+            </tbody>
+        </table>
+        <h2 class="error-at-table" id="no-reservation-sentence"></h2>
+    </main>
+
+    <footer>
+        <h4 class="contact-address">プログラミング研究会<br>連絡先:proken0603@gmail.com</h4>
+    </footer>
+</body>
+</html>

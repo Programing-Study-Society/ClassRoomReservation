@@ -1,0 +1,299 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  margin: 0;
+  width: max(100%, var(--element-min-width));
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+:root {
+  --element-min-width: 360px;
+  --base-color: #000000;
+}
+
+.header {
+  z-index: 999;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  width: max(var(--element-min-width), 100%);
+  height: 60px;
+  background: var(--base-color);
+  color: white;
+}
+
+#header-text {
+  line-height: 60px;
+  padding-left: 10px;
+  font-size: large;
+  text-decoration: none;
+  color: #fff;
+}
+
+#margin {
+  margin-top: 100px;
+}
+
+.page-intro {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.page-title {
+  position: relative;
+  z-index: 2;
+  width: fit-content;
+  left: 20px;
+  top: 10px;
+}
+
+.sentence-title {
+  font-weight: bold;
+  font-size: 1.6rem;
+  background-color: #81d4fa;
+  color: #ffffff;
+  z-index: 2;
+  margin: 0;
+  padding: 7.5px 10px;
+  border-radius: 5px;
+}
+
+.sentence {
+  padding: 1em 0 0.5em;
+  font-size: 1.6rem;
+  width: max(60vw, var(--element-min-width));
+  border: 1px solid #81d4fa;
+  background-color: #e1f5fe;
+}
+
+.sentence > ul {
+  text-align: center;
+  list-style: none;
+  padding-left: 0;
+  padding-top: 8px;
+  letter-spacing: 0.1rem;
+}
+
+#google-login {
+  margin-top: 60px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  z-index: 3;
+  width: max(100%, var(--element-min-width));
+  background-color: #d9d9d9;
+  text-align: center;
+}
+
+.login-failed {
+  padding: 40px 20px;
+  margin: 0 auto;
+  border-radius: 5px;
+  width: max(40vw, var(--element-min-width));
+  background-color: #c0ccff;
+  text-align: center;
+}
+
+.alert-message {
+  margin-top: 0.5em;
+  color: red;
+}
+
+.page-back,
+a.page-back {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  border-radius: 0.5rem;
+  color: #000000;
+  background-color: #98e1f3;
+  margin: 0 auto;
+  max-width: 250px;
+}
+
+a.page-back:hover {
+  text-decoration: underline;
+}
+
+/* モーダル */
+
+.modal-btn {
+  position: fixed;
+  right: 10vw;
+  z-index: 100;
+}
+
+.modal-open {
+  width: 20px;
+  height: 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.modal {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: max(var(--element-min-width), 100%);
+  height: 100%;
+  background: rgba(0, 0, 0, 50%);
+  visibility: hidden;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  overscroll-behavior: contain;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#js-modal{
+  display: none;
+}
+
+.modal::-webkit-scrollbar {
+  display: none;
+}
+
+.modal::before,
+.modal::after {
+  content: "";
+  width: 1px;
+  height: calc(100vh + 1px);
+  display: flex;
+}
+
+/* クラスが追加された時の指定 */
+.modal.is-active {
+  visibility: visible;
+}
+
+/* モーダル内側の指定 */
+.modal-container {
+  position: relative;
+  display: block;
+  max-width: 600px;
+  width: max(var(--element-min-width), 90%);
+  z-index: 1001;
+  margin: auto;
+}
+
+/* モーダルを閉じるボタンの指定 */
+.modal-close {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -20px;
+  right: -7px;
+  width: 35px;
+  height: 35px;
+  color: #fff;
+  background: #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* モーダルのコンテンツ部分の指定 */
+.modal-content {
+  background: #fff;
+  text-align: left;
+  line-height: 1.8;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+/* モーダルのコンテンツ部分のテキストの指定 */
+.modal-content p {
+  letter-spacing: 0.1rem;
+  font-size: 1.4rem;
+  margin: 1em 0;
+}
+
+.header-modal {
+  border-bottom: 1px solid #9e9696;
+}
+
+.header-modal div {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.tooltip p {
+  display: flex;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  bottom: -43px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5em 1em;
+  border-radius: 3px;
+  background-color: #00000099;
+  color: #fff;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+  position: absolute;
+}
+
+.tooltip:hover p {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip p::before {
+  position: absolute;
+  top: -6px;
+  width: 9px;
+  height: 6px;
+  background-color: inherit;
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+  content: "";
+}
+
+footer {
+  padding-bottom: 5px;
+  background-color: #fff;
+  color: #000;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.contact-address p {
+  text-align: center;
+  margin-bottom: 2px;
+}

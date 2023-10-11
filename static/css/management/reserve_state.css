@@ -1,0 +1,12 @@
+.classroom-delete {
+    padding-left: 6px;
+}
+
+.reserve-delete {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reserve-delete:hover {
+    background-color: #fc4949;
+}

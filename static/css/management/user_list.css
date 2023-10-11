@@ -1,0 +1,27 @@
+#user-add-details {
+    user-select: none;
+}
+
+#user-addform {
+    margin-top: 10px;
+}
+
+#expanding-user-add-form {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.user-delete {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-delete:hover {
+    background-color: #fc4949;
+}
+
+.submit-button {
+    display: inline-block;
+    width: 120px;
+    margin-left: 30px;
+}

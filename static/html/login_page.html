@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/js/modal.js" defer="defer"></script>
+    <title>OECU 教室予約フォーム</title>
+</head>
+<body>
+    <header class="header">
+        <div>
+            <a id="header-text">
+                OECU 教室予約フォーム
+            </a>
+        </div>
+    </header>
+    <div id="margin"></div>
+    <main>
+        <div class="modal-btn">
+            <button class="modal-open" id="js-modal-open">
+                <div class="tooltip">
+                    <img src="/image/question.svg">
+                    <p>フォームの概要</p>
+                </div>
+            </button>
+        </div>
+
+        <div class="modal" id="js-modal">
+            <div class="modal-container">
+                <div class="modal-close" id="js-modal-close">×</div>
+                <div class="modal-content">
+                    <header class="header-modal">
+                        <div>
+                            ログインページの概要
+                        </div>
+                    </header>
+                    <p>教室予約フォームはユーザー登録されたOECUアカウントしかログインすることができません。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="page-intro">
+            <div class="page-title">
+                <h2 class="sentence-title">ログインページ</h2>
+            </div>
+            <div class="sentence">
+                <ul>
+                    <li>J号館の教室を予約することができます</li>
+                    <li>以下のボタンからGoogleアカウントにログインしてください</li>
+                </ul>
+
+                <div id="google-login">
+                    <script src="https://accounts.google.com/gsi/client" async defer></script>
+                    <div id="g_id_onload"
+                        data-client_id="605189282485-ds8q92bbamuirvl0tpmfu5ja01oaq21h.apps.googleusercontent.com"
+                        data-context="signup"
+                        data-ux_mode="redirect"
+                        data-login_uri="http://localhost:8000"
+                        data-auto_prompt="false">
+                    </div>
+                    
+                    <div class="g_id_signin"
+                    data-type="standard"
+                    data-shape="rectangular"
+                    data-theme="outline"
+                    data-text="signup_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <h4 class="contact-address">お問い合わせ
+            <p>
+                ClassroomReservationProject@gmail.com<br>
+            </p>
+        </h4>
+        <p class="copyright">© 2023 プログラミング研究会</p>
+    </footer>
+
+</body>
+</html>
