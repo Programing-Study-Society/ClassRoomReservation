@@ -11,6 +11,7 @@ from datetime import timedelta, datetime
 import threading
 import schedule
 from time import sleep
+from dotenv import load_dotenv
 
 
 ### Ctrl + C を押したときに正常終了する ###
@@ -24,6 +25,9 @@ def signal_handler(signum, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 ### ここまで ###
+
+# 環境変数ファイルの読み込み
+load_dotenv('./.env')
 
 
 app = Flask(__name__, static_folder='./static', static_url_path='/')
@@ -76,7 +80,6 @@ def not_found(e) :
     return redirect('/html/notfound.html')
 
 
-print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
 
 
 ### 定期実行プログラム ###
@@ -140,7 +143,12 @@ thread1 = threading.Thread(target=check_past_reservations, daemon=True)
 thread1.start()
 
 if __name__ == '__main__' :
+
     host = os.environ.get('FLASK_RUN_HOST')
     port = os.environ.get('FLASK_RUN_PORT')
     is_debug = os.environ.get('FLASK_DEBUG')
+
+    if is_debug :
+        print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
+
     app.run(host=host, port=port, debug=is_debug)
