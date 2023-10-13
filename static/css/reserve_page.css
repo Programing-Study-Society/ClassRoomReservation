@@ -31,4 +31,5 @@
 
 .fas.fa-trash {
     margin-left: 10px; /* ゴミ箱アイコンの左側に10pxの余白を追加 */
+    border: none;
 }
