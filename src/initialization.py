@@ -55,6 +55,11 @@ if len(registered_authorities) == 0 :
 if len(registered_users) == 0 : 
 
     users = [
+        # {
+        #     'email':'メール',
+        #     'name':'名前',
+        #     'user-state':'権限 [user or moderator or administrator]'
+        # }
         {
             'email':'gp22a074@oecu.jp',
             'name':'haruto',
