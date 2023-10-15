@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, abort, session as client_session
+from flask import Blueprint, request, jsonify, abort, session as client_session, current_app
 from src.database import Reservation, ReservableClassroom, User, Authority, create_session
 from sqlalchemy import and_, or_, orm
 from datetime import datetime, timedelta
@@ -186,22 +186,22 @@ def register_reserve():
         return jsonify({'result': True, 'data': reserve.to_dict(is_required_user_id=is_required_user_id)}), 200
     
     except PostValueError as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({'result': False, 'message': e.args[0]}), 400
 
     except ReserveValueError as e:
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({'result': False, 'message': e.args[0]}), 400
     
     except ManyAttemptsError as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({'result':False, 'message': e.args[0]}), 500
 
     except Exception as e:
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({'result': False, 'message': 'Internal Server Error !'}), 500
     
@@ -237,7 +237,7 @@ def reserve_get(mode):
                     }), 200
 
             except Exception as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
             
@@ -283,12 +283,12 @@ def reserve_get(mode):
                 }), 200
             
             except PostValueError as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': e.args[0]}), 400
 
             except Exception as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
             
@@ -326,17 +326,17 @@ def reserve_get(mode):
                     }), 200
             
             except NotLoginError as e :
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result':False, 'message':e.args[0]}), 400
             
             except NonExistentUser as e :
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': e.args[0]}), 400
 
             except Exception as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
             
@@ -369,12 +369,12 @@ def reserve_get(mode):
                     })
                 
             except PostValueError as e :
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result':False, 'message':e.args[0]}), 400
 
             except Exception as e :
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({'result': False, 'message': 'Internal Server Error'}), 500
 
@@ -417,12 +417,12 @@ def delete_reserve():
         return jsonify({'result':True})
     
     except PostValueError as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({'result':False, 'message':e.args[0]}), 400
         
     except Exception as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({'result':False, 'message':'Internal Server Error'}), 500
     

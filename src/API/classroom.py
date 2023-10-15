@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort, session as client_session
+from flask import Blueprint, jsonify, request, abort, session as client_session, current_app
 from sqlalchemy import or_, and_
 from src.database import create_session
 from src.module.function import generate_token, get_user_state
@@ -145,7 +145,7 @@ def get_classrooms(mode):
                 })
 
             except ReservationTimeValueError as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({
                     'result': False,
@@ -153,7 +153,7 @@ def get_classrooms(mode):
                 }),400
                 
             except Exception as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({
                     'result':False,
@@ -196,7 +196,7 @@ def get_classrooms(mode):
                 }),200
             
             except Post_Value_Error as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({
                     'result': False,
@@ -204,7 +204,7 @@ def get_classrooms(mode):
                 }),400
             
             except Exception as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 return jsonify({
                     'result': False,
@@ -292,7 +292,7 @@ def add_classroom():
                 )
 
             except LuckOfInformationError as e :
-                print(e)
+                current_app.logger.exception(e)
                 
                 classroom_name = classroom_data['classroom-name'] if 'classroom-name' in classroom_data else None
                 start_date = classroom_data['start-date'] if 'start-date' in classroom_data else None
@@ -309,7 +309,7 @@ def add_classroom():
                 })
                 
             except ReservationTimeValueError as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 result_list.append({
                     'result': False,
@@ -322,7 +322,7 @@ def add_classroom():
                 })
                 
             except Post_Value_Error as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 result_list.append({
                     'result': False,
@@ -335,7 +335,7 @@ def add_classroom():
                 })
                 
             except Exception as e:
-                print(e)
+                current_app.logger.exception(e)
                 session.rollback()
                 result_list.append({
                     'result':False,
@@ -358,7 +358,7 @@ def add_classroom():
             raise NothingResultValueError('全ての教室の追加に失敗しました。')
         
     except NothingResultValueError as e :
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result': False,
             'message': e.args[0],
@@ -366,7 +366,7 @@ def add_classroom():
         }), 400
     
     except Exception as e:
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result': False,
             'message': 'サービスにエラーが発生しました。'
@@ -421,7 +421,7 @@ def delete_classroom():
         }),200
         
     except Post_Value_Error as e :
-        print(e)
+        current_app.logger.exception(e)
         session.close()
         return jsonify({
             'result':False, 
@@ -429,7 +429,7 @@ def delete_classroom():
         }), 400
         
     except Exception as e :
-        print(e)
+        current_app.logger.exception(e)
         session.close()
         return jsonify({
             'result':False, 

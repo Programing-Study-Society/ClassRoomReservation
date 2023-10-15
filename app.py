@@ -12,6 +12,7 @@ import threading
 import schedule
 from time import sleep
 from dotenv import load_dotenv
+import logging
 
 
 ### Ctrl + C を押したときに正常終了する ###
@@ -30,17 +31,26 @@ signal.signal(signal.SIGINT, signal_handler)
 load_dotenv('./.env')
 
 
-app = Flask(__name__, static_folder='./static', static_url_path='/')
-
+app = Flask(__name__, static_folder=os.environ.get('STATIC_FILE_PATH'), static_url_path='/')
 
 app.register_blueprint(route)
 app.register_blueprint(reserve)
 app.register_blueprint(classroom)
 app.register_blueprint(user_api)
 
-
 app.config['SECRET_KEY'] = generate_token(32)
 
+### ログファイルの出力設定 ###
+
+log_level = logging.ERROR
+app.logger.setLevel(log_level)
+file_handler = logging.FileHandler(os.environ.get('LOG_FILE_PATH') + '/error.log')
+file_handler.setLevel(log_level)
+formater = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formater)
+app.logger.addHandler(file_handler)
+
+###
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -123,7 +133,7 @@ def check_past_reservations():
             session.commit()
 
         except Exception as e:
-            print(e)
+            app.logger.exception(e)
             session.rollback()
             return
         

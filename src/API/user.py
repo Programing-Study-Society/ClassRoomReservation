@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
-from flask import session as client_session
+from flask import session as client_session, current_app
 from flask_login import login_required
 from src.database import create_session, User, Authority, Reservation
 from src.module.function import get_user_state, generate_token
@@ -63,7 +63,7 @@ def get_user():
         user_users = session.query(User).all()
 
     except Exception as e :
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result':False,
             'message':'サービスにエラーが発生しました。'
@@ -129,14 +129,14 @@ def add_user():
         }), 200
 
     except PostValueError as e :
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result':False,
             'message':e.args[0]
         }), 400
 
     except Exception as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({
             'result':False,
@@ -192,28 +192,28 @@ def user_delete():
         }), 200
 
     except PostValueError as e :
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result':False,
             'message':e.args[0]
         }), 400
     
     except LuckOfAdministrativeUserError as e :
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result':False,
             'message':e.args[0]
         }), 400
     
     except AuthorityError as e :
-        print(e)
+        current_app.logger.exception(e)
         return jsonify({
             'result':False,
             'message':e.args[0]
         }), 400
 
     except Exception as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({
             'result':False,
@@ -244,7 +244,7 @@ def get_authority():
         })
 
     except Exception as e :
-        print(e)
+        current_app.logger.exception(e)
         session.rollback()
         return jsonify({
             'result':False,

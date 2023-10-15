@@ -1,5 +1,5 @@
 from src.database import User, User, Authority, create_session
-from flask import Blueprint, request, redirect, abort
+from flask import Blueprint, request, redirect, abort, current_app
 from flask import session as client_session
 from google.auth import jwt
 from flask_login import login_user, login_required, logout_user
@@ -75,12 +75,12 @@ def default_route():
                 return redirect('/html/reserve_page.html')
 
         except NotApprovedUserError as e:
-            print(e)
+            current_app.logger.exception(e)
             session.rollback()
             return redirect('/html/login_failed.html')
 
         except Exception as e :
-            print(e)
+            current_app.logger.exception(e)
             session.rollback()
             return redirect('/html/login_failed.html')
 
