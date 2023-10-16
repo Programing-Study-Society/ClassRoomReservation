@@ -44,7 +44,10 @@ app.config['SECRET_KEY'] = generate_token(32)
 
 log_level = logging.ERROR
 app.logger.setLevel(log_level)
-file_handler = logging.FileHandler(os.environ.get('LOG_FILE_PATH') + '/error.log')
+file_handler = logging.FileHandler(
+        filename=os.environ.get('LOG_FILE_PATH') + '/error.log',
+        encoding='utf-8'
+    )
 file_handler.setLevel(log_level)
 formater = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formater)
