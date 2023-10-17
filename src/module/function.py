@@ -3,6 +3,10 @@ import secrets
 from src.database import create_session, Authority
 
 
+class Dupulicate(Exception):
+    pass
+
+
 # 予約IDを設定します
 def generate_token(len:int):
     include_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
