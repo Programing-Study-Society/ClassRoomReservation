@@ -233,7 +233,7 @@ def add_classroom():
                 
                 date_pattern = r'\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}'
 
-                if re.match(date_pattern, classroom_data['start-date']) is None or re.match(date_pattern, classroom_data['end-date']) is None :
+                if re.fullmatch(date_pattern, classroom_data['start-date']) is None or re.fullmatch(date_pattern, classroom_data['end-date']) is None :
                     raise Post_Value_Error('日時が間違えています。(yyyy-mm-dd HH:MM:SS)')
                 
                 start_time = datetime.strptime(classroom_data['start-date'], '%Y-%m-%d %H:%M:%S')
