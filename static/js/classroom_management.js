@@ -176,9 +176,18 @@ function classroomAdd()
 
         //予約時間を一時保存する変数
         let roomData = {};
+
         //日付 + 空白 + 予約時間で結合する
-        roomData['start-date'] = dateValue + ' ' + startTimeValue + ':00';
-        roomData['end-date'] = dateValue + ' ' + endTimeValue + ':00';
+        roomData['start-date'] = dateValue + ' ' + startTimeValue;
+        if(startTimeValue.split(':').length < 3) {
+            roomData['start-date'] += ':00';
+        }
+        
+        roomData['end-date'] = dateValue + ' ' + endTimeValue;
+        if(endTimeValue.split(':').length < 3) {
+            roomData['end-date'] += endTimeValue + ':00';
+        }
+
         roomData['classroom-name'] = roomNameValue;
         roomDatas.push(roomData);
     });
