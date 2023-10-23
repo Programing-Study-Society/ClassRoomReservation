@@ -288,16 +288,16 @@ function handleFile(event) {
     originalCSV = csvContent.split('\n');
 
     let rows = [];
-    // csvファイルの中からlengthが4のデータだけを抽出する
+    // csvファイルの中からlengthが6のデータだけを抽出する
     originalCSV.forEach((ele) => {
         let originalColumns = ele.split(','); //「,」区切りで要素に分ける
         let columns = originalColumns.map(function(element){ // 各要素に対して、前と後ろの空白を削除する
             return element.trim();
         });
 
-        if(columns.length === 4) // 1行が4項目(4要素)なら
+        if(columns.length === 6) // 1行が6項目(6要素)なら
         {
-            if(!columns.every(row => row === "")) // 4項目中、データが1項目でも入っていたら
+            if(!columns.every(row => row === "")) // 6項目中、データが1項目でも入っていたら
             {
                 rows.push(columns);
             }
@@ -338,7 +338,7 @@ function handleFile(event) {
         let day = rows[i][0].replace(/\//g, '-'); // /を-に変更
         day = day.replace(/-(\d)\b/g, '-0$1'); // 数字1桁の場合、その数字の前に0を追加
         const startTime = rows[i][1].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
-        const endTime = rows[i][2].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
+        const endTime = rows[i][3].replace(/\b(\d)\b/g, "0$1"); // 数字1桁の場合、その数字の前に0を追加
 
         console.log(i);
         console.log(startTime);
@@ -348,7 +348,7 @@ function handleFile(event) {
         newAddformElements[i].querySelector('.addform-today').value = day;
         newAddformElements[i].querySelector('.addform-start-time').value = startTime;
         newAddformElements[i].querySelector('.addform-end-time').value = endTime;
-        newAddformElements[i].querySelector('.addform-roomname').value = rows[i][3];
+        newAddformElements[i].querySelector('.addform-roomname').value = rows[i][5];
     }
 }
 
