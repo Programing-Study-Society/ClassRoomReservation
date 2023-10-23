@@ -310,6 +310,9 @@ function handleFile(event) {
         return;
     }
 
+    // csvファイルの1行目(カラムの説明部分を抜き出す)
+    rows.shift();
+
     // csvファイルの行数だけaddformElementsを作る
     const addformLen = addformElements.length;
     if(rows.length > addformLen)
@@ -333,7 +336,7 @@ function handleFile(event) {
     // 数が増減したAddformElementsを格納しなおす
     const newAddformElements = document.querySelectorAll('.addform-child');
 
-    for(let i = 1; i < rows.length && i < newAddformElements.length; i++)
+    for(let i = 0; i < rows.length && i < newAddformElements.length; i++)
     {
         let day = rows[i][0].replace(/\//g, '-'); // /を-に変更
         day = day.replace(/-(\d)\b/g, '-0$1'); // 数字1桁の場合、その数字の前に0を追加
