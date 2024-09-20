@@ -4,6 +4,8 @@ from src.API.reserve import reserve
 from src.API.classroom import classroom
 from src.API.user import user_api
 import os
+# from authlib.integrations.flask_client import OAuth
+# from authlib.integrations.base_client.errors import OAuthError
 from flask_login import LoginManager
 from src.module.function import generate_token
 from src.database import create_session, User, Reservation, ReservableClassroom
@@ -54,6 +56,18 @@ file_handler.setFormatter(formater)
 app.logger.addHandler(file_handler)
 
 ###
+
+# app.config['GOOGLE_CLIENT_ID'] = os.environ.get("GOOGLE_CLIENT_ID")
+# app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get("GOOGLE_CLIENT_SECRET")
+
+# oauth = OAuth(app)
+# google = oauth.register(
+#     name='google',
+#     client_id=app.config['GOOGLE_CLIENT_ID'],
+#     client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+#     client_kwargs={'scope': 'openid profile email'},
+#     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
+# )
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -162,6 +176,6 @@ if __name__ == '__main__' :
     is_debug = os.environ.get('FLASK_DEBUG')
 
     if is_debug :
-        print(f' * http://localhost:{os.environ.get("FLASK_RUN_PORT")}')
+        print(f' * http://localhost:{port}')
 
     app.run(host=host, port=port, debug=is_debug)
