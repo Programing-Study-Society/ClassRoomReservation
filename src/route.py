@@ -5,6 +5,20 @@ from google.auth import jwt
 from flask_login import login_user, login_required, logout_user
 from sqlalchemy import orm
 from datetime import datetime
+from oauthlib.oauth2 import WebApplicationClient
+import requests
+import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv('./.env')
+
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
+GOOGLE_REDIRECT_URI = os.environ.get("GOOGLE_REDIRECT_URI", None)
 
 class NotApprovedUserError(Exception):
     pass
@@ -16,10 +30,14 @@ class AuthenticationFailed(Exception):
 
 route = Blueprint('route', __name__, url_prefix='/', static_folder='./static', static_url_path='')
 
+# OAuth2クライアント設定
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 def check_user_user(session:orm.Session, user_email:str) -> bool :
     return session.query(User).filter(User.user_email == user_email).first() != None
 
+def get_google_provider_cfg():
+    return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 @route.errorhandler(404)
 def not_found(e) :
@@ -31,64 +49,114 @@ def default_route():
     if request.method == 'GET':
         return redirect('/html/login_page.html')
 
-    elif request.method == 'POST':
-        try:
+@route.get('/login')
+def login():
+    # 認証用のエンドポイントを取得する
+    google_provider_cfg = get_google_provider_cfg()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
 
-            session = create_session()
+    # ユーザプロファイルを取得するログイン要求
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=GOOGLE_REDIRECT_URI,
+        scope=["openid", "email", "profile"],
+    )
+    return redirect(request_uri)
 
-            # Googleから送られてきたPOSTを辞書型に
-            data = request.form.to_dict()
+@route.route('/login/callback')
+def after_login():
+    try:
+        session = create_session()
+        # Googleから返却された認証コードを取得する
+        code = request.args.get("code")
 
-            if not ('credential' in data) :
-                raise AuthenticationFailed('ログインにエラーが発生しました。')
+        #トークンを取得するためのURLを取得する
+        google_provider_cfg = get_google_provider_cfg()
+        token_endpoint = google_provider_cfg["token_endpoint"]
 
-            # デコードをして読み取れる形に
-            persed_request = jwt.decode(data['credential'], verify=False)
-            sub_id = persed_request['sub']
-            email = persed_request['email']
+        # トークンを取得するための情報を生成し、送信する
+        token_url, headers, body = client.prepare_token_request(
+            token_endpoint,
+            authorization_response=request.url,
+            redirect_url=GOOGLE_REDIRECT_URI,
+            code=code,
+            approval_prompt='force',
+            access_type="offline",
+        )
+        token_response = requests.post(
+            token_url,
+            headers=headers,
+            data=body,
+            auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+        )
 
-            if not check_user_user(session, email) :
-                raise NotApprovedUserError('登録されているユーザーではありません。')
+        # トークンをparse
+        client.parse_request_body_response(json.dumps(token_response.json()))
 
-            # cookieに情報を保存
-            client_session['id'] = sub_id
+        # トークンができたので、GoogleからURLを見つけてヒットした、
+        # Googleプロフィール画像やメールなどのユーザーのプロフィール情報を取得
+        userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+        uri, headers, body = client.add_token(userinfo_endpoint)
+        userinfo_response = requests.get(uri, headers=headers, data=body)
 
-            user = session.query(User).filter(User.user_email == email).first()
+        # メールが検証されていれば、名前、email、プロフィール画像を取得します
+        if not userinfo_response.json().get("email_verified"):
+            raise Exception("User email not available or not verified by Google.")
+        
+        
+        sub_id = userinfo_response.json()["sub"]
+        email = userinfo_response.json()["email"]
 
-            # cookieに情報を保存
-            if user is None :
-                client_session['user-state'] = None
-            else :
-                client_session['user-state'] = user.user_state
+        # Googleから送られてきたPOSTを辞書型に
+        # data = request.form.to_dict()
 
-            user_authority = session.query(Authority).filter(Authority.name == user.user_state).first()
+        # if not ('credential' in data) :
+        #     raise AuthenticationFailed('ログインにエラーが発生しました。')
 
-            if user.user_sub == None :
-                user.user_sub = sub_id
-                session.commit()
+        # デコードをして読み取れる形に
+        # persed_request = jwt.decode(data['credential'], verify=False)
+        # sub_id = persed_request['sub']
+        # email = persed_request['email']
 
-            login_user(user)
+        if not check_user_user(session, email) :
+            raise NotApprovedUserError('登録されているユーザーではありません。')
 
-            if user_authority.is_admin :
-                return redirect('/html/management/classroom_management.html')
-            else :
-                return redirect('/html/reserve_page.html')
+        # cookieに情報を保存
+        client_session['id'] = sub_id
 
-        except NotApprovedUserError as e:
-            current_app.logger.exception(e)
-            session.rollback()
-            return redirect('/html/login_failed.html')
+        user = session.query(User).filter(User.user_email == email).first()
 
-        except Exception as e :
-            current_app.logger.exception(e)
-            session.rollback()
-            return redirect('/html/login_failed.html')
+        # cookieに情報を保存
+        if user is None :
+            client_session['user-state'] = None
+        else :
+            client_session['user-state'] = user.user_state
 
-        finally :
-            session.close()
+        user_authority = session.query(Authority).filter(Authority.name == user.user_state).first()
 
-    else :
-        abort(404)
+        if user.user_sub == None :
+            user.user_sub = sub_id
+            session.commit()
+
+        login_user(user)
+
+        if user_authority.is_admin :
+            return redirect('/html/management/classroom_management.html')
+        else :
+            return redirect('/html/reserve_page.html')
+
+    except NotApprovedUserError as e:
+        current_app.logger.exception(e)
+        session.rollback()
+        return redirect('/html/login_failed.html')
+
+    except Exception as e :
+        current_app.logger.exception(e)
+        session.rollback()
+        return redirect('/html/login_failed.html')
+
+    finally :
+        session.close()
 
 
 @route.route('/logout')
