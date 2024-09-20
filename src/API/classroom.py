@@ -72,7 +72,7 @@ def send_reserve_delete_mail(reservations) :
 
 
 @classroom.errorhandler(404)
-def notfound():
+def notfound(e):
     return jsonify({'result':False, 'message':'Not found'}), 404
 
 

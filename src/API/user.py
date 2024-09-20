@@ -33,7 +33,7 @@ user_api = Blueprint(
 
 
 @user_api.errorhandler(404)
-def notfound():
+def notfound(e):
     return jsonify({'result':False, 'message':'Not found'}), 404
 
 

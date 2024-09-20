@@ -37,7 +37,7 @@ reserve = Blueprint('reserve', __name__, url_prefix='/reserve')
 
 
 @reserve.errorhandler(404)
-def notfound():
+def notfound(e):
     return jsonify({'result':False, 'message':'Not found'}), 404
 
 

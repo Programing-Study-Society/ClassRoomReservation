@@ -22,7 +22,7 @@ def check_user_user(session:orm.Session, user_email:str) -> bool :
 
 
 @route.errorhandler(404)
-def not_found() :
+def not_found(e) :
     return redirect('/html/notfound.html')
 
 
